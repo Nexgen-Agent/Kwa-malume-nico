@@ -3,42 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking</title>
-  <link rel="stylesheet" href="css/booking.css">
+  <title>Bookings | Malume Nico’s</title>
+  <link rel="stylesheet" href="booking.css">
 </head>
 <body>
-  <header>
-    <h1>Book Your Spot</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="comments.html">Comments</a>
-      <a href="booking.html" class="active">Booking</a>
-    </nav>
-  </header>
+  <!-- Background video (same style as home & menu) -->
+  <video autoplay muted loop class="bg-video">
+    <source src="assets/malume-nico.mp4" type="video/mp4">
+  </video>
 
-  <main>
-    <section class="booking-section">
-      <h2>Fill in your details</h2>
-      <form id="bookingForm">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+  <div class="overlay"></div>
 
-        <label for="date">Booking Date:</label>
-        <input type="date" id="date" name="date" required>
+  <!-- Booking Form Card -->
+  <div class="booking-card">
+    <h1 class="title">Book Your Vibes</h1>
+    <p class="subtitle">Make your occasion unforgettable at Malume Nico’s</p>
 
-        <label for="time">Booking Time:</label>
-        <input type="time" id="time" name="time" required>
+    <form id="bookingForm">
+      <!-- Name -->
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" required placeholder="Enter your full name">
+      </div>
 
-        <label for="notes">Additional Notes:</label>
-        <textarea id="notes" name="notes" placeholder="Any special requests?"></textarea>
+      <!-- Contact -->
+      <div class="form-group">
+        <label for="contact">Email or Phone Number</label>
+        <input type="text" id="contact" required placeholder="Enter email or phone">
+      </div>
 
-        <button type="submit">Book Now</button>
-      </form>
+      <!-- Occasion -->
+      <div class="form-group">
+        <label>What’s the Occasion?</label>
+        <div class="options">
+          <button type="button" class="option-btn" data-value="Date">Date</button>
+          <button type="button" class="option-btn" data-value="Chilling with Friends">Chilling with Friends</button>
+          <button type="button" class="option-btn" data-value="Birthday Celebrations">Birthday Celebrations</button>
+          <button type="button" class="option-btn" data-value="Other">Other</button>
+        </div>
+        <input type="hidden" id="occasion" required>
+      </div>
 
-      <div id="confirmation" class="confirmation"></div>
-    </section>
-  </main>
+      <!-- Other Occasion -->
+      <div class="form-group hidden" id="otherOccasionGroup">
+        <label for="otherOccasion">Type your Occasion</label>
+        <input type="text" id="otherOccasion" placeholder="Type here">
+      </div>
 
-  <script src="js/booking.js"></script>
+      <!-- Special Request -->
+      <div class="form-group hidden" id="specialRequestGroup">
+        <label for="specialRequest">Special Requests</label>
+        <textarea id="specialRequest" rows="3" placeholder="Add a personal touch..."></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn">Book Now</button>
+    </form>
+  </div>
+
+  <script src="booking.js"></script>
 </body>
 </html>
