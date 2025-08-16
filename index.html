@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Malume Nico — Home</title>
+  <link rel="stylesheet" href="assets/css/home.css" />
+</head>
+<body>
+
+  <!-- Background video (same as comments page) -->
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
+
+  <!-- Top bar (same style) -->
+  <header class="topbar glass">
+    <div class="brand">
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+      <div class="titles">
+        <div class="name">Malume Nico</div>
+        <div class="tag">the kota the mhhh</div>
+      </div>
+    </div>
+    <nav class="links">
+      <a href="index.html" class="link active">Home</a>
+      <a href="menu.html" class="link">Menu</a>
+      <a href="comments.html" class="link">Comments</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero glass water">
+    <div class="hero-copy">
+      <h1 class="hero-title">
+        <span class="swap active">Weekend Vibes</span>
+        <span class="swap">Birthdays &amp; Celebrations</span>
+      </h1>
+      <p class="hero-sub">Joy, unity and golden moments — <strong>come and chill with us</strong>.</p>
+      <div class="hero-actions">
+        <a href="menu.html" class="btn gold">Order Now</a>
+        <a href="comments.html" class="btn ghost">See Live Vibes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTIONS (Vertical scroll / Horizontal swipe rails) -->
+
+  <!-- Couples -->
+  <section class="moment glass water" id="couples">
+    <header class="moment-head">
+      <h2>Moments with Couples</h2>
+      <p>Laughs that linger. Shared bites. Soft music and softer looks.<br>
+         Make the date a memory. <em>Come and chill with us.</em></p>
+    </header>
+
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="rail" data-section="couples">
+        <!-- Put your couple photos here -->
+        <img loading="lazy" src="assets/img/couples/1.jpg" alt="Couple enjoying Malume Nico" class="card" />
+        <img loading="lazy" src="assets/img/couples/2.jpg" alt="Smiles and snacks" class="card" />
+        <img loading="lazy" src="assets/img/couples/3.jpg" alt="Date night at Malume Nico" class="card" />
+        <img loading="lazy" src="assets/img/couples/4.jpg" alt="Joyful cheers" class="card" />
+        <img loading="lazy" src="assets/img/couples/5.jpg" alt="Golden hour, golden vibes" class="card" />
+      </div>
+
+      <button class="arrow right" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Friends -->
+  <section class="moment glass water" id="friends">
+    <header class="moment-head">
+      <h2>Moments with Friends</h2>
+      <p>Inside jokes. Shared plates. Loud stories that get louder.<br>
+         Pull up with the crew — <em>come and chill with us.</em></p>
+    </header>
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="rail" data-section="friends">
+        <img loading="lazy" src="assets/img/friends/1.jpg" alt="Friends laughing" class="card" />
+        <img loading="lazy" src="assets/img/friends/2.jpg" alt="Group selfie vibes" class="card" />
+        <img loading="lazy" src="assets/img/friends/3.jpg" alt="Snack time together" class="card" />
+        <img loading="lazy" src="assets/img/friends/4.jpg" alt="High energy hangout" class="card" />
+        <img loading="lazy" src="assets/img/friends/5.jpg" alt="Cheers to good times" class="card" />
+      </div>
+      <button class="arrow right" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Family -->
+  <section class="moment glass water" id="family">
+    <header class="moment-head">
+      <h2>Moments with Family</h2>
+      <p>One table. Many smiles. Stories passed between bites.<br>
+         Make it a family thing — <em>come and chill with us.</em></p>
+    </header>
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="rail" data-section="family">
+        <img loading="lazy" src="assets/img/family/1.jpg" alt="Family lunch" class="card" />
+        <img loading="lazy" src="assets/img/family/2.jpg" alt="Parents and kids smiling" class="card" />
+        <img loading="lazy" src="assets/img/family/3.jpg" alt="Sharing kota love" class="card" />
+        <img loading="lazy" src="assets/img/family/4.jpg" alt="Granny approved" class="card" />
+        <img loading="lazy" src="assets/img/family/5.jpg" alt="Generations together" class="card" />
+      </div>
+      <button class="arrow right" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Weekend Vibes -->
+  <section class="moment glass water" id="weekend">
+    <header class="moment-head">
+      <h2>Weekend Vibes</h2>
+      <p>Music in the air. Sun on your face. Zero rush, all joy.<br>
+         Weekends are better here — <em>come and chill with us.</em></p>
+    </header>
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="rail" data-section="weekend">
+        <img loading="lazy" src="assets/img/weekend/1.jpg" alt="Chill weekend table" class="card" />
+        <img loading="lazy" src="assets/img/weekend/2.jpg" alt="Golden hour outdoors" class="card" />
+        <img loading="lazy" src="assets/img/weekend/3.jpg" alt="Vibes + bites" class="card" />
+        <img loading="lazy" src="assets/img/weekend/4.jpg" alt="Friends soaking sun" class="card" />
+        <img loading="lazy" src="assets/img/weekend/5.jpg" alt="Relaxed smiles" class="card" />
+      </div>
+      <button class="arrow right" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Birthdays & Celebrations -->
+  <section class="moment glass water" id="birthdays">
+    <header class="moment-head">
+      <h2>Birthdays &amp; Celebrations</h2>
+      <p>Candles, choruses and a hundred photos. We’ll hype you up.<br>
+         Mark the moment — <em>come and chill with us.</em></p>
+    </header>
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="scroll left">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="rail" data-section="birthdays">
+        <img loading="lazy" src="assets/img/celebrations/1.jpg" alt="Birthday crew" class="card" />
+        <img loading="lazy" src="assets/img/celebrations/2.jpg" alt="Cake and cheers" class="card" />
+        <img loading="lazy" src="assets/img/celebrations/3.jpg" alt="Big smiles, big moments" class="card" />
+        <img loading="lazy" src="assets/img/celebrations/4.jpg" alt="Confetti and joy" class="card" />
+        <img loading="lazy" src="assets/img/celebrations/5.jpg" alt="Unforgettable night" class="card" />
+      </div>
+      <button class="arrow right" aria-label="scroll right">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer (matches comments style) -->
+  <footer class="foot glass">
+    <div>© 2025 Malume Nico — Unity in every bite.</div>
+    <div class="links">
+      <a href="index.html" class="link">Home</a>
+      <a href="menu.html" class="link">Menu</a>
+      <a href="comments.html" class="link">Comments</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/home.js" defer></script>
+</body>
+</html>
