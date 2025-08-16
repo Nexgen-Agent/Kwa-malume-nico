@@ -1,23 +1,53 @@
-document.getElementById("bookingForm").addEventListener("submit", function(event) {
-  event.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+  const optionButtons = document.querySelectorAll(".option-btn");
+  const occasionInput = document.getElementById("occasion");
+  const otherOccasionGroup = document.getElementById("otherOccasionGroup");
+  const specialRequestGroup = document.getElementById("specialRequestGroup");
+  const bookingForm = document.getElementById("bookingForm");
 
-  const name = document.getElementById("name").value;
-  const date = document.getElementById("date").value;
-  const time = document.getElementById("time").value;
-  const notes = document.getElementById("notes").value;
+  optionButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Clear previous selection
+      optionButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
 
-  const confirmationBox = document.getElementById("confirmation");
+      const value = btn.dataset.value;
+      occasionInput.value = value;
 
-  confirmationBox.innerHTML = `
-    <h3>Booking Confirmed ✅</h3>
-    <p><strong>Name:</strong> ${name}</p>
-    <p><strong>Date:</strong> ${date}</p>
-    <p><strong>Time:</strong> ${time}</p>
-    <p><strong>Notes:</strong> ${notes || "None"}</p>
-  `;
+      // Toggle Other input
+      if (value === "Other") {
+        otherOccasionGroup.classList.remove("hidden");
+      } else {
+        otherOccasionGroup.classList.add("hidden");
+      }
 
-  confirmationBox.style.display = "block";
+      // Toggle Special Request for Date & Birthday
+      if (value === "Date" || value === "Birthday Celebrations") {
+        specialRequestGroup.classList.remove("hidden");
+      } else {
+        specialRequestGroup.classList.add("hidden");
+      }
+    });
+  });
 
-  // Reset form after submission
-  document.getElementById("bookingForm").reset();
+  bookingForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const contact = document.getElementById("contact").value.trim();
+    const occasion = occasionInput.value.trim();
+    const otherOccasion = document.getElementById("otherOccasion").value.trim();
+    const specialRequest = document.getElementById("specialRequest").value.trim();
+
+    if (!name || !contact || !occasion) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    alert(`Booking Confirmed 🎉\n\nName: ${name}\nContact: ${contact}\nOccasion: ${occasion}${occasion === "Other" ? " - " + otherOccasion : ""}\nSpecial Request: ${specialRequest}`);
+    bookingForm.reset();
+    optionButtons.forEach(b => b.classList.remove("active"));
+    otherOccasionGroup.classList.add("hidden");
+    specialRequestGroup.classList.add("hidden");
+  });
 });
