@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking</title>
+  <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+  <header>
+    <h1>Book Your Spot</h1>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="comments.html">Comments</a>
+      <a href="booking.html" class="active">Booking</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="booking-section">
+      <h2>Fill in your details</h2>
+      <form id="bookingForm">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+        <label for="date">Booking Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="time">Booking Time:</label>
+        <input type="time" id="time" name="time" required>
+
+        <label for="notes">Additional Notes:</label>
+        <textarea id="notes" name="notes" placeholder="Any special requests?"></textarea>
+
+        <button type="submit">Book Now</button>
+      </form>
+
+      <div id="confirmation" class="confirmation"></div>
+    </section>
+  </main>
+
+  <script src="js/booking.js"></script>
+</body>
+</html>
