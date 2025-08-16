@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Malume Nico — Comments (Live Vibes)</title>
+  <link rel="stylesheet" href="assets/css/comments.css" />
+</head>
+<body>
+
+  <!-- Background video (10s loop) -->
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+
+  <!-- Subtle vignette + gradient wash for readability -->
+  <div class="video-overlay"></div>
+
+  <!-- Top bar -->
+  <header class="topbar glass">
+    <div class="brand">
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+      <div class="titles">
+        <div class="name">Malume Nico</div>
+        <div class="tag">the kota the mhhh</div>
+      </div>
+    </div>
+    <button class="btn gold" id="ctaHome">Come and chill with us</button>
+  </header>
+
+  <!-- Live comments layer -->
+  <main class="stage" id="stage" aria-live="polite" aria-relevant="additions">
+    <!-- IG-live style ticker rail -->
+    <div class="ticker glass water" id="ticker"></div>
+
+    <!-- Floating hearts layer -->
+    <div class="hearts" id="hearts" aria-hidden="true"></div>
+
+    <!-- Add comment form -->
+    <form class="composer glass" id="composer" autocomplete="off">
+      <div class="row">
+        <input type="text" name="name" id="name" placeholder="Your name" maxlength="24" required />
+        <input type="text" name="comment" id="comment" placeholder="Share your moment…" maxlength="120" required />
+      </div>
+      <div class="row buttons">
+        <button type="submit" class="btn gold" id="sendBtn">Send</button>
+        <a id="emailBtn" class="btn ghost" href="#" title="Email us your feedback">Email</a>
+      </div>
+      <div class="hint">Your message pops up instantly — unity & joy on display ❤️</div>
+    </form>
+  </main>
+
+  <!-- Minimal footer -->
+  <footer class="foot glass">
+    <div>© 2025 Malume Nico — Unity in every bite.</div>
+    <div class="links">
+      <a href="index.html" class="link">Home</a>
+      <a href="#" class="link">Menu</a>
+      <a href="#" class="link">Bookings</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/comments.js" defer></script>
+</body>
+</html>
