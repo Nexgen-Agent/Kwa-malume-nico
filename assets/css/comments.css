@@ -101,7 +101,7 @@ body{
   align-self:end;
   padding:12px;
   display:flex; flex-direction:column; gap:10px;
-  width:min(800px, 100%);
+  max-width:800px;
   margin-inline:auto;
 }
 .row{display:flex; gap:10px}
