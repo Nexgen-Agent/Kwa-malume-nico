@@ -54,8 +54,17 @@
       <div class="form-group hidden" id="specialRequestGroup">
         <label for="specialRequest">Special Requests</label>
         <textarea id="specialRequest" rows="3" placeholder="Add a personal touch..."></textarea>
-      </div>
+     <!-- Date Picker -->
+<div class="form-group">
+  <label for="booking-date">Choose Date:</label>
+  <input type="date" id="booking-date" name="booking-date" required>
+</div>
 
+<!-- Time Picker -->
+<div class="form-group">
+  <label for="booking-time">Choose Time:</label>
+  <input type="time" id="booking-time" name="booking-time" min="09:00" max="18:00" step="1800" required>
+</div>
       <!-- Submit -->
       <button type="submit" class="submit-btn">Book Now</button>
     </form>
