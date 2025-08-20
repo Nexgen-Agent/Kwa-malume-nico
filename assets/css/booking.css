@@ -1,15 +1,28 @@
-/* ---------- Booking Page Styling (iOS Water/Glass Style) ---------- */
-
-/* Background */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
-  color: #fff;
-  height: 100%;
-  overflow-x: hidden;
+/* ---------- Theme & base (duplicated from home.css) ---------- */
+:root {
+  --gold: #c89b2d;
+  --gold-dark: #9a6f16;
+  --ink: #1c140b;
+  --ivory: #fffaf1;
+  --wash: linear-gradient(180deg, rgba(0, 0, 0, .12), rgba(0, 0, 0, .55));
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: #fff;
+  background: #fff;
+}
+
+/* ---------- Background video (duplicated from home.css) ---------- */
 .bg-video {
   position: fixed;
   inset: 0;
@@ -17,53 +30,114 @@ body, html {
   height: 100%;
   object-fit: cover;
   z-index: -2;
-  filter: saturate(1.1) brightness(.9) contrast(1.05);
+  filter: saturate(1.05) brightness(.9) contrast(1.05);
 }
 
-.overlay {
+.video-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
   z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(60% 60% at 50% 20%, rgba(200, 155, 45, .16), transparent 60%),
+    var(--wash);
 }
 
-/* Glass + Water effect */
+/* ---------- Glass & Water (duplicated from home.css) ---------- */
+.glass {
+  background: rgba(20, 15, 10, .30);
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .25);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border-radius: 18px;
+}
+
+.water {
+  position: relative;
+  overflow: hidden;
+}
+
+.water::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(120px 60px at 20% 30%, rgba(255, 255, 255, .12), transparent 60%),
+    radial-gradient(80px 40px at 80% 70%, rgba(255, 255, 255, .08), transparent 60%);
+  mix-blend-mode: overlay;
+  opacity: .5;
+  filter: blur(14px);
+  animation: caustics 12s linear infinite;
+}
+
+@keyframes caustics {
+  to {
+    transform: translate3d(-3%, 2%, 0) rotate(1deg);
+  }
+}
+
+/* ---------- Buttons (duplicated from home.css) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid rgba(255, 255, 255, .16);
+  color: #fff;
+  background: rgba(0, 0, 0, .35);
+  position: relative;
+  overflow: hidden;
+  font-weight: 900;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn.gold {
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  box-shadow: 0 12px 28px rgba(200, 155, 45, .22);
+}
+
+.btn.glow-press {
+  animation: haloFade .8s ease forwards;
+}
+
+@keyframes haloFade {
+  to {
+    box-shadow: 0 0 0 18px rgba(200, 155, 45, 0);
+  }
+}
+
+.gold-ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, .85) 0%, rgba(255, 255, 255, .6) 30%, rgba(200, 155, 45, .35) 60%, rgba(200, 155, 45, 0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: .9;
+  mix-blend-mode: screen;
+  animation: rippleOut .7s cubic-bezier(.2, .8, .2, 1) forwards;
+}
+
+@keyframes rippleOut {
+  to {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ---------- Booking Page Specific Styles ---------- */
 .booking-card {
   max-width: 640px;
   margin: 80px auto;
   padding: 30px;
   border-radius: 20px;
-
-  /* Match Comments glass */
-  background: rgba(20,15,10,.28);
-  border: 1px solid rgba(255,255,255,.18);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  box-shadow: 0 12px 40px rgba(0,0,0,.25);
-  position: relative;
-  overflow: hidden;
 }
 
-.booking-card::after {
-  /* subtle water shimmer */
-  content: "";
-  position: absolute;
-  inset: -30%;
-  background:
-    radial-gradient(120px 60px at 20% 30%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(80px 40px at 80% 70%, rgba(255,255,255,.09), transparent 60%);
-  mix-blend-mode: overlay;
-  opacity: .45;
-  filter: blur(14px);
-  animation: caustics 14s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes caustics {
-  to { transform: translate3d(-3%, 2%, 0) rotate(1deg); }
-}
-
-/* Titles */
 .title {
   font-size: 2rem;
   font-weight: 800;
@@ -78,7 +152,6 @@ body, html {
   opacity: 0.85;
 }
 
-/* Form Groups */
 .form-group {
   margin-bottom: 20px;
 }
@@ -93,8 +166,8 @@ input, textarea {
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.2);
-  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255, 255, 255, .2);
+  background: rgba(0, 0, 0, .35);
   color: #fff;
   backdrop-filter: blur(10px) saturate(120%);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
@@ -103,14 +176,13 @@ input, textarea {
 }
 
 input::placeholder, textarea::placeholder {
-  color: rgba(255,255,255,.65);
+  color: rgba(255, 255, 255, .65);
 }
 
 textarea {
   resize: none;
 }
 
-/* Occasion buttons */
 .options {
   display: flex;
   flex-wrap: wrap;
@@ -120,82 +192,25 @@ textarea {
 .option-btn {
   flex: 1;
   padding: 12px;
-  border: 1px solid rgba(255,255,255,.16);
   border-radius: 12px;
-  cursor: pointer;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #fff;
-  background: rgba(0,0,0,.35);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
-}
-
-.option-btn:hover {
-  transform: translateY(-1px);
 }
 
 .option-btn.active {
   background: linear-gradient(90deg, var(--gold-dark), var(--gold));
-  box-shadow: 0 12px 28px rgba(200,155,45,.22);
+  box-shadow: 0 12px 28px rgba(200, 155, 45, .22);
 }
 
-/* Submit button */
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
-  box-shadow: 0 12px 28px rgba(200,155,45,.22);
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+/* Utility Class for hiding elements */
+.hidden {
+  display: none;
 }
 
-.submit-btn:hover {
-  transform: translateY(-1px) scale(1.02);
-  background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
-/* Theme tokens (shared) */
-:root{
-  --gold:#c89b2d;
-  --gold-dark:#9a6f16;
-}
-
-/* ---------- Topbar ---------- */
-.topbar{
-  position:sticky; top:12px; margin:12px; z-index:10;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px;
-  /* The padding here is what determines the overall height.
-     Keep this as is to avoid increasing the top bar size. */
-}
-.brand{display:flex; align-items:center; gap:10px}
-.logo{width:40px; height:40px; border-radius:12px}
-.titles .name{font-weight:900; letter-spacing:.3px}
-.titles .tag{font-size:.85rem; opacity:.85}
-.links{
-  display:flex;
-  gap:14px;
-  align-items:center; /* This is crucial for vertical alignment. */
-}
-.links a img {
-  width: 40px; /* Explicitly set the width to match the logo. */
-  height: 40px; /* Explicitly set the height to match the logo. */
-  border-radius: 8px; /* Adds a bit of style. */
-  transition: transform 0.3s ease; /* Smooth hover effect. */
-}
-.links a img:hover {
-  transform: scale(1.1); /* Slight enlargement on hover. */
+/* Reduced motion (duplicated from home.css) */
+@media (prefers-reduced-motion: reduce) {
+  .water::after, .card, .btn, .moment.swipe-glow, .hero-title .swap {
+    animation: none !important;
+    transition: none !important;
+  }
 }
