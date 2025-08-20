@@ -62,7 +62,11 @@ body{
      Keep this as is to avoid increasing the top bar size. */
 }
 .brand{display:flex; align-items:center; gap:10px}
-.logo{width:40px; height:40px; border-radius:12px}
+.logo{
+  width:100px; /* Logo is now doubled in size */
+  height:100px; /* Logo is now doubled in size */
+  border-radius:12px
+}
 .titles .name{font-weight:900; letter-spacing:.3px}
 .titles .tag{font-size:.85rem; opacity:.85}
 .links{
@@ -71,8 +75,8 @@ body{
   align-items:center; /* This is crucial for vertical alignment. */
 }
 .links a img {
-  width: 40px; /* Explicitly set the width to match the logo. */
-  height: 40px; /* Explicitly set the height to match the logo. */
+  width: 40px; /* Icons are now the original logo size */
+  height: 40px; /* Icons are now the original logo size */
   border-radius: 8px; /* Adds a bit of style. */
   transition: transform 0.3s ease; /* Smooth hover effect. */
 }
