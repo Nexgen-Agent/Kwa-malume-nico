@@ -115,20 +115,23 @@ body{
 
 /* Composer */
 .composer {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 12;
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  max-width: 800px;
-  width: 100%;        /* ensures it scales on small screens */
-  margin: 0 auto;     /* centers it horizontally */
-  z-index: 12;
 }
 
 .row {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap;    /* prevents overflow on small screens */
+  flex-wrap: nowrap;
+}
+    /* prevents overflow on small screens */
 }
 
 .row.buttons {
