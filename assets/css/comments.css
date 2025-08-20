@@ -102,12 +102,16 @@ body{
   backdrop-filter: blur(10px) saturate(120%);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
   border:1px solid rgba(255,255,255,.12);
-  transform: translateY(12px);
+  transform: translateY(100vh); /* Starts the pop-up from the very bottom */
   opacity:0;
   will-change: transform, opacity;
 }
-.bubble.show{ animation: rise .6s cubic-bezier(.2,.8,.2,1) forwards }
-@keyframes rise { to{ transform:none; opacity:1 } }
+.bubble.show{ animation: rise .4s cubic-bezier(.2,.8,.2,1) forwards } /* Faster animation */
+@keyframes rise {
+  0% { transform: translateY(100vh); opacity: 0; } /* Start at bottom, invisible */
+  50% { opacity: 1; } /* Fully visible in the middle */
+  100% { transform: translateY(-100vh); opacity: 0; } /* End off-screen, fading out at the top */
+}
 
 .user{font-weight:800; color:#fff}
 .text{opacity:.95}
