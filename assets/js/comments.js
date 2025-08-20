@@ -73,6 +73,7 @@ function createBubble(user, text){
 // ---------- Add bubble to stage (with reveal) ----------
 function addToStage(user, text){
   const bubble = createBubble(user, text);
+  bubble.style.marginBottom = '6px'; // Add 6px spacing
   stage.appendChild(bubble);
 
   // trigger reveal
@@ -104,9 +105,9 @@ function randomSeed(){
   const y = rect.bottom - 30 - Math.random() * 60;
   if(!prefersReduced) popHeart(x, y);
 }
-let seedTimer = setInterval(randomSeed, 2200);
+let seedTimer = setInterval(randomSeed, 1500); // 1.5 seconds between each comment
 window.addEventListener('blur', ()=> clearInterval(seedTimer));
-window.addEventListener('focus', ()=> seedTimer = setInterval(randomSeed, 2200));
+window.addEventListener('focus', ()=> seedTimer = setInterval(randomSeed, 1500));
 
 // ---------- Composer submit ----------
 composer.addEventListener('submit', (e)=>{
