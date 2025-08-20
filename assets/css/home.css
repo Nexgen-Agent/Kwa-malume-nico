@@ -54,7 +54,11 @@ body{
      Keep this as is to avoid increasing the top bar size. */
 }
 .brand{display:flex; align-items:center; gap:10px}
-.logo{width:40px; height:40px; border-radius:12px}
+.logo{
+  width:60px; /* Increased to be more visible */
+  height:60px; /* Increased to be more visible */
+  border-radius:12px
+}
 .titles .name{font-weight:900; letter-spacing:.3px}
 .titles .tag{font-size:.85rem; opacity:.85}
 .links{
@@ -63,14 +67,15 @@ body{
   align-items:center; /* This is crucial for vertical alignment. */
 }
 .links a img {
-  width: 40px; /* Explicitly set the width to match the logo. */
-  height: 40px; /* Explicitly set the height to match the logo. */
+  width: 24px; /* Decreased to be smaller than the logo */
+  height: 24px; /* Decreased to be smaller than the logo */
   border-radius: 8px; /* Adds a bit of style. */
   transition: transform 0.3s ease; /* Smooth hover effect. */
 }
 .links a img:hover {
   transform: scale(1.1); /* Slight enlargement on hover. */
 }
+
 
 /* ---------- Hero ---------- */
 .hero{
