@@ -116,7 +116,7 @@ body{
 /* Composer */
 .composer {
   position: fixed;
-  bottom: 112px; /* Lifted the entire box up by 100px (12px + 100px) */
+  bottom: 50px; /* Lifted the entire box up by 38px (12px + 50px) */
   left: 12px;
   right: 12px;
   z-index: 12;
