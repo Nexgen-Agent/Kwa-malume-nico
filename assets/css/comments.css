@@ -84,15 +84,6 @@ body{
   transform: scale(1.1); /* Slight enlargement on hover. */
 }
 
-/* IG-style ticker on the left */
-.ticker{
-  align-self: start;
-  width:min(460px, 92vw);
-  height: clamp(240px, 40vh, 380px);
-  padding:12px; overflow:hidden;
-  display:flex; flex-direction:column; gap:8px;
-}
-
 /* Comment bubble */
 .bubble{
   display:inline-flex; align-items:center; gap:10px;
