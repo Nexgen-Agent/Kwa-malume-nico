@@ -242,3 +242,8 @@ textarea {
   transform: scale(1.1); /* Slight enlargement on hover. */
 }
 
+/* Footer */
+.foot{
+  margin:24px 12px; padding:10px 12px;
+  display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
+}
