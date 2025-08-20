@@ -87,28 +87,29 @@ body{
   display:inline-flex; align-items:center; gap:10px;
   max-width:100%;
   padding:10px 12px; border-radius:14px;
+  background: rgba(20,15,10,.30); /* Adds a dark transparent background */
+  backdrop-filter: blur(10px) saturate(120%); /* Creates the glass effect */
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border:1px solid rgba(255,255,255,.12); /* Adds a subtle white border */
   transform: translateY(100vh);
   opacity:0;
   will-change: transform, opacity;
 }
-.bubble.show{ animation: rise 4s linear forwards }
+.bubble.show{ animation: rise 12s linear forwards }
 @keyframes rise {
   0% {
     transform: translateY(100vh); /* Start from the very bottom of the viewport */
-    opacity: 0; /* Fully transparent */
-  }
-  25% {
-    opacity: 1; /* Fade in as it rises */
-  }
-  50% {
-    transform: translateY(0); /* Reach the middle of the screen */
-    opacity: 1;
+    opacity: 1; /* Stay fully visible as it moves up */
   }
   100% {
-    transform: translateY(-50vh); /* Continue to rise */
-    opacity: 0; /* Fade out and disappear */
+    transform: translateY(-100vh); /* Move to the to the middle of the viewport and beyond */
+    opacity: 0; /* Fade out in the middle */
   }
 }
+
+.user{font-weight:800; color:#fff}
+.text{opacity:.95}
+
 
 .user{font-weight:800; color:#fff}
 .text{opacity:.95}
