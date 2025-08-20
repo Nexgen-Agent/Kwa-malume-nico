@@ -116,12 +116,12 @@ body{
 /* Composer */
 .composer {
   position: fixed;
-  bottom: 12px;
+  bottom: 112px; /* Lifted the entire box up by 100px (12px + 100px) */
   left: 12px;
   right: 12px;
   z-index: 12;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* This stacks the rows vertically */
   gap: 10px;
   padding: 12px;
 }
@@ -129,8 +129,10 @@ body{
 .row {
   display: flex;
   gap: 10px;
+  flex-direction: column; /* This makes the inputs stack vertically within the row */
   flex-wrap: nowrap;
 }
+
     /* prevents overflow on small screens */
 }
 
