@@ -242,34 +242,3 @@ textarea {
   transform: scale(1.1); /* Slight enlargement on hover. */
 }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: rgba(20, 15, 10, .8);
-  backdrop-filter: blur(14px) saturate(120%);
-  display: flex; /* Use flexbox for a flexible layout */
-  justify-content: space-around; /* Distributes items evenly */
-  padding: 10px 0;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.bottom-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 0.9rem;
-  text-align: center;
-  flex-grow: 1; /* Allows links to grow and fill available space */
-  padding: 8px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.bottom-nav a img {
-  width: 24px;
-  height: 24px;
-  margin-bottom: 4px;
-}
