@@ -14,7 +14,7 @@ const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Elements
-const ticker = $('#ticker');
+const stage = $('#stage');
 const composer = $('#composer');
 const nameInput = $('#name');
 const commentInput = $('#comment');
@@ -70,13 +70,10 @@ function createBubble(user, text){
   return wrap;
 }
 
-// ---------- Add bubble to ticker (with reveal) ----------
-function addToTicker(user, text){
+// ---------- Add bubble to stage (with reveal) ----------
+function addToStage(user, text){
   const bubble = createBubble(user, text);
-  ticker.appendChild(bubble);
-  // keep only last N bubbles
-  const maxBubbles = 18;
-  while (ticker.children.length > maxBubbles) ticker.removeChild(ticker.firstChild);
+  stage.appendChild(bubble);
 
   // trigger reveal
   requestAnimationFrame(()=> bubble.classList.add('show'));
@@ -100,11 +97,11 @@ const seedTexts = [
 function randomSeed(){
   const name = seedUsers[Math.floor(Math.random()*seedUsers.length)];
   const text = seedTexts[Math.floor(Math.random()*seedTexts.length)];
-  addToTicker(name, text);
-  // random hearts burst near ticker
-  const rect = ticker.getBoundingClientRect();
+  addToStage(name, text);
+  // random hearts burst near the bottom of the stage
+  const rect = stage.getBoundingClientRect();
   const x = rect.left + 40 + Math.random() * 120;
-  const y = rect.top + rect.height - 30 - Math.random() * 60;
+  const y = rect.bottom - 30 - Math.random() * 60;
   if(!prefersReduced) popHeart(x, y);
 }
 let seedTimer = setInterval(randomSeed, 2200);
@@ -118,7 +115,7 @@ composer.addEventListener('submit', (e)=>{
   const text = commentInput.value.trim();
   if(!text) return;
 
-  addToTicker(user, text);
+  addToStage(user, text);
 
   // hearts where the send button is
   const rect = sendBtn.getBoundingClientRect();
