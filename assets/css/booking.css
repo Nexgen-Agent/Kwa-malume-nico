@@ -251,3 +251,7 @@ textarea {
   margin:24px 12px; padding:10px 12px;
   display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
 }
+
+.links a img {
+  filter: brightness(0) invert(1);
+}
