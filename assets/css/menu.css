@@ -202,3 +202,7 @@ body{
 .summary-block{ display:flex; flex-direction:column; gap:10px }
 .summary-line{ display:flex; justify-content:space-between }
 .summary-note{ opacity:.9 }
+
+.links a img {
+  filter: brightness(0) invert(1);
+}
