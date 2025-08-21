@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Malume Nico — Menu</title>
+  <link rel="stylesheet" href="assets/css/menu.css" />
+  <link rel="stylesheet" href="assets/css/home.css" /> </head>
+<body>
+
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+    </div>
+    <nav class="links">
+      <a href="index.html">
+        <img src="assets/img/icons/home.svg" alt="Home"/>
+      </a>
+      <a href="menu.html">
+        <img src="assets/img/icons/menu.svg" alt="Menu"/>
+      </a>
+      <a href="booking.html">
+        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
+      </a>
+      <a href="comments.html">
+        <img src="assets/img/icons/comments.svg" alt="Comments"/>
+      </a>
+    </nav>
+  </header>
+
+  <main class="menu-main">
+    <section class="menu-section glass water">
+      <header class="menu-head">
+        <h2>Our Menu</h2>
+        <p>A taste of unity in every bite. Find your favorite kota or try something new.</p>
+      </header>
+
+      <div class="menu-rail-wrap">
+        <button class="arrow left" aria-label="scroll left">
+          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="menu-rail" id="menu-items">
+          <div class="food-card" data-name="The Original Kota">
+            <img src="assets/img/menu/kota-original.jpg" alt="The Original Kota" class="food-img">
+            <div class="card-info">
+              <span class="food-name">The Original Kota</span>
+            </div>
+            <button class="btn add-to-cart-btn">
+              <span class="add-icon">+ Add</span>
+            </button>
+          </div>
+
+          <div class="food-card" data-name="Spicy Kota">
+            <img src="assets/img/menu/kota-spicy.jpg" alt="Spicy Kota" class="food-img">
+            <div class="card-info">
+              <span class="food-name">Spicy Kota</span>
+            </div>
+            <button class="btn add-to-cart-btn">
+              <span class="add-icon">+ Add</span>
+            </button>
+          </div>
+        </div>
+        <button class="arrow right" aria-label="scroll right">
+          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cart-preview glass" id="cart-preview">
+    <div class="cart-items" id="cart-items">
+      </div>
+    <div class="cart-summary">
+      <div class="summary-details">
+        <span>Total:</span>
+        <span class="total-price" id="total-price">R0.00</span>
+      </div>
+      <button class="btn gold" id="proceed-btn" style="display:none;">Proceed</button>
+    </div>
+  </footer>
+
+  <script src="assets/js/menu.js" defer></script>
+</body>
+</html>
