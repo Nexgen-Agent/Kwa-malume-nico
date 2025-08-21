@@ -1,160 +1,183 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Malume Nico — Menu</title>
-  <link rel="stylesheet" href="assets/css/menu.css" />
-  <link rel="stylesheet" href="assets/css/<body>
-
-  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
-    <source src="assets/video/venue.webm" type="video/webm" />
-    <source src="assets/video/venue.mp4" type="video/mp4" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu | Malume Nico’s</title>
+  <link rel="stylesheet" href="assets/css/menu.css"/>
+</head>
+<body>
+  <!-- Background video (same style as home) -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="assets/malume-nico.mp4" type="video/mp4"/>
   </video>
   <div class="video-overlay"></div>
 
-  <header class="topbar glass">
+  <!-- Topbar (identical structure/classes to home) -->
+  <header class="topbar glass water">
     <div class="brand">
-      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+      <img class="logo" src="assets/img/logo.png" alt="Malume Nico’s"/>
+      <div class="titles">
+        <div class="name">Malume Nico’s</div>
+        <div class="tag">Good vibes. Great food.</div>
+      </div>
     </div>
     <nav class="links">
-      <a href="index.html">
-        <img src="assets/img/icons/home.svg" alt="Home"/>
-      </a>
-      <a href="menu.html">
-        <img src="assets/img/icons/menu.svg" alt="Menu"/>
-      </a>
-      <a href="booking.html">
-        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
-      </a>
-      <a href="comments.html">
-        <img src="assets/img/icons/comments.svg" alt="Comments"/>
+      <a class="link" href="index.html">Home</a>
+      <a class="link active" href="menu.html">Menu</a>
+      <a class="link" href="booking.html">Bookings</a>
+      <a class="link" href="comments.html">Comments</a>
+      <a class="link" href="menu.html">
+        <img src="assets/img/menu-icon.png" alt="Menu"/>
       </a>
     </nav>
   </header>
 
-  <main class="menu-main">
-    <section class="menu-section glass water">
-      <header class="menu-head">
-        <h2>Our Menu</h2>
-        <p>A taste of unity in every bite. Find your favorite kota or try something new.</p>
-      </header>
+  <!-- Hero -->
+  <section class="hero glass water">
+    <h1 class="hero-title">Find Your Flavor</h1>
+    <p class="hero-sub">Scroll, tap “Add”, and we’ll guide you the rest of the way.</p>
+    <div class="hero-actions">
+      <a class="btn gold" href="#menu-rail">Browse Menu</a>
+    </div>
+  </section>
 
-      <div class="menu-rail-wrap">
-        <button class="arrow left" aria-label="scroll left">
-          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <!-- Menu Rail -->
+  <section id="menu-rail" class="moment glass water">
+    <div class="moment-head">
+      <h2>Today’s Picks</h2>
+      <p>Swipe or use arrows. Tap “Add” to fill your cart.</p>
+    </div>
+
+    <div class="rail-wrap">
+      <button class="arrow left" aria-label="Scroll left">‹</button>
+      <div class="rail" id="rail"></div>
+      <button class="arrow right" aria-label="Scroll right">›</button>
+    </div>
+  </section>
+
+  <!-- Bottom Cart Bar -->
+  <div class="cart-bar glass">
+    <div class="cart-info">
+      <span id="cart-count">0 items</span>
+      <span class="divider">•</span>
+      <span id="cart-total">R0.00</span>
+    </div>
+    <button id="open-cart" class="btn gold" disabled>Proceed</button>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="drawer" id="cart-drawer" aria-hidden="true">
+    <div class="drawer-panel glass water">
+      <div class="drawer-head">
+        <h3>Your Order</h3>
+        <button id="close-cart" class="btn ghost">✕</button>
+      </div>
+
+      <div id="cart-list" class="cart-list"></div>
+
+      <div class="cart-totals">
+        <div class="row">
+          <span>Subtotal</span>
+          <strong id="subtotal">R0.00</strong>
+        </div>
+        <div class="row" id="delivery-row" hidden>
+          <span>Delivery Fee</span>
+          <strong id="delivery-fee">R0.00</strong>
+        </div>
+        <div class="row grand">
+          <span>Total</span>
+          <strong id="grand-total">R0.00</strong>
+        </div>
+        <p class="hint" id="free-delivery-hint">Free delivery on orders from R280 🚚✨</p>
+      </div>
+
+      <div class="drawer-actions">
+        <button id="continue-to-mode" class="btn gold" disabled>Continue</button>
+      </div>
+    </div>
+    <div class="drawer-backdrop" id="cart-backdrop"></div>
+  </div>
+
+  <!-- Mode Step -->
+  <div class="drawer" id="mode-drawer" aria-hidden="true">
+    <div class="drawer-panel glass water">
+      <div class="drawer-head">
+        <h3>How would you like to get your food?</h3>
+        <button id="close-mode" class="btn ghost">✕</button>
+      </div>
+
+      <div class="mode-grid">
+        <button class="mode-card" data-mode="dinein">
+          <div class="mode-title">Dine-In (QR)</div>
+          <div class="mode-sub">Paste your Table Number. No contact info needed.</div>
         </button>
-        <div class="menu-rail" id="menu-items">
-          <div class="food-card" data-name="Item 1">
-            <img src="assets/img/menu/1.jpg" alt="Menu Item 1" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 1</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
+        <button class="mode-card" data-mode="pickup">
+          <div class="mode-title">Self Pickup</div>
+          <div class="mode-sub">We’ll prepare it. You collect.</div>
+        </button>
+        <button class="mode-card" data-mode="delivery">
+          <div class="mode-title">Delivery</div>
+          <div class="mode-sub">Free delivery from R280.</div>
+        </button>
+      </div>
+
+      <!-- Dine-In -->
+      <form id="form-dinein" class="mode-form" hidden>
+        <label for="table-number">Paste Table Number</label>
+        <input id="table-number" type="text" placeholder="e.g. T-14" required/>
+        <div class="drawer-actions">
+          <button type="button" id="to-summary-dinein" class="btn gold">Review Order</button>
+        </div>
+      </form>
+
+      <!-- Pickup / Delivery Contact -->
+      <form id="form-contact" class="mode-form" hidden>
+        <div class="grid2">
+          <div>
+            <label for="contact-phone">Phone (required)</label>
+            <input id="contact-phone" type="tel" placeholder="e.g. 071 234 5678" required/>
           </div>
-          <div class="food-card" data-name="Item 2">
-            <img src="assets/img/menu/2.jpg" alt="Menu Item 2" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 2</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 3">
-            <img src="assets/img/menu/3.jpg" alt="Menu Item 3" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 3</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 4">
-            <img src="assets/img/menu/4.jpg" alt="Menu Item 4" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 4</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 5">
-            <img src="assets/img/menu/5.jpg" alt="Menu Item 5" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 5</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 6">
-            <img src="assets/img/menu/6.jpg" alt="Menu Item 6" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 6</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 7">
-            <img src="assets/img/menu/7.jpg" alt="Menu Item 7" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 7</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 8">
-            <img src="assets/img/menu/8.jpg" alt="Menu Item 8" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 8</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 9">
-            <img src="assets/img/menu/9.jpg" alt="Menu Item 9" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 9</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
-          </div>
-          <div class="food-card" data-name="Item 10">
-            <img src="assets/img/menu/10.jpg" alt="Menu Item 10" class="food-img">
-            <div class="card-info">
-              <span class="food-name">Item 10</span>
-            </div>
-            <button class="btn add-to-cart-btn">
-              <span class="add-icon">+ Add</span>
-            </button>
+          <div>
+            <label for="contact-email">Email (required)</label>
+            <input id="contact-email" type="email" placeholder="you@example.com" required/>
           </div>
         </div>
-        <button class="arrow right" aria-label="scroll right">
-          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-    </section>
-  </main>
 
-  <footer class="cart-preview glass" id="cart-preview">
-    <div class="cart-items" id="cart-items">
-      </div>
-    <div class="cart-summary">
-      <div class="summary-details">
-        <span>Total:</span>
-        <span class="total-price" id="total-price">R0.00</span>
-      </div>
-      <button class="btn gold" id="proceed-btn" style="display:none;">Proceed</button>
+        <div id="delivery-only" hidden>
+          <label for="address">Address (optional if sharing location)</label>
+          <input id="address" type="text" placeholder="Street, suburb, city"/>
+          <div class="row buttons">
+            <button type="button" id="share-location" class="btn">Share Live Location</button>
+            <span id="loc-status" class="hint"></span>
+          </div>
+        </div>
+
+        <div class="drawer-actions">
+          <button type="button" id="to-summary-contact" class="btn gold">Review Order</button>
+        </div>
+      </form>
     </div>
-  </footer>
+    <div class="drawer-backdrop" id="mode-backdrop"></div>
+  </div>
 
-  <script src="assets/js/menu.js" defer></script>
+  <!-- Summary Step -->
+  <div class="drawer" id="summary-drawer" aria-hidden="true">
+    <div class="drawer-panel glass water">
+      <div class="drawer-head">
+        <h3>Confirm Your Order</h3>
+        <button id="close-summary" class="btn ghost">✕</button>
+      </div>
+
+      <div id="summary-block" class="summary-block"></div>
+
+      <div class="drawer-actions">
+        <button id="place-order" class="btn gold">Place My Order</button>
+      </div>
+    </div>
+    <div class="drawer-backdrop" id="summary-backdrop"></div>
+  </div>
+
+  <script src="assets/js/menu.js"></script>
 </body>
 </html>
