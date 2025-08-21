@@ -1,12 +1,4 @@
-/* ===========================
-   Malume Nico — Menu (Interactive Order)
-   - Home page styling base (glass, water, buttons)
-   - 3x larger, horizontally scrolling food cards
-   - Dynamic basket/cart preview at bottom
-   - Performance tuned
-=========================== */
-
-/* ---------- Theme & base (same tokens as comments) ---------- */
+/* ---------- Theme & base (duplicated from home for 1:1 look) ---------- */
 :root{
   --gold:#c89b2d;
   --gold-dark:#9a6f16;
@@ -15,10 +7,10 @@
   --wash: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.55));
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%}
+html,body{margin:0;padding:0}
 body{
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:#fff; background:#fff; overflow-x:hidden;
+  color:#fff; background:#fff;
 }
 
 /* ---------- Background video ---------- */
@@ -26,14 +18,17 @@ body{
   position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;
   filter: saturate(1.05) brightness(.9) contrast(1.05);
 }
+.video-overlay,
+.video-overlay::before{
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+}
 .video-overlay{
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
   background:
     radial-gradient(60% 60% at 50% 20%, rgba(200,155,45,.16), transparent 60%),
     var(--wash);
 }
 
-/* ---------- Glass & Water (same look) ---------- */
+/* ---------- Glass & Water ---------- */
 .glass{
   background: rgba(20,15,10,.30);
   border: 1px solid rgba(255,255,255,.18);
@@ -60,25 +55,20 @@ body{
   padding:10px 12px;
 }
 .brand{display:flex; align-items:center; gap:10px}
-.logo{
-  width:100px;
-  height:100px;
-  border-radius:12px
+.logo{width:40px; height:40px; border-radius:12px}
+.titles .name{font-weight:900; letter-spacing:.3px}
+.titles .tag{font-size:.85rem; opacity:.85}
+.links{display:flex; gap:14px; align-items:center}
+.link{color:#fff; opacity:.9; text-decoration:none; font-weight:700}
+.link.active,.link:hover{opacity:1}
+
+/* ---------- Hero ---------- */
+.hero{
+  margin:110px 12px 24px; padding:32px 20px; text-align:center;
 }
-.links{
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
-.links a img {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-.links a img:hover {
-  transform: scale(1.1);
-}
+.hero-title{ font-size: clamp(28px, 6vw, 54px); line-height:1.05; font-weight:900; letter-spacing:.5px; }
+.hero-sub{ margin-top:14px; opacity:.95 }
+.hero-actions{ margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap }
 
 /* ---------- Buttons ---------- */
 .btn{
@@ -95,151 +85,103 @@ body{
   box-shadow: 0 12px 28px rgba(200,155,45,.22);
 }
 .btn.ghost{ background: transparent }
-.btn.glow-press{ animation: haloFade .8s ease forwards }
-@keyframes haloFade{ to{ box-shadow: 0 0 0 18px rgba(200,155,45,0) } }
-.gold-ripple{
-  position:absolute; border-radius:50%; pointer-events:none;
-  background: radial-gradient(circle, rgba(255,255,255,.85) 0%, rgba(255,255,255,.6) 30%, rgba(200,155,45,.35) 60%, rgba(200,155,45,0) 70%);
-  transform: translate(-50%,-50%) scale(0); opacity:.9; mix-blend-mode: screen;
-  animation: rippleOut .7s cubic-bezier(.2,.8,.2,1) forwards;
-}
-@keyframes rippleOut{ to{ transform: translate(-50%,-50%) scale(1.8); opacity:0 } }
 
-/* ---------- Menu Section (new styles) ---------- */
-.menu-main{
-  padding: 12px 0 120px; /* Padding for the fixed cart at the bottom */
-}
-.menu-section{
-  margin:110px 12px 24px; padding:18px 12px;
-}
-.menu-head h2{
+/* ---------- Menu Rail ---------- */
+.moment{ margin:24px 12px; padding:18px 12px; }
+.moment-head h2{
   margin:0 0 6px; font-size: clamp(22px, 4.8vw, 34px); font-weight:900;
 }
-.menu-head p{ margin:0 0 12px; opacity:.95 }
-
-.menu-rail-wrap{
-  position:relative; padding:8px 40px;
-}
+.moment-head p{ margin:0 0 12px; opacity:.95 }
+.rail-wrap{ position:relative; padding:8px 40px }
 .arrow{
   position:absolute; top:50%; transform:translateY(-50%); z-index:2;
   width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.18);
   background: rgba(0,0,0,.4); color:#fff; display:grid; place-items:center; cursor:pointer;
   transition: transform .2s ease, box-shadow .2s ease;
 }
+.arrow.left{ left:6px } .arrow.right{ right:6px }
 .arrow:hover{ transform: translateY(-50%) scale(1.05) }
-.arrow.left{ left:6px }
-.arrow.right{ right:6px }
 
-.menu-rail{
-  display:grid; grid-auto-flow:column; gap:20px; align-items:center; /* Increased gap for larger cards */
+.rail{
+  display:grid; grid-auto-flow:column; gap:12px; align-items:stretch;
   overflow-x:auto; overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory; scrollbar-width:none;
 }
-.menu-rail::-webkit-scrollbar{ display:none }
+.rail::-webkit-scrollbar{ display:none }
 
-/* The new, 3x larger food cards */
+/* Food Card */
 .food-card{
-  width: clamp(660px, 126vw, 1020px);
-  height: clamp(450px, 90vw, 660px);
+  width: clamp(220px, 42vw, 320px);
   scroll-snap-align:center;
-  position: relative;
-  overflow: hidden;
-  border-radius:18px;
+  border-radius:16px; overflow:hidden; background:#222;
   box-shadow: 0 8px 26px rgba(0,0,0,.35);
-  transform: perspective(800px) translateZ(0);
-  transition: transform .2s ease, box-shadow .2s ease;
-  background:#222;
+  display:flex; flex-direction:column;
 }
-.food-card:hover{ transform: perspective(800px) translateZ(18px) }
+.food-card img{ width:100%; height:180px; object-fit:cover }
+.food-body{ padding:12px; display:flex; flex-direction:column; gap:6px }
+.food-title{ font-weight:900 }
+.food-price{ opacity:.95 }
+.food-actions{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:6px }
+.qty-chip{ opacity:.85; font-weight:700 }
 
-.food-img{
-  width:100%; height:100%; object-fit: cover;
-  transform: scale(1.01); transition: transform 0.3s ease;
+/* ---------- Cart Bar ---------- */
+.cart-bar{
+  position:fixed; left:12px; right:12px; bottom:12px; z-index:20;
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
 }
-.food-card:hover .food-img{
-  transform: scale(1.05);
-}
+.cart-info{ display:flex; gap:10px; align-items:center }
+.cart-info .divider{ opacity:.6 }
 
-.card-info{
-  position:absolute; bottom:0; left:0; right:0;
-  padding:12px;
-  background: rgba(0,0,0,.5);
-  backdrop-filter: blur(8px) saturate(120%);
-  display:flex; justify-content:space-between; align-items:center;
+/* ---------- Drawer (Steps) ---------- */
+.drawer{ position:fixed; inset:0; display:none }
+.drawer[aria-hidden="false"]{ display:block }
+.drawer-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45) }
+.drawer-panel{
+  position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+  width:min(860px, 96vw); max-height:86vh; overflow:auto;
+  margin:0 auto 12px; padding:16px; border-radius:18px;
 }
-.food-name{
-  font-size:clamp(1rem, 3vw, 1.5rem); font-weight:700;
-}
-.add-to-cart-btn{
-  font-size:1rem; padding: 8px 14px;
-}
+.drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px }
+.drawer-actions{ margin-top:10px; display:flex; justify-content:flex-end; gap:8px }
 
-/* ---------- Cart Preview ---------- */
-.cart-preview{
-  position:fixed; bottom:12px; left:12px; right:12px;
-  z-index: 12;
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  transform: translateY(120%);
-  transition: transform 0.3s ease-out;
-}
-.cart-preview.active{
-  transform: translateY(0);
-}
-
-.cart-summary{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:10px;
-}
-.summary-details{
-  font-size:1.2rem; font-weight:700;
-}
-.total-price{
-  color: var(--gold);
-}
-.cart-items{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  font-size:.9rem;
-}
+/* Cart list */
+.cart-list{ display:flex; flex-direction:column; gap:10px }
 .cart-item{
-  display:grid;
-  grid-template-columns: 1fr 60px 80px;
-  gap: 10px;
-  align-items:center;
+  display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center;
+  padding:10px; border:1px solid rgba(255,255,255,.12); border-radius:12px; background:rgba(0,0,0,.25);
 }
-.item-name{
-  font-weight: 500;
-}
-.item-quantity{
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.item-price{
-  text-align: right;
-  font-weight: 700;
-}
-.quantity-btn{
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.1);
-  color:#fff;
-  border-radius:4px;
-  width:24px;
-  height:24px;
-  display:grid; place-items:center;
-  cursor:pointer;
-  transition: background .2s ease;
-}
-.quantity-btn:hover{
-  background:rgba(255,255,255,.2);
-}
+.item-title{ font-weight:800 }
+.item-qty{ display:flex; align-items:center; gap:8px }
+.qty-btn{ width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,255,255,.18); background:transparent; color:#fff; font-weight:900; cursor:pointer }
+.item-price{ font-weight:700 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .water::after, .food-card, .btn, .cart-preview{ animation:none !important; transition:none !important }
-}
+/* Totals */
+.cart-totals{ margin-top:8px; padding-top:8px; border-top:1px dashed rgba(255,255,255,.25) }
+.cart-totals .row{ display:flex; justify-content:space-between; margin:6px 0 }
+.cart-totals .row.grand{ font-size:1.1rem; font-weight:900 }
+.hint{ font-size:.9rem; opacity:.85 }
 
+/* Mode cards */
+.mode-grid{ display:grid; grid-template-columns:1fr; gap:10px }
+@media (min-width:640px){ .mode-grid{ grid-template-columns:repeat(3,1fr) } }
+.mode-card{
+  border:1px solid rgba(255,255,255,.16); border-radius:14px; padding:14px; cursor:pointer;
+  background:rgba(0,0,0,.25); transition:transform .15s ease;
+}
+.mode-card:hover{ transform:translateY(-2px) }
+.mode-title{ font-weight:900 }
+.mode-sub{ opacity:.9 }
+
+/* Forms */
+.mode-form{ margin-top:12px }
+.mode-form label{ display:block; font-weight:700; margin-bottom:6px }
+.mode-form input{
+  width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.2);
+  background: rgba(0,0,0,.35); color:#fff; outline:none;
+}
+.grid2{ display:grid; grid-template-columns:1fr; gap:10px }
+@media (min-width:640px){ .grid2{ grid-template-columns:1fr 1fr } }
+
+.summary-block{ display:flex; flex-direction:column; gap:10px }
+.summary-line{ display:flex; justify-content:space-between }
+.summary-note{ opacity:.9 }
