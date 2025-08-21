@@ -212,3 +212,7 @@ input::placeholder{color:rgba(255,255,255,.7)}
     transition: none !important;
   }
 }
+
+.links a img {
+  filter: brightness(0) invert(1);
+}
