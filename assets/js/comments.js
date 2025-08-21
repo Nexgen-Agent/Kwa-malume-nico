@@ -155,3 +155,12 @@ window.addEventListener('load', ()=>{
   const v = document.querySelector('.bg-video');
   if (v && v.paused) v.play().catch(()=>{ /* ignored */ });
 });
+
+function addToStage(user, text){
+  const bubble = createBubble(user, text);
+  bubble.style.marginBottom = '12px'; // This line adds vertical space
+  stage.appendChild(bubble);
+
+  // trigger reveal
+  requestAnimationFrame(()=> bubble.classList.add('show'));
+}
