@@ -4,17 +4,18 @@ const DELIVERY_FEE = 35;             // R (used only if below threshold)
 
 /* Simple menu data (replace images/prices as needed) */
 const MENU = [
-  { id: 'bk_steak',   title: 'TITANIC FAMILY KOTA',      price: 100, img: 'assets/img/menu/1.jpg' },
-  { id: 'bk_wings',   title: 'DUNKED WINGS (6pc)',   price: 75,  img: 'assets/img/menu/2.jpg' },
-  { id: 'bk_burger',  title: 'BUGATTI KOTA,        price: 60, img: 'assets/img/menu/3.jpg' },
-  { id: 'bk_ribs',    title: 'BURGER,           price: 60, img: 'assets/img/menu/4.jpg' },
-  { id: 'bk_salad',   title: 'RANGE ROVER KOTA',  price: 50,  img: 'assets/img/menu/5.jpg' },
-  { id: 'bk_platter', title: 'DAGWOOD',      price: 45, img: 'assets/img/menu/6.jpg' },
-{ id: 'bk_burger',  title: 'BMW M4 KOTA,        price: 40, img: 'assets/img/menu/7.jpg' },
-  { id: 'bk_ribs',    title: 'DESSERT,           price: 40, img: 'assets/img/menu/8.jpg' },
-  { id: 'bk_salad',   title: 'OMODA KOTA',  price: 35,  img: 'assets/img/menu/9.jpg' },
-  { id: 'bk_platter', title: 'HAVAL KOTA',      price: 30, img: 'assets/img/menu/10.jpg' },
+  { id: 'bk_steak', title: 'TITANIC FAMILY KOTA', price: 100, img: 'assets/img/menu/1.jpg' },
+  { id: 'bk_wings', title: 'DUNKED WINGS (6pc)', price: 75, img: 'assets/img/menu/2.jpg' },
+  { id: 'bk_burger', title: 'BUGATTI KOTA', price: 60, img: 'assets/img/menu/3.jpg' },
+  { id: 'bk_ribs', title: 'BURGER', price: 60, img: 'assets/img/menu/4.jpg' },
+  { id: 'bk_salad', title: 'RANGE ROVER KOTA', price: 50, img: 'assets/img/menu/5.jpg' },
+  { id: 'bk_platter', title: 'DAGWOOD', price: 45, img: 'assets/img/menu/6.jpg' },
+  { id: 'bk_burger', title: 'BMW M4 KOTA', price: 40, img: 'assets/img/menu/7.jpg' },
+  { id: 'bk_ribs', title: 'DESSERT', price: 40, img: 'assets/img/menu/8.jpg' },
+  { id: 'bk_salad', title: 'OMODA KOTA', price: 35, img: 'assets/img/menu/9.jpg' },
+  { id: 'bk_platter', title: 'HAVAL KOTA', price: 30, img: 'assets/img/menu/10.jpg' },
 ];
+
 
 /* State */
 const cart = new Map(); // id -> {id, title, price, qty}
