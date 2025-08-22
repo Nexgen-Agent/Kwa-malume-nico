@@ -8,8 +8,7 @@
 </head>
 <body>
 
-    <!-- Background video (same as comments page) -->
-  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
     <source src="assets/video/venue.webm" type="video/webm" />
     <source src="assets/video/venue.mp4" type="video/mp4" />
   </video>
@@ -35,7 +34,6 @@
     </nav>
   </header>
 
-  <!-- Hero -->
   <section class="hero glass water">
     <h1 class="hero-title">Find Your Flavor</h1>
     <p class="hero-sub">Scroll, tap “Add”, and we’ll guide you the rest of the way.</p>
@@ -44,7 +42,6 @@
     </div>
   </section>
 
-  <!-- Menu Rail -->
   <section id="menu-rail" class="moment glass water">
     <div class="moment-head">
       <h2>Today’s Picks</h2>
@@ -53,12 +50,11 @@
 
     <div class="rail-wrap">
       <button class="arrow left" aria-label="Scroll left">‹</button>
-      <div class="rail" id="rail"></div>
+      <div class="rail" id="menu-items"></div>
       <button class="arrow right" aria-label="Scroll right">›</button>
     </div>
   </section>
 
-  <!-- Bottom Cart Bar -->
   <div class="cart-bar glass">
     <div class="cart-info">
       <span id="cart-count">0 items</span>
@@ -68,7 +64,6 @@
     <button id="open-cart" class="btn gold" disabled>Proceed</button>
   </div>
 
-  <!-- Cart Drawer -->
   <div class="drawer" id="cart-drawer" aria-hidden="true">
     <div class="drawer-panel glass water">
       <div class="drawer-head">
@@ -101,7 +96,6 @@
     <div class="drawer-backdrop" id="cart-backdrop"></div>
   </div>
 
-  <!-- Mode Step -->
   <div class="drawer" id="mode-drawer" aria-hidden="true">
     <div class="drawer-panel glass water">
       <div class="drawer-head">
@@ -124,7 +118,6 @@
         </button>
       </div>
 
-      <!-- Dine-In -->
       <form id="form-dinein" class="mode-form" hidden>
         <label for="table-number">Paste Table Number</label>
         <input id="table-number" type="text" placeholder="e.g. T-14" required/>
@@ -133,7 +126,6 @@
         </div>
       </form>
 
-      <!-- Pickup / Delivery Contact -->
       <form id="form-contact" class="mode-form" hidden>
         <div class="grid2">
           <div>
@@ -163,7 +155,6 @@
     <div class="drawer-backdrop" id="mode-backdrop"></div>
   </div>
 
-  <!-- Summary Step -->
   <div class="drawer" id="summary-drawer" aria-hidden="true">
     <div class="drawer-panel glass water">
       <div class="drawer-head">
@@ -182,4 +173,6 @@
 
   <script src="assets/js/menu.js"></script>
 </body>
+</html>
+
 </html>
