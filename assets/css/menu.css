@@ -53,13 +53,11 @@ body{
   position:sticky; top:12px; margin:12px; z-index:10;
   display:flex; align-items:center; justify-content:space-between;
   padding:10px 12px;
-  /* The padding here is what determines the overall height.
-     Keep this as is to avoid increasing the top bar size. */
 }
 .brand{display:flex; align-items:center; gap:10px}
 .logo{
-  width:100px; /* Logo is now doubled in size */
-  height:100px; /* Logo is now doubled in size */
+  width:100px;
+  height:100px;
   border-radius:12px
 }
 .titles .name{font-weight:900; letter-spacing:.3px}
@@ -67,16 +65,16 @@ body{
 .links{
   display:flex;
   gap:14px;
-  align-items:center; /* This is crucial for vertical alignment. */
+  align-items:center;
 }
 .links a img {
-  width: 40px; /* Icons are now the original logo size */
-  height: 40px; /* Icons are now the original logo size */
-  border-radius: 8px; /* Adds a bit of style. */
-  transition: transform 0.3s ease; /* Smooth hover effect. */
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 .links a img:hover {
-  transform: scale(1.1); /* Slight enlargement on hover. */
+  transform: scale(1.1);
 }
 
 /* ---------- Hero ---------- */
