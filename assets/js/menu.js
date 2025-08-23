@@ -142,3 +142,7 @@ function checkout() {
     alert("Please select Dine-in or Delivery first.");
   }
 }
+
+if (document.querySelector(".menu-page")) {
+  // safe to run menu.js code
+}
