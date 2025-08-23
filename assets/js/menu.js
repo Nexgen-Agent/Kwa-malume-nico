@@ -1,4 +1,4 @@
-// -------------------- Menu Data --------------------
+// Menu data
 const menuItems = [
   { id: 1, name: "Titanic Family Kota", price: 100, img: "assets/img/menu/1.jpg" },
   { id: 2, name: "Danked Wings", price: 75, img: "assets/img/menu/2.jpg" },
@@ -15,69 +15,42 @@ const menuItems = [
 let cart = [];
 let orderType = "";
 
-// -------------------- Render Menu --------------------
+// Render menu
 const menuDiv = document.getElementById("menu");
-
 menuItems.forEach(item => {
   const card = document.createElement("div");
-  card.classList.add("card", "glass", "water");
-
+  card.classList.add("card");
   card.innerHTML = `
-    <img src="${item.img}" alt="${item.name}" class="menu-img">
+    <img src="${item.img}" alt="${item.name}">
     <div class="card-body">
       <h3>${item.name}</h3>
       <p>R${item.price}</p>
-      <button class="btn gold" onclick="addToCart(${item.id}, event)">Add to Cart</button>
+      <button onclick="addToCart(${item.id})">Add to Cart</button>
     </div>
   `;
-
   menuDiv.appendChild(card);
 });
 
-// -------------------- Add to Cart --------------------
-function addToCart(id, e) {
+// Add to cart
+function addToCart(id) {
   const item = menuItems.find(m => m.id === id);
-
-  // if already in cart, increase qty
-  const existing = cart.find(i => i.id === id);
-  if (existing) {
-    existing.qty++;
-  } else {
-    cart.push({ ...item, qty: 1 });
-  }
+  cart.push(item);
   updateCart();
 
-  // Ripple animation
-  const btn = e.target;
-  const ripple = document.createElement("span");
-  ripple.classList.add("gold-ripple");
-  ripple.style.left = `${e.offsetX}px`;
-  ripple.style.top = `${e.offsetY}px`;
-  btn.appendChild(ripple);
-  setTimeout(() => ripple.remove(), 700);
-
-  // Glow press effect
-  btn.classList.add("glow-press");
-  setTimeout(() => btn.classList.remove("glow-press"), 800);
+  // Small animation (reaction)
+  alert(`${item.name} added ✅`);
 }
 
-// -------------------- Update Cart --------------------
+// Update cart
 function updateCart() {
   const cartList = document.getElementById("cart-items");
   cartList.innerHTML = "";
 
   let total = 0;
   cart.forEach((item, index) => {
-    total += item.price * item.qty;
-
+    total += item.price;
     const li = document.createElement("li");
-    li.classList.add("cart-item");
-
-    li.innerHTML = `
-      ${item.name} x${item.qty} - R${item.price * item.qty}
-      <button class="btn ghost" onclick="removeFromCart(${index})">✖</button>
-    `;
-
+    li.textContent = `${item.name} - R${item.price}`;
     cartList.appendChild(li);
   });
 
@@ -86,25 +59,12 @@ function updateCart() {
   if (orderType === "delivery") {
     document.getElementById("delivery-note").textContent =
       total >= 280 ? "🎉 Free Delivery Applied!" : "🚚 Delivery Fee Applies (Orders < R280)";
-  } else {
-    document.getElementById("delivery-note").textContent = "";
   }
 }
 
-// -------------------- Remove from Cart --------------------
-function removeFromCart(index) {
-  if (cart[index].qty > 1) {
-    cart[index].qty--;
-  } else {
-    cart.splice(index, 1);
-  }
-  updateCart();
-}
-
-// -------------------- Set Order Type --------------------
+// Set order type
 function setOrderType(type) {
   orderType = type;
-
   if (type === "dinein") {
     document.getElementById("dinein-section").classList.remove("hidden");
     document.getElementById("delivery-section").classList.add("hidden");
@@ -112,11 +72,9 @@ function setOrderType(type) {
     document.getElementById("delivery-section").classList.remove("hidden");
     document.getElementById("dinein-section").classList.add("hidden");
   }
-
-  updateCart(); // refresh delivery note if needed
 }
 
-// -------------------- Checkout --------------------
+// Checkout
 function checkout() {
   if (cart.length === 0) {
     alert("Your cart is empty!");
@@ -141,8 +99,4 @@ function checkout() {
   } else {
     alert("Please select Dine-in or Delivery first.");
   }
-}
-
-if (document.querySelector(".menu-page")) {
-  // safe to run menu.js code
 }
