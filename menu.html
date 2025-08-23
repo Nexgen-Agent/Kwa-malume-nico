@@ -1,178 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Menu | Malume Nico’s</title>
-  <link rel="stylesheet" href="assets/css/menu.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kota Menu</title>
+  <link rel="stylesheet" href="menu.css">
 </head>
 <body>
 
-    <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
-    <source src="assets/video/venue.webm" type="video/webm" />
-    <source src="assets/video/venue.mp4" type="video/mp4" />
-  </video>
-  <div class="video-overlay"></div>
-
-  <header class="topbar glass">
-    <div class="brand">
-      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
-    </div>
-    <nav class="links">
-      <a href="index.html">
-        <img src="assets/img/icons/home.svg" alt="Home"/>
-      </a>
-      <a href="menu.html">
-        <img src="assets/img/icons/menu.svg" alt="Menu"/>
-      </a>
-      <a href="booking.html">
-        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
-      </a>
-      <a href="comments.html">
-        <img src="assets/img/icons/comments.svg" alt="Comments"/>
-      </a>
-    </nav>
+  <header>
+    <h1>🍔 Kota House Menu</h1>
+    <p>Select your meals easily — no waiting, no stress.</p>
   </header>
 
-  <section class="hero glass water">
-    <h1 class="hero-title">Find Your Flavor</h1>
-    <p class="hero-sub">Scroll, tap “Add”, and we’ll guide you the rest of the way.</p>
-    <div class="hero-actions">
-      <a class="btn gold" href="#menu-rail">Browse Menu</a>
-    </div>
+  <!-- Dine-in or Delivery -->
+  <section id="order-type">
+    <button onclick="setOrderType('dinein')">🍽️ Dine-In</button>
+    <button onclick="setOrderType('delivery')">🚚 Delivery</button>
   </section>
 
-  <section id="menu-rail" class="moment glass water">
-    <div class="moment-head">
-      <h2>Today’s Picks</h2>
-      <p>Swipe or use arrows. Tap “Add” to fill your cart.</p>
-    </div>
-
-    <div class="rail-wrap">
-      <button class="arrow left" aria-label="Scroll left">‹</button>
-      <div class="rail" id="menu-items"></div>
-      <button class="arrow right" aria-label="Scroll right">›</button>
-    </div>
+  <!-- Dine-in input (only table number needed) -->
+  <section id="dinein-section" class="hidden">
+    <input type="text" id="tableNumber" placeholder="Enter your Table Number">
   </section>
 
-  <div class="cart-bar glass">
-    <div class="cart-info">
-      <span id="cart-count">0 items</span>
-      <span class="divider">•</span>
-      <span id="cart-total">R0.00</span>
-    </div>
-    <button id="open-cart" class="btn gold" disabled>Proceed</button>
-  </div>
+  <!-- Delivery inputs (phone + email) -->
+  <section id="delivery-section" class="hidden">
+    <input type="text" id="phone" placeholder="Enter your Phone Number">
+    <input type="email" id="email" placeholder="Enter your Email">
+  </section>
 
-  <div class="drawer" id="cart-drawer" aria-hidden="true">
-    <div class="drawer-panel glass water">
-      <div class="drawer-head">
-        <h3>Your Order</h3>
-        <button id="close-cart" class="btn ghost">✕</button>
-      </div>
+  <!-- Menu -->
+  <main id="menu">
+    <!-- Meals will be injected here by menu.js -->
+  </main>
 
-      <div id="cart-list" class="cart-list"></div>
+  <!-- Cart -->
+  <aside id="cart">
+    <h2>Your Cart 🛒</h2>
+    <ul id="cart-items"></ul>
+    <p id="total">Total: R0</p>
+    <p id="delivery-note"></p>
+    <button onclick="checkout()">✅ Checkout</button>
+  </aside>
 
-      <div class="cart-totals">
-        <div class="row">
-          <span>Subtotal</span>
-          <strong id="subtotal">R0.00</strong>
-        </div>
-        <div class="row" id="delivery-row" hidden>
-          <span>Delivery Fee</span>
-          <strong id="delivery-fee">R0.00</strong>
-        </div>
-        <div class="row grand">
-          <span>Total</span>
-          <strong id="grand-total">R0.00</strong>
-        </div>
-        <p class="hint" id="free-delivery-hint">Free delivery on orders from R280 🚚✨</p>
-      </div>
-
-      <div class="drawer-actions">
-        <button id="continue-to-mode" class="btn gold" disabled>Continue</button>
-      </div>
-    </div>
-    <div class="drawer-backdrop" id="cart-backdrop"></div>
-  </div>
-
-  <div class="drawer" id="mode-drawer" aria-hidden="true">
-    <div class="drawer-panel glass water">
-      <div class="drawer-head">
-        <h3>How would you like to get your food?</h3>
-        <button id="close-mode" class="btn ghost">✕</button>
-      </div>
-
-      <div class="mode-grid">
-        <button class="mode-card" data-mode="dinein">
-          <div class="mode-title">Dine-In (QR)</div>
-          <div class="mode-sub">Paste your Table Number. No contact info needed.</div>
-        </button>
-        <button class="mode-card" data-mode="pickup">
-          <div class="mode-title">Self Pickup</div>
-          <div class="mode-sub">We’ll prepare it. You collect.</div>
-        </button>
-        <button class="mode-card" data-mode="delivery">
-          <div class="mode-title">Delivery</div>
-          <div class="mode-sub">Free delivery from R280.</div>
-        </button>
-      </div>
-
-      <form id="form-dinein" class="mode-form" hidden>
-        <label for="table-number">Paste Table Number</label>
-        <input id="table-number" type="text" placeholder="e.g. T-14" required/>
-        <div class="drawer-actions">
-          <button type="button" id="to-summary-dinein" class="btn gold">Review Order</button>
-        </div>
-      </form>
-
-      <form id="form-contact" class="mode-form" hidden>
-        <div class="grid2">
-          <div>
-            <label for="contact-phone">Phone (required)</label>
-            <input id="contact-phone" type="tel" placeholder="e.g. 071 234 5678" required/>
-          </div>
-          <div>
-            <label for="contact-email">Email (required)</label>
-            <input id="contact-email" type="email" placeholder="you@example.com" required/>
-          </div>
-        </div>
-
-        <div id="delivery-only" hidden>
-          <label for="address">Address (optional if sharing location)</label>
-          <input id="address" type="text" placeholder="Street, suburb, city"/>
-          <div class="row buttons">
-            <button type="button" id="share-location" class="btn">Share Live Location</button>
-            <span id="loc-status" class="hint"></span>
-          </div>
-        </div>
-
-        <div class="drawer-actions">
-          <button type="button" id="to-summary-contact" class="btn gold">Review Order</button>
-        </div>
-      </form>
-    </div>
-    <div class="drawer-backdrop" id="mode-backdrop"></div>
-  </div>
-
-  <div class="drawer" id="summary-drawer" aria-hidden="true">
-    <div class="drawer-panel glass water">
-      <div class="drawer-head">
-        <h3>Confirm Your Order</h3>
-        <button id="close-summary" class="btn ghost">✕</button>
-      </div>
-
-      <div id="summary-block" class="summary-block"></div>
-
-      <div class="drawer-actions">
-        <button id="place-order" class="btn gold">Place My Order</button>
-      </div>
-    </div>
-    <div class="drawer-backdrop" id="summary-backdrop"></div>
-  </div>
-
-  <script src="assets/js/menu.js"></script>
+  <script src="menu.js"></script>
 </body>
-</html>
-
 </html>
