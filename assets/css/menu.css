@@ -1,132 +1,95 @@
-/* ---------- Menu Page Scope ---------- */
-body.menu-page {
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:#fff;
-  background:#000;
-  margin:0;
-  padding:0;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0; padding: 0;
+  background: #fafafa;
+  color: #333;
 }
 
-/* Theme */
-body.menu-page {
-  --gold:#c89b2d;
-  --gold-dark:#9a6f16;
-  --ink:#1c140b;
-  --ivory:#fffaf1;
-  --wash: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.55));
+header {
+  text-align: center;
+  background: #ffcc00;
+  padding: 20px;
 }
 
-/* Background video */
-body.menu-page .bg-video{
-  position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;
-  filter: saturate(1.05) brightness(.9) contrast(1.05);
-}
-body.menu-page .video-overlay,
-body.menu-page .video-overlay::before{
-  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-}
-body.menu-page .video-overlay{
-  background:
-    radial-gradient(60% 60% at 50% 20%, rgba(200,155,45,.16), transparent 60%),
-    var(--wash);
+#order-type {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 15px 0;
 }
 
-/* Glass & Water */
-body.menu-page .glass{
-  background: rgba(20,15,10,.30);
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow: 0 12px 40px rgba(0,0,0,.25);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-  border-radius: 18px;
-}
-body.menu-page .water{ position:relative; overflow:hidden }
-body.menu-page .water::after{
-  content:""; position:absolute; inset:-30%;
-  background:
-    radial-gradient(120px 60px at 20% 30%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(80px 40px at 80% 70%, rgba(255,255,255,.08), transparent 60%);
-  mix-blend-mode: overlay; opacity:.5; filter: blur(14px);
-  animation: caustics 12s linear infinite;
-}
-@keyframes caustics{ to{ transform: translate3d(-3%,2%,0) rotate(1deg) } }
-
-/* Topbar */
-body.menu-page .topbar{
-  position:sticky; top:12px; margin:12px; z-index:10;
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px;
-}
-body.menu-page .logo{ width:100px; height:100px; border-radius:12px }
-body.menu-page .links{ display:flex; gap:14px; align-items:center }
-body.menu-page .links a img{
-  width:40px; height:40px; border-radius:8px;
-  transition: transform .3s ease;
-  filter: brightness(0) invert(1);
-}
-body.menu-page .links a img:hover{ transform:scale(1.1) }
-
-/* Menu Header */
-body.menu-page header h1{
-  font-size:2rem; margin:20px 0 10px;
-  text-align:center; font-weight:900;
-}
-body.menu-page header p{
-  text-align:center; opacity:.85;
+#order-type button {
+  padding: 10px 20px;
+  border: none;
+  background: #333;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: transform 0.2s;
 }
 
-/* Order Type Buttons */
-body.menu-page #order-type{
-  display:flex; gap:10px; justify-content:center; margin:20px 0;
-}
-body.menu-page #order-type button{
-  padding:10px 18px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.35); color:#fff; font-weight:700;
-  cursor:pointer; transition:background .2s ease;
-}
-body.menu-page #order-type button:hover{
-  background:linear-gradient(90deg,var(--gold-dark),var(--gold));
+#order-type button:hover {
+  transform: scale(1.05);
+  background: #111;
 }
 
-/* Forms */
-body.menu-page input{
-  display:block; width:90%; margin:10px auto;
-  padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.2);
-  background:rgba(0,0,0,.35); color:#fff; outline:none;
+.hidden { display: none; }
+
+#menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+  padding: 20px;
 }
 
-/* Food Menu */
-body.menu-page #menu{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px; padding:20px;
-}
-body.menu-page .food-card{
-  background:#222; border-radius:16px; overflow:hidden;
-  box-shadow:0 8px 26px rgba(0,0,0,.35);
-  display:flex; flex-direction:column;
-  transition:transform .2s ease;
-}
-body.menu-page .food-card:hover{ transform:translateY(-4px) }
-body.menu-page .food-card img{ width:100%; height:180px; object-fit:cover }
-body.menu-page .food-body{ padding:12px }
-body.menu-page .food-title{ font-weight:900; margin:0 0 6px }
-body.menu-page .food-price{ opacity:.95 }
-body.menu-page .food-actions{
-  display:flex; justify-content:space-between; align-items:center; margin-top:10px;
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
 }
 
-/* Cart */
-body.menu-page #cart{
-  position:fixed; right:0; top:0; bottom:0; width:300px;
-  background:rgba(0,0,0,.8); padding:20px; overflow-y:auto;
+.card:hover {
+  transform: translateY(-5px);
 }
-body.menu-page #cart h2{ margin-top:0 }
-body.menu-page #cart ul{ list-style:none; padding:0; margin:0 }
-body.menu-page #cart li{ margin:8px 0 }
-body.menu-page #cart button{
-  width:100%; padding:12px; margin-top:10px;
-  border:none; border-radius:12px;
-  background:linear-gradient(90deg,var(--gold-dark),var(--gold));
-  color:#fff; font-weight:900; cursor:pointer;
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 5px 0;
+}
+
+.card button {
+  background: #ffcc00;
+  border: none;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#cart {
+  position: fixed;
+  top: 0; right: 0;
+  width: 280px;
+  background: white;
+  height: 100%;
+  border-left: 2px solid #ddd;
+  padding: 15px;
+  overflow-y: auto;
 }
