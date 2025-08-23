@@ -1,49 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kota Menu</title>
-  <link rel="stylesheet" href="menu.css">
-</head>
-<body>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>Kota Menu</title>  
+  <link rel="stylesheet" href="menu.css">  
+</head>  
+<body>    <!-- Background video (same as comments page) -->    <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">  
+    <source src="assets/video/venue.webm" type="video/webm" />  
+    <source src="assets/video/venue.mp4" type="video/mp4" />  
+  </video>  
+  <div class="video-overlay"></div>  <header class="topbar glass">  
+    <div class="brand">  
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">  
+    </div>  
+    <nav class="links">  
+      <a href="index.html">  
+        <img src="assets/img/icons/home.svg" alt="Home"/>  
+      </a>  
+      <a href="menu.html">  
+        <img src="assets/img/icons/menu.svg" alt="Menu"/>  
+      </a>  
+      <a href="booking.html">  
+        <img src="assets/img/icons/booking.svg" alt="Bookings"/>  
+      </a>  
+      <a href="comments.html">  
+        <img src="assets/img/icons/comments.svg" alt="Comments"/>  
+      </a>  
+    </nav>  
+  </header>    <header>  
+    <h1>🍔 Kota House Menu</h1>  
+    <p>Select your meals easily — no waiting, no stress.</p>  
+  </header>    <!-- Dine-in or Delivery -->    <section id="order-type">  
+    <button onclick="setOrderType('dinein')">🍽️ Dine-In</button>  
+    <button onclick="setOrderType('delivery')">🚚 Delivery</button>  
+  </section>    <!-- Dine-in input (only table number needed) -->    <section id="dinein-section" class="hidden">  
+    <input type="text" id="tableNumber" placeholder="Enter your Table Number">  
+  </section>    <!-- Delivery inputs (phone + email) -->    <section id="delivery-section" class="hidden">  
+    <input type="text" id="phone" placeholder="Enter your Phone Number">  
+    <input type="email" id="email" placeholder="Enter your Email">  
+  </section>    <!-- Menu -->    <main id="menu">  
+    <!-- Meals will be injected here by menu.js -->  
+  </main>    <!-- Cart -->    <aside id="cart">  
+    <h2>Your Cart 🛒</h2>  
+    <ul id="cart-items"></ul>  
+    <p id="total">Total: R0</p>  
+    <p id="delivery-note"></p>  
+    <button onclick="checkout()">✅ Checkout</button>  
+  </aside>    <script src="menu.js"></script>  </body>  
+</html>  
 
-  <header>
-    <h1>🍔 Kota House Menu</h1>
-    <p>Select your meals easily — no waiting, no stress.</p>
-  </header>
 
-  <!-- Dine-in or Delivery -->
-  <section id="order-type">
-    <button onclick="setOrderType('dinein')">🍽️ Dine-In</button>
-    <button onclick="setOrderType('delivery')">🚚 Delivery</button>
-  </section>
-
-  <!-- Dine-in input (only table number needed) -->
-  <section id="dinein-section" class="hidden">
-    <input type="text" id="tableNumber" placeholder="Enter your Table Number">
-  </section>
-
-  <!-- Delivery inputs (phone + email) -->
-  <section id="delivery-section" class="hidden">
-    <input type="text" id="phone" placeholder="Enter your Phone Number">
-    <input type="email" id="email" placeholder="Enter your Email">
-  </section>
-
-  <!-- Menu -->
-  <main id="menu">
-    <!-- Meals will be injected here by menu.js -->
-  </main>
-
-  <!-- Cart -->
-  <aside id="cart">
-    <h2>Your Cart 🛒</h2>
-    <ul id="cart-items"></ul>
-    <p id="total">Total: R0</p>
-    <p id="delivery-note"></p>
-    <button onclick="checkout()">✅ Checkout</button>
-  </aside>
-
-  <script src="menu.js"></script>
-</body>
-</html>
