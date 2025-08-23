@@ -163,6 +163,9 @@ body{
   .water::after, .card, .btn, .moment.swipe-glow, .hero-title .swap{ animation:none !important; transition:none !important }
 }
 
+.links a img {
+  filter: brightness(0) invert(1);
+}
 
 
 
