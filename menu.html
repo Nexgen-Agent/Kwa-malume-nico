@@ -1,49 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kota Menu</title>
-  <link rel="stylesheet" href="menu.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Malume Nico — Menu</title>
+  <link rel="stylesheet" href="assets/css/menu.css" />
 </head>
-<body>
+<body class="menu-page">
 
-  <header>
-    <h1>🍔 Kota House Menu</h1>
-    <p>Select your meals easily — no waiting, no stress.</p>
+  <!-- Background video (same as other pages) -->
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
+
+  <!-- Topbar (glass) -->
+  <header class="topbar glass">
+    <div class="brand">
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+    </div>
+    <nav class="links" aria-label="Primary">
+      <a href="index.html" title="Home">
+        <img src="assets/img/icons/home.svg" alt="Home"/>
+      </a>
+      <a href="menu.html" title="Menu">
+        <img src="assets/img/icons/menu.svg" alt="Menu"/>
+      </a>
+      <a href="booking.html" title="Bookings">
+        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
+      </a>
+      <a href="comments.html" title="Comments">
+        <img src="assets/img/icons/comments.svg" alt="Comments"/>
+      </a>
+    </nav>
   </header>
 
-  <!-- Dine-in or Delivery -->
-  <section id="order-type">
-    <button onclick="setOrderType('dinein')">🍽️ Dine-In</button>
-    <button onclick="setOrderType('delivery')">🚚 Delivery</button>
+  <!-- Page header -->
+  <header class="page-head">
+    <h1>🍔 Malume Nico — Menu</h1>
+    <p class="sub">Tap an item to add it. Dine-in uses only table number. Delivery needs phone & email. Free delivery for orders R280 or more.</p>
+  </header>
+
+  <!-- Order type -->
+  <section class="mode-grid" id="modeGrid" aria-label="Order mode">
+    <button type="button" class="mode-card btn" data-mode="dinein" id="btnDineIn">
+      <div class="mode-title">🍽️ Dine-In</div>
+      <div class="mode-sub">Enter table number only</div>
+    </button>
+
+    <button type="button" class="mode-card btn" data-mode="delivery" id="btnDelivery">
+      <div class="mode-title">🚚 Delivery</div>
+      <div class="mode-sub">Phone & email required</div>
+    </button>
+
+    <div class="mode-card glass" aria-hidden="true">
+      <div class="mode-title">🛎 Guided</div>
+      <div class="mode-sub">Select, review, confirm — we guide every step</div>
+    </div>
   </section>
 
-  <!-- Dine-in input (only table number needed) -->
-  <section id="dinein-section" class="hidden">
-    <input type="text" id="tableNumber" placeholder="Enter your Table Number">
+  <!-- Mode forms -->
+  <section class="mode-form" id="modeForms">
+    <div class="mode-form-inner">
+      <div class="mode-block" id="dineinBlock">
+        <label for="tableNumber">Table number (from paper menu)</label>
+        <input id="tableNumber" type="text" inputmode="numeric" placeholder="e.g. 12" />
+      </div>
+
+      <div class="mode-block hidden" id="deliveryBlock">
+        <label for="phone">Phone number</label>
+        <input id="phone" type="tel" placeholder="+27 76 123 4567" />
+        <label for="email">Email address</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+      </div>
+    </div>
   </section>
 
-  <!-- Delivery inputs (phone + email) -->
-  <section id="delivery-section" class="hidden">
-    <input type="text" id="phone" placeholder="Enter your Phone Number">
-    <input type="email" id="email" placeholder="Enter your Email">
-  </section>
-
-  <!-- Menu -->
-  <main id="menu">
-    <!-- Meals will be injected here by menu.js -->
+  <!-- Menu horizontal rails (multiple categories are vertical stacked) -->
+  <main id="menu" class="menu-rows" aria-live="polite">
+    <!-- JS will inject .food-rail sections -->
   </main>
 
-  <!-- Cart -->
-  <aside id="cart">
-    <h2>Your Cart 🛒</h2>
-    <ul id="cart-items"></ul>
-    <p id="total">Total: R0</p>
-    <p id="delivery-note"></p>
-    <button onclick="checkout()">✅ Checkout</button>
-  </aside>
+  <!-- Floating cart bar (mobile) & cart drawer trigger -->
+  <div class="cart-bar glass" id="cartBar" aria-hidden="false">
+    <div class="cart-info">
+      <div class="cart-bubble" id="cartCount">0</div>
+      <div class="cart-text">
+        <div class="cart-title">Your Order</div>
+        <div class="cart-sub hint" id="cartSummary">R0 — Open cart</div>
+      </div>
+    </div>
+    <div>
+      <button class="btn gold" id="openCartBtn" type="button">View Cart</button>
+    </div>
+  </div>
 
-  <script src="menu.js"></script>
+  <!-- Cart drawer (bottom panel) -->
+  <div class="drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-backdrop" id="drawerBackdrop"></div>
+    <div class="drawer-panel glass water" role="dialog" aria-label="Cart">
+      <div class="drawer-head">
+        <h3>Your Cart</h3>
+        <div>
+          <button class="btn ghost" id="closeCartBtn">Close</button>
+        </div>
+      </div>
+
+      <div class="cart-list" id="cartList" aria-live="polite"></div>
+
+      <div class="cart-totals">
+        <div class="row summary-line">
+          <div>Subtotal</div><div id="subTotal">R0</div>
+        </div>
+        <div class="row summary-line" id="deliveryRow">
+          <div>Delivery</div><div id="deliveryFee">R0</div>
+        </div>
+        <div class="row summary-line grand">
+          <div>Total</div><div id="grandTotal">R0</div>
+        </div>
+
+        <div class="hint" id="freeNote">Free delivery on R280+</div>
+      </div>
+
+      <div class="drawer-actions">
+        <button class="btn ghost" id="clearCartBtn">Clear</button>
+        <button class="btn gold" id="checkoutBtn">Confirm Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast" aria-hidden="true"></div>
+
+  <script src="assets/js/menu.js" defer></script>
 </body>
 </html>
