@@ -92,3 +92,19 @@ window.addEventListener('load', ()=>{
   const v = $('.bg-video');
   if (v && v.paused) v.play().catch(()=>{});
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const heroActions = document.querySelector('.hero-actions');
+  if (heroActions) {
+    heroActions.addEventListener('click', (event) => {
+      // Find the closest parent <a> tag to the clicked element
+      const link = event.target.closest('a');
+      if (link) {
+        const href = link.getAttribute('href');
+        console.log(`Navigating to: ${href}`);
+        // The browser will automatically perform the navigation
+      }
+    });
+  }
+});
+
