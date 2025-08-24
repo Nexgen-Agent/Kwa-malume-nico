@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: malume_db
+    environment:
+      POSTGRES_USER: malume
+      POSTGRES_PASSWORD: malume_pw
+      POSTGRES_DB: malume_nico
+    ports:
+      - "5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+volumes:
+  dbdata:
