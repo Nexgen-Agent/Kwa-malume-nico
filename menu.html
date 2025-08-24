@@ -133,6 +133,26 @@
   <!-- toast -->
   <div id="toast" class="toast" aria-hidden="true"></div>
 
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+  const socket = io('http://localhost:4000');
+  // After creating an order, join its room:
+  function joinOrder(orderId, tableNumber) {
+    socket.emit('join', { orderId, tableNumber });
+  }
+
+  socket.on('order:update', (payload) => {
+    // Update UI: totals, status, items, etc.
+    console.log('Order update:', payload);
+    // e.g., refresh cart totals, status badge, etc.
+  });
+
+  socket.on('order:new', (payload) => {
+    // Triggered in a table room (for dine-in flows / table tablet)
+    console.log('New order at this table:', payload);
+  });
+</script>
+
   <script src="assets/js/menu.js" defer></script>
 </body>
 </html>
