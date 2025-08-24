@@ -1,1 +1,8 @@
-.
+fastapi==0.95.2
+uvicorn[standard]==0.22.0
+sqlalchemy==2.0.32
+aiosqlite==0.20.0
+databases==0.7.2
+pydantic==2.8.2
+orjson==3.11.5
+python-multipart==0.0.6
