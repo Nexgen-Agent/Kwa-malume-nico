@@ -207,3 +207,7 @@ body.menu-page .toast.show{ display:block; animation: toastIn .36s ease both; }
 @media (prefers-reduced-motion: reduce){
   body.menu-page .water::after, body.menu-page .food-card, body.menu-page .btn, body.menu-page .arrow{ animation:none !important; transition:none !important }
 }
+
+.links a img {
+  filter: brightness(0) invert(1);
+}
