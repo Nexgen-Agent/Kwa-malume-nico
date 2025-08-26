@@ -8,17 +8,13 @@
 </head>
 <body class="menu-page">
 
-  /* ---------- Background video ---------- */
-.bg-video{
-  position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;
-  filter: saturate(1.05) brightness(.9) contrast(1.05);
-}
-.video-overlay{
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background:
-    radial-gradient(60% 60% at 50% 20%, rgba(200,155,45,.16), transparent 60%),
-    var(--wash);
-}
+  <!-- Background video (same as comments page) -->
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
+
   <!-- Topbar (glass) -->
   <header class="topbar glass">
     <div class="brand">
