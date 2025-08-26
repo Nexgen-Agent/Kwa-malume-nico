@@ -25,6 +25,11 @@ const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 (function pressGlow(){
   $$('.btn').forEach(btn=>{
     const handler = (e)=>{
+      // Do not attach ripple to links, to prevent interference with href
+      if (btn.tagName === 'A') {
+        return;
+      }
+
       btn.classList.remove('glow-press'); void btn.offsetWidth; btn.classList.add('glow-press');
       const x = (e.touches ? e.touches[0].clientX : e.clientX);
       const y = (e.touches ? e.touches[0].clientY : e.clientY);
@@ -92,19 +97,3 @@ window.addEventListener('load', ()=>{
   const v = $('.bg-video');
   if (v && v.paused) v.play().catch(()=>{});
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  const heroActions = document.querySelector('.hero-actions');
-  if (heroActions) {
-    heroActions.addEventListener('click', (event) => {
-      // Find the closest parent <a> tag to the clicked element
-      const link = event.target.closest('a');
-      if (link) {
-        const href = link.getAttribute('href');
-        console.log(`Navigating to: ${href}`);
-        // The browser will automatically perform the navigation
-      }
-    });
-  }
-});
-
