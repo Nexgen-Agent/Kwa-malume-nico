@@ -25,10 +25,8 @@ const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 (function pressGlow(){
   $$('.btn').forEach(btn=>{
     const handler = (e)=>{
-      // Do not attach ripple to links, to prevent interference with href
-      if (btn.tagName === 'A') {
-        return;
-      }
+      // This stops the browser from immediately following the link
+      e.preventDefault();
 
       btn.classList.remove('glow-press'); void btn.offsetWidth; btn.classList.add('glow-press');
       const x = (e.touches ? e.touches[0].clientX : e.clientX);
@@ -41,10 +39,18 @@ const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
       r.style.left = (x - rect.left) + 'px';
       r.style.top = (y - rect.top) + 'px';
       btn.appendChild(r);
-      r.addEventListener('animationend', ()=> r.remove());
+
+      // Listen for the end of the ripple animation
+      r.addEventListener('animationend', ()=> {
+        r.remove();
+        // If the element is a link, manually navigate to the href
+        if (btn.tagName === 'A' && btn.href) {
+            window.location.href = btn.href;
+        }
+      });
     };
     btn.addEventListener('click', handler);
-    btn.addEventListener('touchstart', handler, {passive:true});
+    btn.addEventListener('touchstart', handler, {passive:false});
   });
 })();
 
