@@ -136,8 +136,6 @@ body.menu-page input{
 body.menu-page .menu-rows{ padding:12px 12px 120px; max-width:1400px; margin:0 auto; display:flex; flex-direction:column; gap:18px }
 
 /* each rail */
-body.menu-page .food-rail{ display:flex; flex-direction:column; gap:8px; }
-body.menu-page .moment-head{ padding:6px 8px }
 body.menu-page .moment-head h2{ margin:0; font-weight:900; font-size:clamp(18px,4.2vw,28px) }
 
 /* rail wrap */
@@ -159,16 +157,7 @@ body.menu-page .rail{
 body.menu-page .rail::-webkit-scrollbar{ display:none }
 ,.42);
 }
-body.menu-page .food-card{
-  width: clamp(220px, 40vw, 320px);
-  scroll-snap-align:center;
-  border-radius:14px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  background: linear-gradient(180deg, rgba(0,0,0,.32), rgba(0,0,0,.45));
-  box-shadow: 0 10px 28px rgba(0,0,0,.42);
-}
+
 body.menu-page .food-card img{ 
   width: 100%; 
   max-width: 100%;
@@ -251,3 +240,21 @@ body.menu-page .toast.show{ display:block; animation: toastIn .36s ease both; }
   animation: turn-page-right 1s forwards;
   transform-origin: right;
 }
+
+}
+/* rail scroller */
+body.menu-page .rail{
+  display:grid; grid-auto-flow:column; gap:12px; align-items:start;
+  overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type: x mandatory; padding:12px 6px;
+}
+body.menu-page .rail::-webkit-scrollbar{ display:none }
+
+/* food card */
+body.menu-page .food-card{
+  width: clamp(220px, 40vw, 320px);
+  scroll-snap-align:center;
+  border-radius:14px; overflow:hidden; display:flex; flex-direction:column;
+  background: linear-gradient(180deg, rgba(0,0,0,.32), rgba(0,0,0,.45));
+  box-shadow: 0 10px 28px rgba(0,0,0,.42);
+}
+
