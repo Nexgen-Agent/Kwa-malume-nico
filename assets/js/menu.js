@@ -350,3 +350,32 @@
   init();
 
 })();
+
+// Get a reference to the rails and arrows
+const foodRails = document.querySelectorAll('.rail');
+const leftArrows = document.querySelectorAll('.arrow.left');
+const rightArrows = document.querySelectorAll('.arrow.right');
+
+// A function to scroll the rail
+const scrollRail = (rail, direction) => {
+  const cardWidth = rail.querySelector('.food-card').offsetWidth;
+  const scrollAmount = cardWidth * direction;
+  rail.scrollBy({
+    left: scrollAmount,
+    behavior: 'smooth'
+  });
+};
+
+// Add event listeners to the left arrows
+leftArrows.forEach((arrow, index) => {
+  arrow.addEventListener('click', () => {
+    scrollRail(foodRails[index], -1); // Scroll left
+  });
+});
+
+// Add event listeners to the right arrows
+rightArrows.forEach((arrow, index) => {
+  arrow.addEventListener('click', () => {
+    scrollRail(foodRails[index], 1); // Scroll right
+  });
+});
