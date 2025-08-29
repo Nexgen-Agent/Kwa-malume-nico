@@ -230,3 +230,24 @@ body.menu-page .toast.show{ display:block; animation: toastIn .36s ease both; }
 .links a img {
   filter: brightness(0) invert(1);
 }
+
+/* Animation for turning the page */
+@keyframes turn-page-left {
+  from { transform: perspective(1000px) rotateY(0deg); }
+  to { transform: perspective(1000px) rotateY(-180deg); }
+}
+
+@keyframes turn-page-right {
+  from { transform: perspective(1000px) rotateY(0deg); }
+  to { transform: perspective(1000px) rotateY(180deg); }
+}
+
+.food-card.turn-left {
+  animation: turn-page-left 1s forwards;
+  transform-origin: left;
+}
+
+.food-card.turn-right {
+  animation: turn-page-right 1s forwards;
+  transform-origin: right;
+}
