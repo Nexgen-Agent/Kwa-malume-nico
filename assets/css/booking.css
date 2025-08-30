@@ -269,3 +269,8 @@ textarea {
   
   /* ... other button styles ... */
 }
+
+.btn {
+  /* This is a simple filter to make the buttons translucent */
+  filter: brightness(1.2) blur(3px);
+}
