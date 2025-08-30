@@ -109,43 +109,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const liquidFill = document.querySelector('.liquid-fill');
   const body = document.body;
 
-  // Add a class to the body to prevent interaction
+  // Add the 'loading' class to the body to apply the blur and disable interactions
   body.classList.add('loading');
   
-  // Calculate duration based on network connection (downlink speed)
+  // Get network information to calculate the animation duration
   const networkInfo = navigator.connection;
-  let duration = 3000; // Default duration for slow networks (in ms)
+  let duration = 3000; // Default duration for slower networks (3 seconds)
 
+  // Check if network info is available and use it to adjust the duration
   if (networkInfo && networkInfo.downlink) {
-    // Make the animation faster for faster networks.
-    // downlink is in Mbps. Adjust the factor (e.g., 1500) for desired min/max speeds.
-    // Capped at a minimum of 500ms to ensure animation is visible.
+    // The downlink property is in megabits per second (Mbps).
+    // We make the animation faster for better networks.
+    // Example: For a 1.5 Mbps network, duration would be 1500ms.
+    // We cap the duration at a minimum of 500ms to ensure the animation is visible.
     duration = Math.max(500, 1500 / networkInfo.downlink); 
   }
 
-  // Set the animation duration dynamically for the liquid fill
+  // Set the calculated duration for the liquid fill's CSS transition
   liquidFill.style.transitionDuration = `${duration}ms`;
 
-  // Start the filling animation
-  // Use a slight delay to ensure the transition is applied before changing height
+  // Use a slight delay to ensure the CSS transition property is set before starting the animation
   setTimeout(() => {
+    // Set the liquid height to 100%, which triggers the CSS transition to fill the cup
     liquidFill.style.height = '100%';
-  }, 50); // Small delay to ensure CSS transition property is set
+  }, 50);
 
+  // The 'load' event fires when the page and all of its assets (images, stylesheets, scripts) are fully loaded
   window.addEventListener('load', () => {
-    // The page is fully loaded, wait for the liquid filling animation to complete
+    // Wait for the liquid filling animation to complete before hiding the loader
     setTimeout(() => {
-      // Remove blur and fade out loader overlay
-      body.style.filter = 'none';
+      // Remove the 'loading' class from the body, which immediately removes the blur
+      body.classList.remove('loading');
+      
+      // Now, start the fade-out effect on the loader overlay
       loaderOverlay.style.opacity = '0';
       
-      // After fade-out transition, completely hide and allow interaction
+      // Wait for the CSS opacity transition to complete, then hide the element completely to free up the space
       setTimeout(() => {
         loaderOverlay.style.display = 'none';
-        body.classList.remove('loading');
-      }, 500); // This duration should match the opacity transition on #loader-overlay
-    }, duration); // Wait for the dynamic liquid fill duration
+      }, 500); // This delay must match the transition duration on `#loader-overlay` in your CSS
+    }, duration);
   });
 });
+
 
 
