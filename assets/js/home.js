@@ -104,53 +104,5 @@ window.addEventListener('load', ()=>{
   if (v && v.paused) v.play().catch(()=>{});
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const loaderOverlay = document.getElementById('loader-overlay');
-  const liquidFill = document.querySelector('.liquid-fill');
-  const body = document.body;
-
-  // Add the 'loading' class to the body to apply the blur and disable interactions
-  body.classList.add('loading');
-  
-  // Get network information to calculate the animation duration
-  const networkInfo = navigator.connection;
-  let duration = 3000; // Default duration for slower networks (3 seconds)
-
-  // Check if network info is available and use it to adjust the duration
-  if (networkInfo && networkInfo.downlink) {
-    // The downlink property is in megabits per second (Mbps).
-    // We make the animation faster for better networks.
-    // Example: For a 1.5 Mbps network, duration would be 1500ms.
-    // We cap the duration at a minimum of 500ms to ensure the animation is visible.
-    duration = Math.max(500, 1500 / networkInfo.downlink); 
-  }
-
-  // Set the calculated duration for the liquid fill's CSS transition
-  liquidFill.style.transitionDuration = `${duration}ms`;
-
-  // Use a slight delay to ensure the CSS transition property is set before starting the animation
-  setTimeout(() => {
-    // Set the liquid height to 100%, which triggers the CSS transition to fill the cup
-    liquidFill.style.height = '100%';
-  }, 50);
-
-  // The 'load' event fires when the page and all of its assets (images, stylesheets, scripts) are fully loaded
-  window.addEventListener('load', () => {
-    // Wait for the liquid filling animation to complete before hiding the loader
-    setTimeout(() => {
-      // Remove the 'loading' class from the body, which immediately removes the blur
-      body.classList.remove('loading');
-      
-      // Now, start the fade-out effect on the loader overlay
-      loaderOverlay.style.opacity = '0';
-      
-      // Wait for the CSS opacity transition to complete, then hide the element completely to free up the space
-      setTimeout(() => {
-        loaderOverlay.style.display = 'none';
-      }, 500); // This delay must match the transition duration on `#loader-overlay` in your CSS
-    }, duration);
-  });
-});
-
 
 
