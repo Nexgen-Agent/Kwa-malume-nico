@@ -107,22 +107,40 @@ window.addEventListener('load', ()=>{
 document.addEventListener('DOMContentLoaded', () => {
   const loaderOverlay = document.getElementById('loader-overlay');
   const liquid = document.querySelector('.liquid');
+  const body = document.body;
+
+  // Add a class to the body to prevent interaction
+  body.classList.add('loading');
   
-  // Start the filling animation
-  liquid.style.height = '100%';
-  
-  // Get the duration from the network
-  const networkSpeed = navigator.connection ? navigator.connection.downlink : 1; // Default to 1 if not available
-  const duration = 1500 / networkSpeed; // Faster for better networks
+  // Calculate duration based on network connection (downlink speed)
+  const networkInfo = navigator.connection;
+  let duration = 3000; // Default duration for slow networks
+
+  if (networkInfo && networkInfo.downlink) {
+    // Make the animation faster for faster networks
+    // For example, 1000ms for fast connections (>5Mbps)
+    duration = 1500 / networkInfo.downlink; 
+  }
+
+  // Set the animation duration dynamically
   liquid.style.transitionDuration = `${duration}ms`;
 
+  // Start the filling animation
+  liquid.style.height = '100%';
+
   window.addEventListener('load', () => {
-    // Page is fully loaded, hide the loader and remove the blur
+    // The page is fully loaded, wait for the animation to complete
     setTimeout(() => {
-      document.body.style.filter = 'blur(0px)';
+      // Remove blur and loader
+      body.style.filter = 'none';
       loaderOverlay.style.opacity = '0';
-      loaderOverlay.style.visibility = 'hidden';
-      document.body.classList.remove('loading');
-    }, 500); // Wait for the transition to finish
+      
+      // After transition, remove from DOM and allow interaction
+      setTimeout(() => {
+        loaderOverlay.style.display = 'none';
+        body.classList.remove('loading');
+      }, 500); 
+    }, duration);
   });
 });
+
