@@ -1,4 +1,4 @@
-/* Malume Nico — Home
+p/* Malume Nico — Home
    - Shares the same “water glass + gold glow” feel as comments page
    - Vertical sections; each has a horizontal swipe rail
    - Drag to scroll, arrow buttons, 3D lift on cards
@@ -106,7 +106,7 @@ window.addEventListener('load', ()=>{
 
 document.addEventListener('DOMContentLoaded', () => {
   const loaderOverlay = document.getElementById('loader-overlay');
-  const liquid = document.querySelector('.liquid');
+  const liquidFill = document.querySelector('.liquid-fill');
   const body = document.body;
 
   // Add a class to the body to prevent interaction
@@ -114,33 +114,38 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Calculate duration based on network connection (downlink speed)
   const networkInfo = navigator.connection;
-  let duration = 3000; // Default duration for slow networks
+  let duration = 3000; // Default duration for slow networks (in ms)
 
   if (networkInfo && networkInfo.downlink) {
-    // Make the animation faster for faster networks
-    // For example, 1000ms for fast connections (>5Mbps)
-    duration = 1500 / networkInfo.downlink; 
+    // Make the animation faster for faster networks.
+    // downlink is in Mbps. Adjust the factor (e.g., 1500) for desired min/max speeds.
+    // Capped at a minimum of 500ms to ensure animation is visible.
+    duration = Math.max(500, 1500 / networkInfo.downlink); 
   }
 
-  // Set the animation duration dynamically
-  liquid.style.transitionDuration = `${duration}ms`;
+  // Set the animation duration dynamically for the liquid fill
+  liquidFill.style.transitionDuration = `${duration}ms`;
 
   // Start the filling animation
-  liquid.style.height = '100%';
+  // Use a slight delay to ensure the transition is applied before changing height
+  setTimeout(() => {
+    liquidFill.style.height = '100%';
+  }, 50); // Small delay to ensure CSS transition property is set
 
   window.addEventListener('load', () => {
-    // The page is fully loaded, wait for the animation to complete
+    // The page is fully loaded, wait for the liquid filling animation to complete
     setTimeout(() => {
-      // Remove blur and loader
+      // Remove blur and fade out loader overlay
       body.style.filter = 'none';
       loaderOverlay.style.opacity = '0';
       
-      // After transition, remove from DOM and allow interaction
+      // After fade-out transition, completely hide and allow interaction
       setTimeout(() => {
         loaderOverlay.style.display = 'none';
         body.classList.remove('loading');
-      }, 500); 
-    }, duration);
+      }, 500); // This duration should match the opacity transition on #loader-overlay
+    }, duration); // Wait for the dynamic liquid fill duration
   });
 });
+
 

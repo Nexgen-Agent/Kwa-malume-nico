@@ -216,29 +216,32 @@ body {
   pointer-events: none;
 }
 
-/* Styles for the cup and liquid animation */
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.cup {
-  width: 80px;
-  height: 100px;
-  border: 4px solid #fff;
-  border-radius: 0 0 40px 40px;
+/* Container for your cup SVG image and liquid fill */
+.cup-image-loader {
+  width: 150px; /* Adjust as needed for your SVG's intrinsic size or desired display size */
+  height: 150px; /* Adjust as needed */
+  background-image: url('assets/img/loader/cup.svg'); /* <--- Your SVG image path here */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Crucial to contain the liquid fill within the cup shape */
+  display: flex;
+  align-items: flex-end; /* Ensures liquid starts at the bottom */
+  /* If your SVG has a transparent background around the cup,
+     you might not need border-radius here, or it can be used for the overall shape. */
 }
 
-.liquid {
-  position: absolute;
-  bottom: 0;
+/* The "liquid" that fills up */
+.liquid-fill {
   width: 100%;
-  background-color: #4a90e2; /* Color of the liquid */
-  transition: height 0.5s linear; /* The speed of the animation */
   height: 0; /* Starts empty */
+  background-color: #4a90e2; /* Color of the liquid */
+  transition: height 0.5s linear; /* Default transition speed */
+  /* These border-radius values are an estimation to match the bottom curve of the cup. */
+  /* You may need to fine-tune them by inspecting your SVG's actual shape. */
+  border-bottom-left-radius: 40%; 
+  border-bottom-right-radius: 40%;
 }
 
 
