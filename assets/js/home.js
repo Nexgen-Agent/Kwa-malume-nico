@@ -103,3 +103,26 @@ window.addEventListener('load', ()=>{
   const v = $('.bg-video');
   if (v && v.paused) v.play().catch(()=>{});
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loaderOverlay = document.getElementById('loader-overlay');
+  const liquid = document.querySelector('.liquid');
+  
+  // Start the filling animation
+  liquid.style.height = '100%';
+  
+  // Get the duration from the network
+  const networkSpeed = navigator.connection ? navigator.connection.downlink : 1; // Default to 1 if not available
+  const duration = 1500 / networkSpeed; // Faster for better networks
+  liquid.style.transitionDuration = `${duration}ms`;
+
+  window.addEventListener('load', () => {
+    // Page is fully loaded, hide the loader and remove the blur
+    setTimeout(() => {
+      document.body.style.filter = 'blur(0px)';
+      loaderOverlay.style.opacity = '0';
+      loaderOverlay.style.visibility = 'hidden';
+      document.body.classList.remove('loading');
+    }, 500); // Wait for the transition to finish
+  });
+});
