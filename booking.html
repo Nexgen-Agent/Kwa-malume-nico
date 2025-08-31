@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bookings | Malume Nico’s</title>
   <link rel="stylesheet" href="assets/css/booking.css">
+    </script>
+<script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "YQ1_lvS5oeuriiyBd",
+      });
+   })();
+</script>
+
+<script src="assets/js/script.js" defer></script>
 </head>
 <body>  
 
@@ -89,7 +99,8 @@
   <input type="time" id="booking-time" name="booking-time" min="09:00" max="18:00" step="1800" required>
 </div>
       <!-- Submit -->
-      <button type="submit" class="submit-btn">Book Now</button>
+      <button type="submit" class="submit-btn" onclick="sendEmail()">Book Now</button>
+    
     </form>
   </div>
 
