@@ -51,3 +51,21 @@ document.addEventListener("DOMContentLoaded", () => {
     specialRequestGroup.classList.add("hidden");
   });
 });
+
+function sendMail() {
+    const templateParams = {
+        name: document.querySelector("#name").value,
+        email: document.querySelector("#email").value,
+        subject: document.querySelector("#subject").value,
+        message: document.querySelector("#message").value,
+    };
+
+    emailjs.send("service_pdwcuat", "template_rq0e43j", templateParams)
+    .then(() => {
+        alert("✅ Email sent successfully!");
+    })
+    .catch((error) => {
+        console.error("❌ Error sending email:", error);
+        alert("Failed to send email. Please try again.");
+    });
+}
