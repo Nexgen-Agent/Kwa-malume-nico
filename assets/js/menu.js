@@ -379,3 +379,39 @@ rightArrows.forEach((arrow, index) => {
     scrollRail(foodRails[index], 1); // Scroll right
   });
 });
+
+async function sendOrder(payload){
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const data = await res.json();
+    return data; // { id, status, total }
+  } catch (error) {
+    console.error("Failed to send order:", error);
+  }
+}
+
+async function loadMenu(){
+  try {
+    const res = await fetch('/api/menu', { headers: { 'Accept': 'application/json' }});
+    if (res.status === 304) {
+      console.log('Menu data is cached and up-to-date.');
+      return;
+    }
+    if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const items = await res.json();
+    console.log('Menu items loaded:', items);
+    // You would add your code here to render the items on the page.
+    return items;
+  } catch (error) {
+    console.error("Failed to load menu:", error);
+  }
+}
