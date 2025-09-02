@@ -141,13 +141,21 @@ body{
 .arrow.right{ right:6px }
 
 /* Horizontal rail */
-.rail{
-  display:grid; grid-auto-flow:column; gap:12px; align-items:center;
-  overflow-x:auto; overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory; scrollbar-width:none;
+.rail {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity; /* smoother snap */
+  -webkit-overflow-scrolling: touch;
 }
-.rail::-webkit-scrollbar{ display:none }
 
+.card {
+  flex: 0 0 auto;  /* don’t shrink */
+  width: 300px;
+  height: 200px;
+}
 .card{
   width: clamp(220px, 42vw, 340px);
   height: clamp(150px, 30vw, 220px);
