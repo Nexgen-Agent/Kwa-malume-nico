@@ -199,23 +199,4 @@ body{
 .nav-btn.ghost{ background: transparent }
 
 
-.gallery {
-  width: 100%;
-  overflow-x: auto;   /* enable horizontal scroll */
-  overflow-y: hidden; /* block vertical scroll */
-  white-space: nowrap;
-  scroll-behavior: smooth; /* optional smooth scroll */
-}
-
-.gallery-track {
-  display: inline-flex;  /* children in a row */
-  gap: 10px;             /* space between images */
-}
-
-.gallery img {
-  flex: 0 0 auto;   /* prevent shrinking */
-  width: 300px;     /* adjust size */
-  height: auto;
-  border-radius: 10px;
-}
 
