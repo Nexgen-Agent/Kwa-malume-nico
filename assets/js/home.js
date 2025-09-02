@@ -205,3 +205,31 @@ window.addEventListener('load', ()=>{
 
 if (v && v.paused) v.play().catch (()=>{});
  });
+
+
+// Auto-scrolling rails (infinite loop)
+function autoScrollRail(rail, speed = 1) {
+  let scrollAmount = 0;
+
+  function step() {
+    rail.scrollLeft += speed;
+    scrollAmount += speed;
+
+    // if reached the end, reset to start
+    if (rail.scrollLeft + rail.clientWidth >= rail.scrollWidth) {
+      rail.scrollLeft = 0;
+      scrollAmount = 0;
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  step();
+}
+
+// Apply to all rails
+window.addEventListener("load", () => {
+  document.querySelectorAll(".rail").forEach(rail => {
+    autoScrollRail(rail, 0.5); // adjust speed (pixels per frame)
+  });
+});
