@@ -238,17 +238,12 @@ window.addEventListener("load", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const loaderOverlay = document.getElementById("loader-overlay");
-  const loaderGif = document.getElementById("loader-gif");
-
-  // 🔄 Force restart of GIF on every page load
-  loaderGif.src = "assets/img/loader/Cup.gif?" + new Date().getTime();
 
   window.addEventListener("load", () => {
-    // Fade out overlay when page is ready
     loaderOverlay.style.opacity = "0";
     loaderOverlay.style.visibility = "hidden";
-
-    // Remove completely after fade
-    setTimeout(() => loaderOverlay.remove(), 600);
+    setTimeout(() => {
+      loaderOverlay.remove(); // fully remove from DOM
+    }, 600); // match CSS transition
   });
 });
