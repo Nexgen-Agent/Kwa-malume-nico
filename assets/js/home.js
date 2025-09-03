@@ -233,3 +233,25 @@ window.addEventListener("load", () => {
     autoScrollRail(rail, 0.5); // adjust speed (pixels per frame)
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loaderOverlay = document.getElementById('loader-overlay');
+  const body = document.body;
+
+  // Add the 'loading' class to the body to apply the blur and show the loader
+  body.classList.add('loading');
+  
+  // The 'load' event waits for the entire page, including all assets, to finish loading.
+  window.addEventListener('load', () => {
+    // The page is fully loaded. Remove the blur.
+    body.classList.remove('loading');
+    
+    // Now, fade out the loader overlay.
+    loaderOverlay.style.opacity = '0';
+    
+    // After the fade-out, hide the element completely.
+    setTimeout(() => {
+      loaderOverlay.style.display = 'none';
+    }, 500); // This delay should match the CSS transition duration on #loader-overlay.
+  });
+});
