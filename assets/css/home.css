@@ -223,8 +223,8 @@ body.loading {
 
 /* This ensures the GIF image is the size you want. */
 .gif-loader {
-  width: 700px;
-  height: 700px;
+  width: 380px;
+  height: 380px;
   object-fit: contain; /* This is the fix */
 }
 
