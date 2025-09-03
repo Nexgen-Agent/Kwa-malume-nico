@@ -238,21 +238,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const loaderOverlay = document.getElementById('loader-overlay');
   const body = document.body;
 
-  // Add the 'loading' class immediately to apply the blur and show the loader
+  // Add the 'loading' class to apply the blur and show the loader
   body.classList.add('loading');
   
-  // Wait for the entire page (including all images, videos, and other assets) to finish loading.
+  // Wait for the entire page (all images, scripts, etc.) to load
   window.addEventListener('load', () => {
-    // The page is fully loaded, so we can now remove the blur and hide the loader.
-    // First, remove the 'loading' class to instantly remove the blur
+    // When the page is fully loaded, remove the blur
     body.classList.remove('loading');
     
-    // Then, start the fade-out effect on the loader overlay
+    // Begin the fade-out effect for the loader
     loaderOverlay.style.opacity = '0';
     
-    // After the fade-out transition, hide the element completely to free up the space.
+    // After the fade, hide the loader completely
     setTimeout(() => {
       loaderOverlay.style.display = 'none';
-    }, 500); // This delay must match the transition duration on `#loader-overlay` in your CSS
+    }, 500); // This must match the CSS transition duration
   });
 });
