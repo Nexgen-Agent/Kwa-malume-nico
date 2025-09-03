@@ -32,3 +32,29 @@ async def ws_orders(ws: WebSocket, room: str):
             await ws.receive_text()
     except WebSocketDisconnect:
         leave_room(room, ws)
+
+from fastapi import WebSocket, WebSocketDisconnect
+
+class Hub:
+    def __init__(self):
+        self.clients = []
+
+    async def connect(self, ws: WebSocket):
+        await ws.accept()
+        self.clients.append(ws)
+
+    def disconnect(self, ws: WebSocket):
+        if ws in self.clients:
+            self.clients.remove(ws)
+
+    async def broadcast(self, event: str, data: dict):
+        dead = []
+        for ws in self.clients:
+            try:
+                await ws.send_json({"type": event, "data": data})
+            except Exception:
+                dead.append(ws)
+        for ws in dead:
+            self.disconnect(ws)
+
+hub = Hub()
