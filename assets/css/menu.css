@@ -646,3 +646,16 @@ body.menu-page .food-card img {
     opacity: 1;
   }
 }
+
+body.menu-page .menu-rows {
+    /* Existing code */
+    padding: 12px 12px 120px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    /* Add this line to create internal padding for all sections */
+    padding-top: 24px;
+}
