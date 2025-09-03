@@ -1,0 +1,237 @@
+/* Malume Nico - Home
+
+Shares the same "water glass + gold
+ glow" feel as comments page
+
+- Vertical sections;
+ each has a horizontal
+ swipe rail
+
+Drag to scroll, arrow buttons, 3D lift on
+ cards
+
+Performance-friendly: GPU transforms,
+
+rAF batching, lazy images
+ */
+
+const $ = (s, $c=$ document) =>
+ c.querySelector(s);
+ const $$ = (s, $c=$ document) =>
+
+Array.from(c.querySelectorAll(s));
+
+//
+
+Hero rotating title
+
+(function rotateHero(){
+
+const swaps = $$('.hero-title .swap');
+
+if(!swaps.length) return;
+
+let i=0;
+
+function show(){
+
+swaps.forEach((el,idx)=>
+
+el.classList.toggle('active', idx === i));
+
+i=(i+1) % swaps.length;
+
+}
+
+show();
+
+setInterval(show, 3800);
+
+})();
+ //
+
+Button gold ripple
+
+(function pressGlow(){
+
+$$('.btn').forEach(btn=>{
+
+const handler =(e)=>{
+
+btn.classList.remove('glow-press'); void
+ btn.offsetWidth; btn.classList.add('glow-
+ press');
+
+const x = (e.touches ?
+ e.touches[0].clientX: e.clientX);
+ const y = (e.touches ?
+ e.touches[0].clientY: e.clientY);
+
+const r =
+ document.createElement('span');
+
+r.className = 'gold-ripple';
+
+const rect =
+ btn.getBoundingClientRect();
+
+const size = Math.max(rect.width,
+ rect.height) * 1.15;
+
+r.style.width = r.style.height = size + 'px';
+ r.style.left = (x - rect.left) + 'px';
+
+r.style.top = (y - rect.top) + 'px';
+
+btn.appendChild(r);
+
+r.addEventListener('animationend', ()=>
+ r.remove());
+
+};
+
+btn.addEventListener('click', handler);
+ btn.addEventListener('touchstart',
+ handler, {passive:true});
+
+});
+
+})();
+
+//
+
+Rails: arrows + drag-to-scroll +
+
+swipe glow
+
+function setupRail(section){
+
+const wrap = section.querySelector('.rail-
+ wrap');
+
+const rail = section.querySelector('.rail');
+ const left =
+ section.querySelector('.arrow.left');
+ const right =
+ section.querySelector('.arrow.right');
+ const SCROLL = () =>
+ Math.max(rail.clientWidth, 260) * 0.6;
+
+left.addEventListener('click', () => {
+ section.classList.add('swipe-glow');
+ rail.scrollBy({left: -SCROLL(),
+ behavior:'smooth'}); });
+ right.addEventListener('click', ()=>{
+ section.classList.add('swipe-glow');
+ rail.scrollBy({left: SCROLL(),
+ behavior: 'smooth'}); });
+
+rail.addEventListener('scroll', ()=>{
+ /*
+ remove glow after motion */
+
+clearTimeout(rail._glowT); rail._glowT =
+ setTimeout(()=>section.classList.remove('s
+ wipe-glow'), 400); }, {passive:true});
+
+// Drag to scroll (mouse + touch via
+ Pointer Events)
+
+let isDown=false, startX = 0, startLeft = 0;
+ rail.addEventListener('pointerdown', e=>{
+ isDown=true;
+
+rail.setPointerCapture(e.pointerId);
+
+startX=e.clientX; startLeft=rail.scrollLeft;
+
+section.classList.add('swipe-glow');
+ });
+ rail.addEventListener('pointermove', e=>{
+
+if(!isDown) return;
+
+const dx = e.clientX - startX;
+
+rail.scrollLeft = startLeft - dx;
+
+// mini 3D tilt
+
+const tilt = Math.max(-1, Math.min(1, dx/
+ 80));
+ wrap.style.transform =
+ `perspective(1200px) rotateY(${tilt*4}deg)`;
+ });
+
+const release = e=>{
+
+if(!isDown) return;
+
+isDown=false; wrap.style.transform = "";
+
+setTimeout(()=>section.classList.remove('s
+ wipe-glow'), 420);
+
+};
+
+rail.addEventListener('pointerup', release);
+ rail.addEventListener('pointercancel',
+ release);
+
+}
+
+// Init all rails
+
+$$('.moment').forEach(setupRail);
+
+//
+
+Lazy load guard (if images
+ missing, avoid console noise)
+
+$$('.card').forEach(img=>{
+ img.addEventListener('error', ()=>{
+ img.style.background ='#222'; img.alt =
+ 'Photo coming soon'; });
+
+});
+
+//
+
+Ensure background video starts
+
+window.addEventListener('load', ()=>{
+ const v = $('.bg-video');
+
+if (v && v.paused) v.play().catch (()=>{});
+ });
+
+
+// Auto-scrolling rails (infinite loop)
+function autoScrollRail(rail, speed = 1) {
+  let scrollAmount = 0;
+
+  function step() {
+    rail.scrollLeft += speed;
+    scrollAmount += speed;
+
+    // if reached the end, reset to start
+    if (rail.scrollLeft + rail.clientWidth >= rail.scrollWidth) {
+      rail.scrollLeft = 0;
+      scrollAmount = 0;
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  step();
+}
+
+// Apply to all rails
+window.addEventListener("load", () => {
+  document.querySelectorAll(".rail").forEach(rail => {
+    autoScrollRail(rail, 0.5); // adjust speed (pixels per frame)
+  });
+});
+
+
