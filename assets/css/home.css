@@ -150,39 +150,51 @@ body{
   scroll-snap-type: x proximity; /* smoother snap */
   -webkit-overflow-scrolling: touch;
 }
-
 .card {
-  flex: 0 0 auto;  /* don’t shrink */
-  /* Remove fixed width and height to allow the image to dictate size */
-  /* width: 300px; */
-  /* height: 200px; */
-  border-radius:16px; 
-  scroll-snap-align:center;
-  box-shadow: 0 8px 26px rgba(0,0,0,.35);
+  flex: 0 0 100%;   /* Each card fills 100% of viewport width */
+  height: 100vh;    /* Fill full viewport height */
+  border-radius: 0; /* Edge-to-edge for a clean look */
+  scroll-snap-align: center;
+  position: relative;
+  box-shadow: none; /* Cleaner when full screen */
+  background:#000;
   transform: perspective(800px) translateZ(0); 
   transition: transform .2s ease, box-shadow .2s ease;
-  background:#222;
 }
 
 .card img {
   width: 100%;
-  height: auto;
-  display: block; /* To remove any default spacing */
+  height: 100%;
+  object-fit: cover; /* Crop image nicely while keeping aspect ratio */
+  display: block;    /* Remove inline spacing */
 }
 
-.card:hover{ 
-  transform: perspective(800px) translateZ(18px) 
+.card:hover { 
+  transform: perspective(800px) translateZ(18px);
 }
 
-.moment.swipe-glow{ 
+/* Keep the snap glow effect */
+.moment.swipe-glow { 
   box-shadow: 0 0 0 0 rgba(200,155,45,.4), 0 12px 28px rgba(150,110,20,.22); 
-  animation: momentGlow .7s ease forwards 
+  animation: momentGlow .7s ease forwards;
 }
 
-@keyframes momentGlow{ 
-  to{ box-shadow: 0 0 0 28px rgba(200,155,45,0), 0 12px 28px rgba(150,110,20,.12) } 
+@keyframes momentGlow { 
+  to { 
+    box-shadow: 0 0 0 28px rgba(200,155,45,0), 
+                0 12px 28px rgba(150,110,20,.12); 
+  } 
 }
 
+/* Rail tweaks to ensure snapping */
+.rail {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
 
 /* Footer */
 .foot{
