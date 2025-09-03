@@ -238,20 +238,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const loaderOverlay = document.getElementById('loader-overlay');
   const body = document.body;
 
-  // Add the 'loading' class to apply the blur and show the loader
+  // Start with blur and loader showing
   body.classList.add('loading');
-  
-  // Wait for the entire page (all images, scripts, etc.) to load
+
+  // Wait for the full page to load
   window.addEventListener('load', () => {
-    // When the page is fully loaded, remove the blur
+    // Remove blur
     body.classList.remove('loading');
-    
-    // Begin the fade-out effect for the loader
+
+    // Fade out loader
     loaderOverlay.style.opacity = '0';
-    
-    // After the fade, hide the loader completely
+    loaderOverlay.style.visibility = 'hidden'; // fade visibility too
+
+    // Fully hide after transition
     setTimeout(() => {
       loaderOverlay.style.display = 'none';
-    }, 500); // This must match the CSS transition duration
+    }, 500); // match CSS transition time
   });
 });
