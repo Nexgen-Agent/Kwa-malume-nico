@@ -240,11 +240,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const loaderOverlay = document.getElementById("loader-overlay");
   const loaderGif = document.getElementById("loader-gif");
 
-  // 🔄 Force GIF to restart fresh every time the page is loaded
-  loaderGif.src = loaderGif.src + "?" + new Date().getTime();
+  // 🔄 Force restart of GIF on every page load
+  loaderGif.src = "assets/img/loader/Cup.gif?" + new Date().getTime();
 
   window.addEventListener("load", () => {
-    // Fade out overlay when page finishes loading
+    // Fade out overlay when page is ready
     loaderOverlay.style.opacity = "0";
     loaderOverlay.style.visibility = "hidden";
 
