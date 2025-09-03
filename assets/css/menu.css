@@ -122,12 +122,13 @@ body.menu-page .menu-section {
   background: rgba(0, 0, 0, .28); /* Example background for visual separation */
 }
 
-/* page header */
 body.menu-page .page-head {
-  margin: 0; /* Removing margin to use parent padding */
-  padding: 16px; /* Added padding to create space */
+  padding: 16px; 
+  margin: 0; 
   text-align: center;
+  box-sizing: border-box; /* This is the key line */
 }
+
 
 body.menu-page .page-head h1 {
   margin: 0;
