@@ -218,3 +218,73 @@ input::placeholder{color:rgba(255,255,255,.7)}
 .links a img {
   filter: brightness(0) invert(1);
 }
+
+/* Loader Overlay */
+#loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0a0a0a, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+}
+
+/* Loader Container */
+.loader {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Animated Rings */
+.loader .ring {
+  position: absolute;
+  border: 4px solid transparent;
+  border-top: 4px solid gold;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.loader .ring:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  animation-delay: 0s;
+}
+.loader .ring:nth-child(2) {
+  width: 90px;
+  height: 90px;
+  animation-delay: -0.3s;
+}
+.loader .ring:nth-child(3) {
+  width: 60px;
+  height: 60px;
+  animation-delay: -0.6s;
+}
+
+/* Text in the center */
+.loading-text {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  color: gold;
+  letter-spacing: 2px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
