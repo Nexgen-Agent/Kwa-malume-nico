@@ -238,12 +238,22 @@ window.addEventListener("load", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const loaderOverlay = document.getElementById("loader-overlay");
+  const body = document.body;
+
+  // Add the loading class to the body to trigger the blur effect
+  body.classList.add("loading");
 
   window.addEventListener("load", () => {
+    // Once the page is fully loaded, remove the blur effect
+    body.classList.remove("loading");
+
+    // Start the fade-out transition for the loader overlay
     loaderOverlay.style.opacity = "0";
     loaderOverlay.style.visibility = "hidden";
+
+    // After the transition, fully remove the loader element from the DOM
     setTimeout(() => {
-      loaderOverlay.remove(); // fully remove from DOM
-    }, 600); // match CSS transition
+      loaderOverlay.remove();
+    }, 600); // This delay must match the CSS transition duration
   });
 });
