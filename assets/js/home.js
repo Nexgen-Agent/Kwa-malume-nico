@@ -234,25 +234,21 @@ window.addEventListener("load", () => {
   });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const loaderOverlay = document.getElementById('loader-overlay');
-  const body = document.body;
 
-  // Start with blur and loader showing
-  body.classList.add('loading');
 
-  // Wait for the full page to load
-  window.addEventListener('load', () => {
-    // Remove blur
-    body.classList.remove('loading');
+document.addEventListener("DOMContentLoaded", () => {
+  const loaderOverlay = document.getElementById("loader-overlay");
+  const loaderGif = document.getElementById("loader-gif");
 
-    // Fade out loader
-    loaderOverlay.style.opacity = '0';
-    loaderOverlay.style.visibility = 'hidden'; // fade visibility too
+  // 🔄 Force GIF to restart fresh every time the page is loaded
+  loaderGif.src = loaderGif.src + "?" + new Date().getTime();
 
-    // Fully hide after transition
-    setTimeout(() => {
-      loaderOverlay.style.display = 'none';
-    }, 500); // match CSS transition time
+  window.addEventListener("load", () => {
+    // Fade out overlay when page finishes loading
+    loaderOverlay.style.opacity = "0";
+    loaderOverlay.style.visibility = "hidden";
+
+    // Remove completely after fade
+    setTimeout(() => loaderOverlay.remove(), 600);
   });
 });
