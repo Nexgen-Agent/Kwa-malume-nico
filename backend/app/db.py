@@ -10,3 +10,5 @@ engine = create_async_engine(DATABASE_URL, echo=False, future=True, pool_pre_pin
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 Base = declarative_base()
+
+
