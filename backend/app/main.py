@@ -28,3 +28,32 @@ async def startup():
 @app.get("/health")
 async def health():
     return {"ok": True}
+
+from fastapi import FastAPI, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
+from .db import Base, engine
+from .routers import menu, orders
+from .realtime import hub
+
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Restaurant Live Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # TODO: lock down in prod
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(menu.router)
+app.include_router(orders.router)
+
+@app.websocket("/ws")
+async def websocket_endpoint(ws: WebSocket):
+    await hub.connect(ws)
+    try:
+        while True:
+            await ws.receive_text()
+    except:
+        hub.disconnect(ws)
