@@ -29,3 +29,49 @@ class OrderOut(BaseModel):
     id: int
     status: str
     total: float
+
+from pydantic import BaseModel, Field, EmailStr
+from datetime import datetime
+from typing import Optional, Dict, Any
+
+# Comments
+class CommentIn(BaseModel):
+    name: str = Field(..., max_length=120)
+    message: str = Field(..., max_length=2000)
+
+class CommentOut(CommentIn):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Orders
+class OrderIn(BaseModel):
+    customer: str
+    email: Optional[EmailStr] = None
+    items: Dict[str, Any]
+    note: Optional[str] = ""
+
+class OrderOut(OrderIn):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# Bookings
+class BookingIn(BaseModel):
+    name: str
+    contact: str
+    occasion: str
+    special_request: Optional[str] = ""
+    date: str
+    time: str
+
+class BookingOut(BookingIn):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
