@@ -250,23 +250,18 @@ body.menu-page .rail{
 body.menu-page .rail::-webkit-scrollbar{ display:none }
 
 /* food card */
-body.menu-page .food-card {
+body.menu-page .food-card{
   width: clamp(220px, 40vw, 320px);
-  scroll-snap-align: center;
-  border-radius: 14px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(180deg, rgba(0, 0, 0, .32), rgba(0, 0, 0, .45));
-  box-shadow: 0 10px 28px rgba(0, 0, 0, .42);
+  scroll-snap-align:center;
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  background: linear-gradient(180deg, rgba(0,0,0,.32), rgba(0,0,0,.45));
+  box-shadow: 0 10px 28px rgba(0,0,0,.42);
+  flex-shrink: 0;
 }
 
-body.menu-page .food-card img {
-  width: 100%;
-  max-width: 100%;
-  height: 200px; /* This gives a consistent height for all images */
-  object-fit: cover; /* This is the key property to prevent stretching */
-}
 
 
 /* Loader Overlay */
