@@ -26,3 +26,34 @@ class OrderItem(Base):
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
     menu_item_id: Mapped[int] = mapped_column(ForeignKey("menu_items.id"))
     qty: Mapped[int] = mapped_column(Integer, default=1)
+
+from sqlalchemy import Column, Integer, String, Text, DateTime
+from datetime import datetime
+from .db import Base
+
+class Comment(Base):
+    __tablename__ = "comments"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120))
+    message = Column(Text)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer, primary_key=True, index=True)
+    customer = Column(String(120))
+    email = Column(String(180))
+    items = Column(Text)  # JSON string
+    note = Column(Text, default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Booking(Base):
+    __tablename__ = "bookings"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120))
+    contact = Column(String(180))
+    occasion = Column(String(180))
+    special_request = Column(Text, default="")
+    date = Column(String(32))
+    time = Column(String(32))
+    created_at = Column(DateTime, default=datetime.utcnow)
