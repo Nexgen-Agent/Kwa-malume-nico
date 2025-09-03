@@ -198,12 +198,14 @@ body{
 }
 .nav-btn.ghost{ background: transparent }
 
+/* This is the key part. It applies the blur and disables pointer events ONLY when the 'loading' class is added to the body by the JavaScript. */
 body.loading {
   filter: blur(5px);
   pointer-events: none;
   transition: filter 0.5s ease-in-out;
 }
 
+/* This is the loader overlay. It stays hidden by default until the JavaScript changes its properties. */
 #loader-overlay {
   position: fixed;
   top: 0;
@@ -215,11 +217,13 @@ body.loading {
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  /* These transitions are what allow the fade-out effect. */
   transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
 
+/* This ensures the GIF image is the size you want. */
 .gif-loader {
-  width: 150px; /* Or whatever size you need */
+  width: 150px; 
   height: 150px;
 }
 
