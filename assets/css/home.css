@@ -151,11 +151,12 @@ body{
   -webkit-overflow-scrolling: touch;
 }
 .card {
-  width: clamp(220px, 40vw, 320px); /* flexible for desktop/tablet */
+  width: clamp(220px, 40vw, 320px); /* flexible on larger screens */
+  height: auto;
   scroll-snap-align: center;
   border-radius: 16px;
   overflow: hidden;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, rgba(0,0,0,.32), rgba(0,0,0,.45));
   box-shadow: 0 8px 26px rgba(0,0,0,.35);
@@ -163,11 +164,10 @@ body{
   transition: transform .2s ease, box-shadow .2s ease;
 }
 
-/* Make image scale properly */
 .card img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
+  object-fit: cover;  /* ensures full coverage */
   display: block;
 }
 
@@ -175,24 +175,13 @@ body{
   transform: perspective(800px) translateZ(18px); 
 }
 
-.moment.swipe-glow { 
-  box-shadow: 0 0 0 0 rgba(200,155,45,.4), 0 12px 28px rgba(150,110,20,.22); 
-  animation: momentGlow .7s ease forwards; 
-}
-
-@keyframes momentGlow { 
-  to { 
-    box-shadow: 0 0 0 28px rgba(200,155,45,0), 
-                0 12px 28px rgba(150,110,20,.12); 
-  } 
-}
-
-/* 🔥 Force full-width cards on mobile */
+/* 🔥 Mobile: force one card per view */
 @media (max-width: 768px) {
   .card {
-    width: 100%; /* Always fills screen width */
+    width: 100%;      /* take full container width */
     max-width: 100%;
-    border-radius: 0; /* Optional → edge-to-edge for a cleaner look */
+    height: auto;     /* keeps image ratio */
+    border-radius: 0; /* optional → edge-to-edge look */
   }
 }
 
