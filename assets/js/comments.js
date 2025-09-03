@@ -9,6 +9,27 @@
    - Performance tuned (GPU transforms, rAF batching)
 =========================== */
 
+// Loader Functionality
+document.addEventListener("DOMContentLoaded", () => {
+  const loaderOverlay = document.getElementById("loader-overlay");
+  const body = document.body;
+
+  // Make sure the body is blurred and the loader is visible immediately.
+  body.classList.add("loading");
+
+  // This waits for ALL content (images, videos, etc.) to finish loading.
+  window.addEventListener("load", () => {
+    // When everything is loaded, remove the blur.
+    body.classList.remove("loading");
+
+    // Fade out and then remove the loader.
+    loaderOverlay.style.opacity = "0";
+    setTimeout(() => {
+      loaderOverlay.style.display = "none";
+    }, 600); // This must match the CSS transition duration
+  });
+});
+
 const $ = (s, c=document) => c.querySelector(s);
 const $$ = (s, c=document) => Array.from(c.querySelectorAll(s));
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
