@@ -27,3 +27,14 @@ async def list_menu(request: Request, response: Response, db: AsyncSession = Dep
     response.headers["ETag"] = etag
     response.headers["Cache-Control"] = "public, max-age=86400, stale-while-revalidate=300"
     return items
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from ..db import get_db
+
+router = APIRouter(prefix="/menu", tags=["Menu"])
+
+@router.get("/")
+def get_menu(db: Session = Depends(get_db)):
+    # Placeholder until seed_menu.py populates
+    return {"menu": "Coming soon"}
