@@ -68,3 +68,19 @@ async def orders_ws(websocket: WebSocket):
 from fastapi.middleware.gzip import GZipMiddleware
 # Add to your main app
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Add these imports
+from .routers import auth
+from .auth import get_current_user
+
+# Add auth router
+app.include_router(auth.router)
+
+# Add this to enable CORS for WebSocket authentication
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://yourfrontend.com"],  # Your frontend URLs
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
