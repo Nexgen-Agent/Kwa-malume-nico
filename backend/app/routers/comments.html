@@ -1,32 +1,54 @@
+# app/routers/orders.py
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 from .. import models, schemas, db, realtime
 
-router = APIRouter(prefix="/comments", tags=["Comments"])
+router = APIRouter(prefix="/orders", tags=["Orders"])
 
-# Create comment
-@router.post("/", response_model=schemas.CommentOut)
-def create_comment(comment: schemas.CommentCreate, session: Session = Depends(db.SessionLocal)):
-    new_comment = models.Comment(**comment.dict())
-    session.add(new_comment)
+# Create order
+@router.post("/", response_model=schemas.OrderOut)
+def create_order(order: schemas.OrderCreate, session: Session = Depends(db.SessionLocal)):
+    new_order = models.Order(
+        customer_name=order.customer_name,
+        table_number=order.table_number,
+        phone=order.phone,
+        email=order.email,
+        note=order.note,
+        mode=order.mode,
+        status="pending"
+    )
+    session.add(new_order)
     session.commit()
-    session.refresh(new_comment)
-    # Broadcast to all WebSocket clients
-    import asyncio
-    asyncio.create_task(realtime.comment_manager.broadcast({
-        "type": "comment",
-        "username": new_comment.username,
-        "message": new_comment.message,
-        "created_at": str(new_comment.created_at),
-    }))
-    return new_comment
+    session.refresh(new_order)
 
-# WebSocket for live comments
+    # TODO: Save order items separately in OrderItem model (loop over order.items)
+    # For now we just broadcast summary
+    total = sum([item.qty * session.query(models.MenuItem).get(item.menu_item_id).price for item in order.items])
+
+    import asyncio
+    asyncio.create_task(realtime.order_manager.broadcast({
+        "type": "order",
+        "id": new_order.id,
+        "customer_name": new_order.customer_name,
+        "status": new_order.status,
+        "total": total,
+        "created_at": str(new_order.created_at),
+    }))
+
+    return schemas.OrderOut(
+        id=new_order.id,
+        customer_name=new_order.customer_name,
+        status=new_order.status,
+        total=total,
+        created_at=new_order.created_at
+    )
+
+# WebSocket for live orders
 @router.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    await realtime.comment_manager.connect(websocket)
+    await realtime.order_manager.connect(websocket)
     try:
         while True:
             await websocket.receive_text()  # Keep connection alive
     except WebSocketDisconnect:
-        realtime.comment_manager.disconnect(websocket)
+        realtime.order_manager.disconnect(websocket)
