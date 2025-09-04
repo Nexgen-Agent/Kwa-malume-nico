@@ -1,83 +1,48 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict, Set
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
+
+# Dictionary of rooms -> set of WebSocket connections
 rooms: Dict[str, Set[WebSocket]] = {}
 
+
 async def join_room(room: str, ws: WebSocket):
+    """Add a WebSocket connection to a room."""
     await ws.accept()
-    s = rooms.setdefault(room, set())
-    s.add(ws)
+    rooms.setdefault(room, set()).add(ws)
+
 
 def leave_room(room: str, ws: WebSocket):
+    """Remove a WebSocket connection from a room."""
     if room in rooms and ws in rooms[room]:
         rooms[room].remove(ws)
+        if not rooms[room]:
+            del rooms[room]  # cleanup empty rooms
 
-async def broadcast(room: str, data: dict):
+
+async def broadcast(room: str, event: str, data: dict):
+    """Send a message to all clients in a room."""
     dead = []
     for ws in rooms.get(room, set()):
         try:
-            await ws.send_json(data)
+            await ws.send_json({"type": event, "data": data})
         except Exception:
             dead.append(ws)
     for ws in dead:
         leave_room(room, ws)
 
-@router.websocket("/ws/orders/{room}")
-async def ws_orders(ws: WebSocket, room: str):
+
+@router.websocket("/ws/{room}")
+async def ws_endpoint(ws: WebSocket, room: str):
+    """
+    General WebSocket endpoint.
+    Example: /ws/orders or /ws/comments
+    """
     await join_room(room, ws)
     try:
         while True:
-            # keep-alive / client messages (not required)
+            # Keep-alive: clients may send pings/messages
             await ws.receive_text()
     except WebSocketDisconnect:
         leave_room(room, ws)
-
-from fastapi import WebSocket, WebSocketDisconnect
-
-class Hub:
-    def __init__(self):
-        self.clients = []
-
-    async def connect(self, ws: WebSocket):
-        await ws.accept()
-        self.clients.append(ws)
-
-    def disconnect(self, ws: WebSocket):
-        if ws in self.clients:
-            self.clients.remove(ws)
-
-    async def broadcast(self, event: str, data: dict):
-        dead = []
-        for ws in self.clients:
-            try:
-                await ws.send_json({"type": event, "data": data})
-            except Exception:
-                dead.append(ws)
-        for ws in dead:
-            self.disconnect(ws)
-
-hub = Hub()
-
-from typing import List
-from fastapi import WebSocket
-
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
-    async def broadcast(self, message: dict):
-        for connection in self.active_connections:
-            await connection.send_json(message)
-
-
-# One manager for comments, one for orders
-comment_manager = ConnectionManager()
-order_manager = ConnectionManager()
