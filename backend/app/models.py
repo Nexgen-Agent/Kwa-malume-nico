@@ -1,10 +1,21 @@
 from datetime import datetime
+from enum import Enum
 from sqlalchemy import (
-    Integer, String, Float, ForeignKey, DateTime, Text, func
+    Integer, String, Float, ForeignKey, DateTime, Text, func, Enum as SQLEnum, Date, Time
 )
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from .db import Base
 
+# Enums for constrained values
+class OrderMode(str, Enum):
+    DINE_IN = "dinein"
+    DELIVERY = "delivery"
+
+class OrderStatus(str, Enum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+    COMPLETED = "completed"
 
 # ------------------------
 # MENU
@@ -13,9 +24,9 @@ class MenuItem(Base):
     __tablename__ = "menu_items"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(150), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
-    img: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    img: Mapped[str | None] = mapped_column(String(500), nullable=True)  # Longer for URLs
 
     order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="menu_item")
 
@@ -27,18 +38,23 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    customer_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    customer_name: Mapped[str] = mapped_column(String(200), nullable=False)
     phone: Mapped[str | None] = mapped_column(String(40))
-    email: Mapped[str | None] = mapped_column(String(120))
-    mode: Mapped[str] = mapped_column(String(20), default="dinein")  # dinein | delivery
+    email: Mapped[str | None] = mapped_column(String(255))  # Longer for emails
+    mode: Mapped[OrderMode] = mapped_column(SQLEnum(OrderMode), default=OrderMode.DINE_IN)
     table_number: Mapped[str | None] = mapped_column(String(20))
-    status: Mapped[str] = mapped_column(String(20), default="pending")  # pending | accepted | rejected
+    status: Mapped[OrderStatus] = mapped_column(SQLEnum(OrderStatus), default=OrderStatus.PENDING)
     total: Mapped[float] = mapped_column(Float, default=0.0)
     note: Mapped[str | None] = mapped_column(Text)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+    items: Mapped[list["OrderItem"]] = relationship(
+        "OrderItem", 
+        back_populates="order", 
+        cascade="all, delete-orphan",
+        lazy="selectin"  # Consider for eager loading if needed
+    )
 
 
 class OrderItem(Base):
@@ -60,7 +76,7 @@ class Comment(Base):
     __tablename__ = "comments"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(String(50), nullable=False)
+    username: Mapped[str] = mapped_column(String(100), nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
@@ -72,10 +88,10 @@ class Booking(Base):
     __tablename__ = "bookings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(120), nullable=False)
-    contact: Mapped[str] = mapped_column(String(180), nullable=False)
-    occasion: Mapped[str | None] = mapped_column(String(180))
+    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    contact: Mapped[str] = mapped_column(String(200), nullable=False)
+    occasion: Mapped[str | None] = mapped_column(String(200))
     special_request: Mapped[str | None] = mapped_column(Text)
-    date: Mapped[str] = mapped_column(String(32), nullable=False)
-    time: Mapped[str] = mapped_column(String(32), nullable=False)
+    date: Mapped[Date] = mapped_column(Date, nullable=False)  # Use Date type
+    time: Mapped[Time] = mapped_column(Time, nullable=False)  # Use Time type
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
