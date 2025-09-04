@@ -1,80 +1,81 @@
-from sqlalchemy import Integer, String, Float, ForeignKey, DateTime, func, Column
+from datetime import datetime
+from sqlalchemy import (
+    Integer, String, Float, ForeignKey, DateTime, Text, func
+)
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from .db import Base
 
+
+# ------------------------
+# MENU
+# ------------------------
 class MenuItem(Base):
     __tablename__ = "menu_items"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(150), nullable=False, index=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
-    img: Mapped[str] = mapped_column(String(255), nullable=True)
+    img: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
+    order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="menu_item")
+
+
+# ------------------------
+# ORDERS
+# ------------------------
 class Order(Base):
     __tablename__ = "orders"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    mode: Mapped[str] = mapped_column(String(20), nullable=False)  # dinein | delivery
-    table_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    phone: Mapped[str | None] = mapped_column(String(40), nullable=True)
-    email: Mapped[str | None] = mapped_column(String(120), nullable=True)
-    status: Mapped[str] = mapped_column(String(30), default="pending")
-    total: Mapped[float] = mapped_column(Float, default=0)
-    created_at = Column(DateTime, server_default=func.now())
+    customer_name: Mapped[str] = mapped_column(String(120), nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(40))
+    email: Mapped[str | None] = mapped_column(String(120))
+    mode: Mapped[str] = mapped_column(String(20), default="dinein")  # dinein | delivery
+    table_number: Mapped[str | None] = mapped_column(String(20))
+    status: Mapped[str] = mapped_column(String(20), default="pending")  # pending | accepted | rejected
+    total: Mapped[float] = mapped_column(Float, default=0.0)
+    note: Mapped[str | None] = mapped_column(Text)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+
 
 class OrderItem(Base):
     __tablename__ = "order_items"
+
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
     menu_item_id: Mapped[int] = mapped_column(ForeignKey("menu_items.id"))
     qty: Mapped[int] = mapped_column(Integer, default=1)
 
-from sqlalchemy import Column, Integer, String, Text, DateTime
-from datetime import datetime
-from .db import Base
+    order: Mapped["Order"] = relationship("Order", back_populates="items")
+    menu_item: Mapped["MenuItem"] = relationship("MenuItem", back_populates="order_items")
 
+
+# ------------------------
+# COMMENTS
+# ------------------------
 class Comment(Base):
     __tablename__ = "comments"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(120))
-    message = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
-class Order(Base):
-    __tablename__ = "orders"
-    id = Column(Integer, primary_key=True, index=True)
-    customer = Column(String(120))
-    email = Column(String(180))
-    items = Column(Text)  # JSON string
-    note = Column(Text, default="")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String(50), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
+
+# ------------------------
+# BOOKINGS
+# ------------------------
 class Booking(Base):
     __tablename__ = "bookings"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(120))
-    contact = Column(String(180))
-    occasion = Column(String(180))
-    special_request = Column(Text, default="")
-    date = Column(String(32))
-    time = Column(String(32))
-    created_at = Column(DateTime, default=datetime.utcnow)
 
-from sqlalchemy import Column, Integer, String, Text, DateTime, func
-from .db import Base
-
-class Comment(Base):
-    __tablename__ = "comments"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), nullable=False)
-    message = Column(Text, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-
-class Order(Base):
-    __tablename__ = "orders"
-
-    id = Column(Integer, primary_key=True, index=True)
-    customer_name = Column(String(100), nullable=False)
-    item = Column(String(100), nullable=False)
-    status = Column(String(20), default="pending")  # pending, accepted, rejected
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    contact: Mapped[str] = mapped_column(String(180), nullable=False)
+    occasion: Mapped[str | None] = mapped_column(String(180))
+    special_request: Mapped[str | None] = mapped_column(Text)
+    date: Mapped[str] = mapped_column(String(32), nullable=False)
+    time: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
