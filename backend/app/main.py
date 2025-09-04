@@ -64,3 +64,7 @@ async def orders_ws(websocket: WebSocket):
     except Exception as e:
         print(f"WebSocket error: {e}")
         order_manager.disconnect(websocket)
+
+from fastapi.middleware.gzip import GZipMiddleware
+# Add to your main app
+app.add_middleware(GZipMiddleware, minimum_size=1000)
