@@ -57,3 +57,24 @@ class Booking(Base):
     date = Column(String(32))
     time = Column(String(32))
     created_at = Column(DateTime, default=datetime.utcnow)
+
+from sqlalchemy import Column, Integer, String, Text, DateTime, func
+from .db import Base
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), nullable=False)
+    message = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    customer_name = Column(String(100), nullable=False)
+    item = Column(String(100), nullable=False)
+    status = Column(String(20), default="pending")  # pending, accepted, rejected
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
