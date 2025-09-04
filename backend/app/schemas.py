@@ -150,3 +150,44 @@ class BookingOut(BookingIn):
     else:
         class Config:
             orm_mode = True
+
+# Add these to your existing schemas.py
+
+# User schemas
+class UserCreate(BaseModel):
+    username: str = Field(..., min_length=3, max_length=50)
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+    is_admin: bool = False
+
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: str
+    is_admin: bool
+    created_at: datetime
+
+    if PYDANTIC_V2:
+        model_config = ConfigDict(from_attributes=True)
+    else:
+        class Config:
+            orm_mode = True
+
+# Auth schemas
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+# Order status update
+class OrderStatusUpdate(BaseModel):
+    status: str
+
+    @validator('status')
+    def validate_status(cls, v):
+        valid_statuses = ['pending', 'accepted', 'rejected', 'completed', 'preparing', 'ready']
+        if v not in valid_statuses:
+            raise ValueError(f"Status must be one of: {valid_statuses}")
+        return v
