@@ -146,3 +146,56 @@ window.addEventListener('load', () => {
     v.play().catch(() => {});
   }
 });
+
+// Auto-scroll functionality with perfect timing
+function initAutoScroll() {
+  const rails = document.querySelectorAll('.rail');
+  
+  rails.forEach(rail => {
+    // Add auto-scroll class for CSS animation
+    rail.classList.add('auto-scroll');
+    
+    // Pause on hover
+    rail.addEventListener('mouseenter', () => {
+      rail.classList.remove('auto-scroll');
+    });
+    
+    rail.addEventListener('mouseleave', () => {
+      rail.classList.add('auto-scroll');
+    });
+    
+    // Pause on touch
+    rail.addEventListener('touchstart', () => {
+      rail.classList.remove('auto-scroll');
+    }, { passive: true });
+    
+    rail.addEventListener('touchend', () => {
+      setTimeout(() => {
+        rail.classList.add('auto-scroll');
+      }, 3000);
+    }, { passive: true });
+  });
+}
+
+// Manual arrow functionality
+function initArrows() {
+  document.querySelectorAll('.arrow').forEach(arrow => {
+    arrow.addEventListener('click', () => {
+      const direction = arrow.classList.contains('left') ? -1 : 1;
+      const rail = arrow.closest('.rail-wrap').querySelector('.rail');
+      const card = rail.querySelector('.card');
+      const cardWidth = card.offsetWidth + 12; // 12px gap
+      
+      rail.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+    });
+  });
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  initAutoScroll();
+  initArrows();
+  
+  // Network-aware loader (from previous implementation)
+  initLoader();
+});
