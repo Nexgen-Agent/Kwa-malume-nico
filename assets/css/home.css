@@ -1,4 +1,4 @@
-/* ---------- Theme & base ---------- */
+/* ---------- Theme & base (same tokens as comments) ---------- */
 :root{
   --gold:#c89b2d;
   --gold-dark:#9a6f16;
@@ -13,7 +13,7 @@ body{
   color:#fff; background:#fff;
 }
 
-/* ---------- Background video ---------- */
+/* ---------- Background video (duplicated from home.css) ---------- */
 .bg-video {
   position: fixed;
   inset: 0;
@@ -35,7 +35,7 @@ body{
     var(--wash);
 }
 
-/* ---------- Glass & Water ---------- */
+/* ---------- Glass & Water (same look) ---------- */
 .glass{
   background: rgba(20,15,10,.30);
   border: 1px solid rgba(255,255,255,.18);
@@ -47,6 +47,18 @@ body{
   backface-visibility: hidden;
 }
 .water{ position:relative; overflow:hidden }
+.water::after{
+  content:""; position:absolute; inset:-30%;
+  background:
+    radial-gradient(120px 60px at 20% 30%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(80px 40px at 80% 70%, rgba(255,255,255,.08), transparent 60%);
+  mix-blend-mode: overlay; opacity:.5; filter: blur(14px);
+  animation: caustics 12s linear infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+@keyframes caustics{ to{ transform: translate3d(-3%,2%,0) rotate(1deg) } }
 
 /* ---------- Topbar ---------- */
 .topbar{
@@ -123,6 +135,157 @@ body{
   margin:0 0 6px; font-size: clamp(22px, 4.8vw, 34px); font-weight:900;
 }
 .moment-head p{ margin:0 0 12px; opacity:.95 }
+.rail-wrap{
+  position:relative; padding:8px 40px;
+}
+.arrow{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.4); color:#fff; display:grid; place-items:center; cursor:pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+  transform: translateZ(0);
+}
+.arrow:hover{ transform: translateY(-50%) scale(1.05) }
+.arrow.left{ left:6px }
+.arrow.right{ right:6px }
+
+/* Horizontal rail - PERFECT IMAGE FITTING (like menu page) */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 12px;
+  align-items: start;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding: 12px 6px;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* PERFECT IMAGE CARDS - matching menu page style */
+.card {
+  width: clamp(220px, 40vw, 320px);
+  scroll-snap-align: center;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .32), rgba(0, 0, 0, .45));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .42);
+  transform: perspective(800px) translateZ(0);
+  transition: transform .3s ease, box-shadow .3s ease;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.card img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.card:hover {
+  transform: perspective(800px) translateZ(10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, .55);
+}
+
+/* Fade in animation for images */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: perspective(800px) translateZ(0) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: perspective(800px) translateZ(0) scale(1); 
+  }
+}
+
+/* Remove the old card styles and replace with menu-page perfection */
+.moment {
+  margin: 24px 12px; 
+  padding: 18px 12px;
+}
+
+.rail-wrap {
+  position: relative;
+  padding: 6px 46px; /* Matching menu page padding */
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(0, 0, 0, .28);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .12s;
+}
+
+.arrow.left {
+  left: 10px;
+}
+
+.arrow.right {
+  right: 10px;
+}
+
+.arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .rail-wrap {
+    padding: 6px 40px;
+  }
+
+  .arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .card {
+    width: clamp(200px, 70vw, 280px);
+  }
+}
+
+/* Ensure smooth scrolling */
+.rail {
+  scroll-behavior: smooth;
+}
+
+/* Auto-scroll animation */
+@keyframes autoScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 12px));
+  }
+}
+
+.rail.auto-scroll {
+  animation: autoScroll 30s linear infinite;
+}
+
+.rail.auto-scroll:hover {
+  animation-play-state: paused;
+}
+
+.moment.swipe-glow{ box-shadow: 0 0 0 0 rgba(200,155,45,.4), 0 12px 28px rgba(150,110,20,.22); animation: momentGlow .7s ease forwards }
+@keyframes momentGlow{ to{ box-shadow: 0 0 0 28px rgba(200,155,45,0), 0 12px 28px rgba(150,110,20,.12) } }
 
 /* Footer */
 .foot{
@@ -130,11 +293,31 @@ body{
   display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
 }
 
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .water::after, .card, .btn, .moment.swipe-glow, .hero-title .swap{ animation:none !important; transition:none !important }
+}
+
 .links a img {
   filter: brightness(0) invert(1);
 }
 
-/* Loader Overlay - FIXED */
+.nav-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 14px; border-radius:999px; cursor:pointer; user-select:none;
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff; background: rgba(0,0,0,.28);
+  position:relative; overflow:hidden; font-weight:800;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.nav-btn:hover{ transform: translateY(-2px) }
+.nav-btn.gold{
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  box-shadow: 0 10px 28px rgba(200,155,45,.18);
+}
+.nav-btn.ghost{ background: transparent }
+
+/* Loader Overlay - OPTIMIZED */
 #loader-overlay {
   position: fixed;
   top: 0;
@@ -146,7 +329,9 @@ body{
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+  transform: translateZ(0);
+  will-change: opacity, visibility;
 }
 
 /* Loader Container */
@@ -159,13 +344,15 @@ body{
   align-items: center;
 }
 
-/* Animated Rings */
+/* Animated Rings - OPTIMIZED */
 .loader .ring {
   position: absolute;
   border: 4px solid transparent;
   border-top: 4px solid gold;
   border-radius: 50%;
   animation: spin 1.5s linear infinite;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .loader .ring:nth-child(1) {
@@ -193,7 +380,7 @@ body{
   animation: pulse 1.2s ease-in-out infinite;
 }
 
-/* Animations */
+/* Optimized Animations */
 @keyframes spin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -204,7 +391,37 @@ body{
   50% { opacity: 1; }
 }
 
-/* Hide loader by default */
+/* Critical above-the-fold optimization */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .moment {
+    margin: 20px 8px;
+    padding: 16px 10px;
+  }
+
+  .rail-wrap {
+    padding: 8px 30px;
+  }
+
+  .card {
+    width: 300px; /* Slightly smaller on mobile */
+  }
+
+  .arrow {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* Hide loader by default - JavaScript will control this */
 #loader-overlay.hidden {
   opacity: 0;
   visibility: hidden;
@@ -271,3 +488,307 @@ body{
   transform: translateY(-50%);
   z-index: 10;
   width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev {
+  left: 16px;
+}
+
+.carousel-next {
+  right: 16px;
+}
+
+/* Indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.carousel-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicator.active {
+  background: var(--gold);
+  transform: scale(1.2);
+}
+
+/* Mobile responsiveness for carousel */
+@media (max-width: 768px) {
+  .fade-carousel {
+    height: 300px;
+  }
+
+  .carousel-prev,
+  .carousel-next {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slide {
+    transition: none;
+  }
+
+  .carousel-prev:hover,
+  .carousel-next:hover {
+    transform: translateY(-50%);
+  }
+
+  .carousel-indicator {
+    transition: none;
+  }
+}
+
+/* Footer */
+.foot{
+  margin:24px 12px; padding:10px 12px;
+  display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
+
+/* ==================== */
+/* LIQUID LIGHT TRAVEL ANIMATION */
+/* ==================== */
+
+@keyframes waterCausticsTravel {
+  0% {
+    transform: translateX(-100%) rotate(-5deg);
+    opacity: 0.3;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateX(100%) rotate(5deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes waterCausticsPulse {
+  0%, 100% {
+    opacity: 0.4;
+    filter: blur(15px) brightness(1.1);
+  }
+  50% {
+    opacity: 0.7;
+    filter: blur(12px) brightness(1.3);
+  }
+}
+
+/* Liquid light overlay for entire page */
+.liquid-light-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Moving light beams */
+.light-beam {
+  position: absolute;
+  width: 200%;
+  height: 150px;
+  background: radial-gradient(ellipse at center, 
+    rgba(200, 155, 45, 0.15) 0%,
+    rgba(200, 155, 45, 0.1) 20%,
+    rgba(200, 155, 45, 0.05) 40%,
+    transparent 70%);
+  mix-blend-mode: overlay;
+  animation: waterCausticsTravel 8s linear infinite;
+  filter: blur(10px);
+  will-change: transform, opacity;
+}
+
+/* Multiple beams for richer effect */
+.light-beam:nth-child(1) {
+  top: 15%;
+  animation-delay: 0s;
+  animation-duration: 12s;
+  height: 120px;
+  transform: rotate(3deg);
+}
+
+.light-beam:nth-child(2) {
+  top: 40%;
+  animation-delay: 2s;
+  animation-duration: 10s;
+  height: 180px;
+  transform: rotate(-2deg);
+  background: radial-gradient(ellipse at center, 
+    rgba(255, 220, 120, 0.12) 0%,
+    rgba(255, 220, 120, 0.08) 20%,
+    rgba(255, 220, 120, 0.04) 40%,
+    transparent 70%);
+}
+
+.light-beam:nth-child(3) {
+  top: 70%;
+  animation-delay: 5s;
+  animation-duration: 15s;
+  height: 100px;
+  transform: rotate(5deg);
+  background: radial-gradient(ellipse at center, 
+    rgba(180, 140, 40, 0.1) 0%,
+    rgba(180, 140, 40, 0.06) 20%,
+    rgba(180, 140, 40, 0.03) 40%,
+    transparent 70%);
+}
+
+/* Subtle background caustics */
+.background-caustics {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(200, 155, 45, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(200, 155, 45, 0.06) 0%, transparent 25%),
+    radial-gradient(circle at 40% 80%, rgba(255, 220, 120, 0.05) 0%, transparent 25%),
+    radial-gradient(circle at 60% 20%, rgba(255, 220, 120, 0.04) 0%, transparent 25%);
+  animation: waterCausticsPulse 9s ease-in-out infinite;
+  will-change: opacity, filter;
+}
+
+/* Enhanced water effect for glass elements */
+.glass.enhanced-water::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: 
+    radial-gradient(ellipse at 30% 40%, rgba(255, 255, 255, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+  filter: blur(20px);
+  animation: waterCausticsTravel 15s linear infinite, waterCausticsPulse 12s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+}
+
+/* Add shimmer to specific elements */
+.moment-head h2 {
+  position: relative;
+  display: inline-block;
+}
+
+.moment-head h2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: textShimmer 8s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+@keyframes textShimmer {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Enhanced gold buttons */
+.btn.gold.enhanced {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.gold.enhanced::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: buttonShine 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes buttonShine {
+  0% {
+    left: -100%;
+  }
+  15% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .light-beam,
+  .background-caustics,
+  .glass.enhanced-water::after,
+  .moment-head h2::after,
+  .btn.gold.enhanced::before {
+    animation: none !important;
+  }
+
+  .light-beam {
+    opacity: 0.1 !important;
+  }
+}
+
+
+there is code not being used anymore here so remove it ..my website is no longer leaving the loading zone so fix that 
