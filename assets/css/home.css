@@ -130,21 +130,13 @@ body{
 /* ---------- Moments Sections ---------- */
 .moment{
   margin:24px 12px; padding:18px 12px;
-  /* Ensure each section takes full viewport height on mobile */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 .moment-head h2{
   margin:0 0 6px; font-size: clamp(22px, 4.8vw, 34px); font-weight:900;
 }
 .moment-head p{ margin:0 0 12px; opacity:.95 }
 .rail-wrap{
-  position:relative; 
-  padding:8px 40px;
-  /* Expand container to fit larger cards */
-  min-height: 300px; /* Increased from previous */
+  position:relative; padding:8px 40px;
 }
 .arrow{
   position:absolute; top:50%; transform:translateY(-50%); z-index:2;
@@ -157,62 +149,41 @@ body{
 .arrow.left{ left:6px }
 .arrow.right{ right:6px }
 
-/* Horizontal rail - UPDATED FOR LARGER CARDS & NO CROPPING */
+/* Horizontal rail - PERFECT IMAGE FITTING */
 .rail {
   display: flex;
   flex-wrap: nowrap;
-  gap: 16px; /* Increased gap for larger cards */
+  gap: 16px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory; /* Force snap to each card */
+  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   transform: translateZ(0);
-  padding: 10px 0; /* Added padding for better spacing */
+  padding: 10px 0;
+  scroll-behavior: smooth;
 }
 
-/* DOUBLED CARD SIZE with perfect image fitting */
+/* PERFECT IMAGE CARDS - NO BLACK CANVAS */
 .card {
   flex: 0 0 auto;
-  width: clamp(280px, 85vw, 500px); /* Doubled width */
-  height: auto; /* Natural height */
-  max-height: 400px; /* Maximum height */
-  object-fit: contain; /* Show entire image without cropping */
-  object-position: center;
-  border-radius: 20px; /* Slightly larger radius */
-  scroll-snap-align: center; /* Snap to each card */
-  box-shadow: 0 12px 36px rgba(0,0,0,.4); /* Enhanced shadow */
-  transform: perspective(1000px) translateZ(0);
+  width: 350px; /* Fixed 350px as requested */
+  height: auto; /* Natural height based on image */
+  scroll-snap-align: center;
+  border-radius: 16px;
+  transform: perspective(800px) translateZ(0);
   transition: transform .3s ease, box-shadow .3s ease, opacity .5s ease;
-  background: transparent; /* Remove black background */
-  opacity: 0.9; /* Slight transparency for fade effect */
+  background: transparent; /* NO BLACK BACKGROUND */
+  opacity: 0.9;
   animation: fadeIn 0.8s ease-out forwards;
+  overflow: hidden; /* Ensure image stays within card */
 }
 
 .card:hover{ 
-  transform: perspective(1000px) translateZ(25px);
+  transform: perspective(800px) translateZ(15px);
   opacity: 1;
-  box-shadow: 0 20px 50px rgba(0,0,0,.6);
 }
 
-/* Fade in animation for images */
-@keyframes fadeIn {
-  from { opacity: 0; transform: perspective(1000px) translateZ(0) scale(0.95); }
-  to { opacity: 0.9; transform: perspective(1000px) translateZ(0) scale(1); }
-}
-
-.moment.swipe-glow{ box-shadow: 0 0 0 0 rgba(200,155,45,.4), 0 12px 28px rgba(150,110,20,.22); animation: momentGlow .7s ease forwards }
-@keyframes momentGlow{ to{ box-shadow: 0 0 0 28px rgba(200,155,45,0), 0 12px 28px rgba(150,110,20,.12) } }
-
-/* Footer */
-.foot{
-  margin:24px 12px; padding:10px 12px;
-  display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .water::after, .card, .btn, .moment.swipe-glow, .hero-title .swap{ animation:none !important; transition:none !important }
-}
-
-.links a img {
-  filter:
+/* Ensure images fit perfectly without distortion */
+.card img {
+  width: 100%;
+  height: 100%;
