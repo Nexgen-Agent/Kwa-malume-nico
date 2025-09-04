@@ -75,3 +75,38 @@ class BookingOut(BookingIn):
 
     class Config:
         orm_mode = True
+
+from pydantic import BaseModel
+from datetime import datetime
+
+# ----- Comments -----
+class CommentBase(BaseModel):
+    username: str
+    message: str
+
+class CommentCreate(CommentBase):
+    pass
+
+class CommentOut(CommentBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+# ----- Orders -----
+class OrderBase(BaseModel):
+    customer_name: str
+    item: str
+
+class OrderCreate(OrderBase):
+    pass
+
+class OrderOut(OrderBase):
+    id: int
+    status: str
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
