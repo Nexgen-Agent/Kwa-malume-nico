@@ -177,25 +177,113 @@ function initAutoScroll() {
   });
 }
 
-// Manual arrow functionality
-function initArrows() {
-  document.querySelectorAll('.arrow').forEach(arrow => {
-    arrow.addEventListener('click', () => {
-      const direction = arrow.classList.contains('left') ? -1 : 1;
-      const rail = arrow.closest('.rail-wrap').querySelector('.rail');
-      const card = rail.querySelector('.card');
-      const cardWidth = card.offsetWidth + 12; // 12px gap
-      
-      rail.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+// ========================
+// FADE CAROUSEL FUNCTIONALITY
+// ========================
+
+class FadeCarousel {
+  constructor(container) {
+    this.container = container;
+    this.track = container.querySelector('.carousel-track');
+    this.slides = Array.from(container.querySelectorAll('.carousel-slide'));
+    this.indicators = Array.from(container.querySelectorAll('.carousel-indicator'));
+    this.prevBtn = container.querySelector('.carousel-prev');
+    this.nextBtn = container.querySelector('.carousel-next');
+    
+    this.currentIndex = 0;
+    this.isTransitioning = false;
+    this.autoPlayInterval = null;
+    this.autoPlayDelay = 4000; // 4 seconds between transitions
+    
+    this.init();
+  }
+  
+  init() {
+    // Set initial active state
+    this.showSlide(this.currentIndex);
+    
+    // Event listeners
+    this.prevBtn.addEventListener('click', () => this.prev());
+    this.nextBtn.addEventListener('click', () => this.next());
+    
+    // Indicator clicks
+    this.indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => this.goToSlide(index));
     });
+    
+    // Start autoplay
+    this.startAutoPlay();
+    
+    // Pause on hover
+    this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
+    this.container.addEventListener('mouseleave', () => this.startAutoPlay());
+    
+    // Touch events for mobile
+    this.container.addEventListener('touchstart', () => this.stopAutoPlay(), { passive: true });
+    this.container.addEventListener('touchend', () => this.startAutoPlay(), { passive: true });
+  }
+  
+  showSlide(index) {
+    if (this.isTransitioning) return;
+    
+    this.isTransitioning = true;
+    
+    // Hide current slide
+    this.slides[this.currentIndex].classList.remove('active');
+    this.indicators[this.currentIndex]?.classList.remove('active');
+    
+    // Update current index (with looping)
+    this.currentIndex = index;
+    if (this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
+    if (this.currentIndex >= this.slides.length) this.currentIndex = 0;
+    
+    // Show new slide
+    this.slides[this.currentIndex].classList.add('active');
+    this.indicators[this.currentIndex]?.classList.add('active');
+    
+    // Reset transitioning state after animation completes
+    setTimeout(() => {
+      this.isTransitioning = false;
+    }, 500); // Match CSS transition duration
+  }
+  
+  next() {
+    this.showSlide(this.currentIndex + 1);
+  }
+  
+  prev() {
+    this.showSlide(this.currentIndex - 1);
+  }
+  
+  goToSlide(index) {
+    if (index === this.currentIndex) return;
+    this.showSlide(index);
+  }
+  
+  startAutoPlay() {
+    this.stopAutoPlay();
+    this.autoPlayInterval = setInterval(() => {
+      this.next();
+    }, this.autoPlayDelay);
+  }
+  
+  stopAutoPlay() {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
+    }
+  }
+}
+
+// Initialize all carousels when page loads
+function initFadeCarousels() {
+  document.querySelectorAll('.fade-carousel').forEach(container => {
+    new FadeCarousel(container);
   });
 }
 
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  initAutoScroll();
-  initArrows();
-  
-  // Network-aware loader (from previous implementation)
-  initLoader();
+// Add this to your existing DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+  // Your existing code...
+  initFadeCarousels(); // Add this line
 });
