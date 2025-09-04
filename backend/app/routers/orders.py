@@ -6,20 +6,22 @@ router = APIRouter(prefix="/orders", tags=["Orders"])
 
 # Create order
 @router.post("/", response_model=schemas.OrderOut)
-def create_order(order: schemas.OrderCreate, session: Session = Depends(db.SessionLocal)):
+# Make the function async
+async def create_order(order: schemas.OrderCreate, session: Session = Depends(db.SessionLocal)):
     new_order = models.Order(**order.dict())
     session.add(new_order)
     session.commit()
     session.refresh(new_order)
+    
     # Broadcast to all WebSocket clients
-    import asyncio
-    asyncio.create_task(realtime.order_manager.broadcast({
+    # Now you can use await directly
+    await realtime.order_manager.broadcast({
         "type": "order",
         "customer_name": new_order.customer_name,
         "item": new_order.item,
         "status": new_order.status,
         "created_at": str(new_order.created_at),
-    }))
+    })
     return new_order
 
 # WebSocket for live orders
