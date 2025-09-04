@@ -259,3 +259,13 @@ setTimeout(() => {
     initFadeCarousels();
   }
 }, 1000);
+
+<!-- Liquid Light Overlay -->
+<div class="liquid-light-overlay">
+  <div class="light-beam"></div>
+  <div class="light-beam"></div>
+  <div class="light-beam"></div>
+</div>
+
+<!-- Background Caustics -->
+<div class="background-caustics"></div>
