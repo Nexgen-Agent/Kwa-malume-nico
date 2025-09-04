@@ -95,3 +95,13 @@ class Booking(Base):
     date: Mapped[Date] = mapped_column(Date, nullable=False)  # Use Date type
     time: Mapped[Time] = mapped_column(Time, nullable=False)  # Use Time type
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+# Add to your model
+class MenuItem(Base):
+    # ... existing fields ...
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), onupdate=func.now())
+
+# Then in your endpoint
+last_modified = max(item.updated_at for item in menu_items) if menu_items else None
+if last_modified:
+    response.headers["Last-Modified"] = last_modified.strftime("%a, %d %b %Y %H:%M:%S GMT")
