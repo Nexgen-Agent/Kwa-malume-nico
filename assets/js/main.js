@@ -76,109 +76,8 @@ const $$ = (s, $c = document) => Array.from($c.querySelectorAll(s));
   });
 })();
 
-// Rails: arrows + drag-to-scroll + swipe glow
-function setupRail(section) {
-  const wrap = section.querySelector('.rail-wrap');
-  const rail = section.querySelector('.rail');
-  const left = section.querySelector('.arrow.left');
-  const right = section.querySelector('.arrow.right');
-  const SCROLL = () => Math.max(rail.clientWidth, 260) * 0.6;
-
-  left.addEventListener('click', () => {
-    section.classList.add('swipe-glow');
-    rail.scrollBy({ left: -SCROLL(), behavior: 'smooth' });
-  });
-
-  right.addEventListener('click', () => {
-    section.classList.add('swipe-glow');
-    rail.scrollBy({ left: SCROLL(), behavior: 'smooth' });
-  });
-
-  rail.addEventListener('scroll', () => {
-    clearTimeout(rail._glowT);
-    rail._glowT = setTimeout(() => section.classList.remove('swipe-glow'), 400);
-  }, { passive: true });
-
-  // Drag to scroll
-  let isDown = false, startX = 0, startLeft = 0;
-  rail.addEventListener('pointerdown', e => {
-    isDown = true;
-    rail.setPointerCapture(e.pointerId);
-    startX = e.clientX;
-    startLeft = rail.scrollLeft;
-    section.classList.add('swipe-glow');
-  });
-
-  rail.addEventListener('pointermove', e => {
-    if (!isDown) return;
-    const dx = e.clientX - startX;
-    rail.scrollLeft = startLeft - dx;
-    const tilt = Math.max(-1, Math.min(1, dx / 80));
-    wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
-  });
-
-  const release = e => {
-    if (!isDown) return;
-    isDown = false;
-    wrap.style.transform = "";
-    setTimeout(() => section.classList.remove('swipe-glow'), 420);
-  };
-  rail.addEventListener('pointerup', release);
-  rail.addEventListener('pointercancel', release);
-}
-
-// Init all rails
-$$('.moment').forEach(setupRail);
-
-// Lazy load guard
-$$('.card').forEach(img => {
-  img.addEventListener('error', () => {
-    img.style.background = '#222';
-    img.alt = 'Photo coming soon';
-  });
-});
-
-// Ensure background video starts
-// The original code had a bug here. `$$('.bg-video')` returns an array, but `.paused` is a property of a single video element.
-window.addEventListener('load', () => {
-  const v = document.querySelector('.bg-video');
-  if (v && v.paused) {
-    v.play().catch(() => {});
-  }
-});
-
-// Auto-scroll functionality with perfect timing
-function initAutoScroll() {
-  const rails = document.querySelectorAll('.rail');
-  
-  rails.forEach(rail => {
-    // Add auto-scroll class for CSS animation
-    rail.classList.add('auto-scroll');
-    
-    // Pause on hover
-    rail.addEventListener('mouseenter', () => {
-      rail.classList.remove('auto-scroll');
-    });
-    
-    rail.addEventListener('mouseleave', () => {
-      rail.classList.add('auto-scroll');
-    });
-    
-    // Pause on touch
-    rail.addEventListener('touchstart', () => {
-      rail.classList.remove('auto-scroll');
-    }, { passive: true });
-    
-    rail.addEventListener('touchend', () => {
-      setTimeout(() => {
-        rail.classList.add('auto-scroll');
-      }, 3000);
-    }, { passive: true });
-  });
-}
-
 // ========================
-// FADE CAROUSEL FUNCTIONALITY
+// FADE CAROUSEL FUNCTIONALITY - FIXED
 // ========================
 
 class FadeCarousel {
@@ -277,13 +176,86 @@ class FadeCarousel {
 
 // Initialize all carousels when page loads
 function initFadeCarousels() {
-  document.querySelectorAll('.fade-carousel').forEach(container => {
+  const carousels = document.querySelectorAll('.fade-carousel');
+  console.log(`Found ${carousels.length} fade carousels to initialize`);
+  
+  carousels.forEach((container, index) => {
+    console.log(`Initializing carousel ${index + 1}`);
     new FadeCarousel(container);
   });
 }
 
-// Add this to your existing DOMContentLoaded event
+// Remove the old rail functionality since we're using fade carousels now
+function removeOldRailFunctionality() {
+  // Remove event listeners from old rail system if they exist
+  const rails = document.querySelectorAll('.rail');
+  rails.forEach(rail => {
+    rail.replaceWith(rail.cloneNode(true)); // This removes all event listeners
+  });
+}
+
+// Main initialization
 document.addEventListener('DOMContentLoaded', function() {
-  // Your existing code...
-  initFadeCarousels(); // Add this line
+  console.log('DOM fully loaded and parsed');
+  
+  // Remove old scrolling functionality
+  removeOldRailFunctionality();
+  
+  // Initialize the fade carousels
+  initFadeCarousels();
+  
+  // Your existing button functionality
+  $$('.btn').forEach(btn => {
+    const handler = (e) => {
+      btn.classList.remove('glow-press');
+      void btn.offsetWidth;
+      btn.classList.add('glow-press');
+
+      const x = (e.touches ? e.touches[0].clientX : e.clientX);
+      const y = (e.touches ? e.touches[0].clientY : e.clientY);
+
+      const r = document.createElement('span');
+      r.className = 'gold-ripple';
+
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.15;
+
+      r.style.width = r.style.height = size + 'px';
+      r.style.left = (x - rect.left) + 'px';
+      r.style.top = (y - rect.top) + 'px';
+      btn.appendChild(r);
+
+      r.addEventListener('animationend', () => r.remove());
+    };
+
+    btn.addEventListener('click', handler);
+    btn.addEventListener('touchstart', handler, { passive: true });
+  });
+
+  // Lazy load guard
+  $$('.card').forEach(img => {
+    img.addEventListener('error', () => {
+      img.style.background = '#222';
+      img.alt = 'Photo coming soon';
+    });
+  });
+
+  // Ensure background video starts
+  window.addEventListener('load', () => {
+    const v = document.querySelector('.bg-video');
+    if (v && v.paused) {
+      v.play().catch(() => {});
+    }
+  });
 });
+
+// Fallback: If carousels aren't initialized after 1 second, try again
+setTimeout(() => {
+  const carousels = document.querySelectorAll('.fade-carousel');
+  const anyActive = document.querySelector('.carousel-slide.active');
+  
+  if (carousels.length > 0 && !anyActive) {
+    console.log('Fallback: Re-initializing carousels');
+    initFadeCarousels();
+  }
+}, 1000);
