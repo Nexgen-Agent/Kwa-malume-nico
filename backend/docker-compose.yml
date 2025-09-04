@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   db:
     image: postgres:16
@@ -11,16 +12,20 @@ services:
       - "5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
-volumes:
-  dbdata:
+    restart: unless-stopped
 
-version: "3.8"
-services:
   api:
     build: .
+    container_name: malume_api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://malume:malume_pw@db:5432/malume_nico
     ports:
       - "4000:4000"
     volumes:
       - ./app:/app/app
-      - ./malume.db:/app/malume.db
     restart: unless-stopped
+
+volumes:
+  dbdata:
