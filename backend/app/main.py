@@ -57,3 +57,17 @@ async def websocket_endpoint(ws: WebSocket):
             await ws.receive_text()
     except:
         hub.disconnect(ws)
+
+from fastapi import FastAPI
+from .db import Base, engine
+from .routers import menu, comments, orders
+
+# Create DB tables
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="Malume Nico API")
+
+# Routers
+app.include_router(menu.router)
+app.include_router(comments.router)
+app.include_router(orders.router)
