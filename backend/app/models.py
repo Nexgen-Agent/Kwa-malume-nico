@@ -105,3 +105,25 @@ class MenuItem(Base):
 last_modified = max(item.updated_at for item in menu_items) if menu_items else None
 if last_modified:
     response.headers["Last-Modified"] = last_modified.strftime("%a, %d %b %Y %H:%M:%S GMT")
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    customer_name: Mapped[str] = mapped_column(String(200), nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(40))
+    email: Mapped[str | None] = mapped_column(String(255))
+    mode: Mapped[OrderMode] = mapped_column(SQLEnum(OrderMode), default=OrderMode.DINE_IN)
+    table_number: Mapped[str | None] = mapped_column(String(20))
+    status: Mapped[OrderStatus] = mapped_column(SQLEnum(OrderStatus), default=OrderStatus.PENDING)
+    total: Mapped[float] = mapped_column(Float, default=0.0)
+    note: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # ADD THIS RELATIONSHIP HERE:
+    items: Mapped[list["OrderItem"]] = relationship(
+        "OrderItem", 
+        back_populates="order", 
+        cascade="all, delete-orphan",
+        lazy="selectin"  # This enables eager loading of items
+    )
