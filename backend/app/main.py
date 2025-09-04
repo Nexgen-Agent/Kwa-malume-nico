@@ -1,73 +1,53 @@
-import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from .db import engine, Base
-from .routers import menu, orders
-from .realtime import router as ws_router
+from .db import Base, engine
+from .routers import menu, comments, orders
+from .realtime import comment_manager, order_manager
+
+# Create DB tables on startup
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Malume Nico API")
 
+# Allow frontend access (adjust origins in production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten for production
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
 )
 
+# Register routers
 app.include_router(menu.router)
+app.include_router(comments.router)
 app.include_router(orders.router)
-app.include_router(ws_router)
 
-@app.on_event("startup")
-async def startup():
-    # ensure DB & tables exist
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
+# Health check
 @app.get("/health")
 async def health():
     return {"ok": True}
 
-from fastapi import FastAPI, WebSocket
-from fastapi.middleware.cors import CORSMiddleware
-from .db import Base, engine
-from .routers import menu, orders
-from .realtime import hub
 
-Base.metadata.create_all(bind=engine)
+# ----------------------
+# WEBSOCKETS
+# ----------------------
 
-app = FastAPI(title="Restaurant Live Backend")
+@app.websocket("/ws/comments")
+async def comments_ws(ws: WebSocket):
+    await comment_manager.connect(ws)
+    try:
+        while True:
+            await ws.receive_text()  # keep alive
+    except WebSocketDisconnect:
+        comment_manager.disconnect(ws)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # TODO: lock down in prod
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
-app.include_router(menu.router)
-app.include_router(orders.router)
-
-@app.websocket("/ws")
-async def websocket_endpoint(ws: WebSocket):
-    await hub.connect(ws)
+@app.websocket("/ws/orders")
+async def orders_ws(ws: WebSocket):
+    await order_manager.connect(ws)
     try:
         while True:
             await ws.receive_text()
-    except:
-        hub.disconnect(ws)
-
-from fastapi import FastAPI
-from .db import Base, engine
-from .routers import menu, comments, orders
-
-# Create DB tables
-Base.metadata.create_all(bind=engine)
-
-app = FastAPI(title="Malume Nico API")
-
-# Routers
-app.include_router(menu.router)
-app.include_router(comments.router)
-app.include_router(orders.router)
+    except WebSocketDisconnect:
+        order_manager.disconnect(ws)
