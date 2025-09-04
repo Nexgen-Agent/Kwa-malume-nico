@@ -1,18 +1,16 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
 from .db import Base, engine
 from .routers import menu, comments, orders
 from .realtime import comment_manager, order_manager
-
-# Create DB tables on startup
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Malume Nico API")
 
 # Allow frontend access (adjust origins in production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # In production, specify exact origins
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
@@ -23,31 +21,46 @@ app.include_router(menu.router)
 app.include_router(comments.router)
 app.include_router(orders.router)
 
+# Create DB tables on startup (async version)
+@app.on_event("startup")
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 # Health check
 @app.get("/health")
 async def health():
     return {"ok": True}
-
 
 # ----------------------
 # WEBSOCKETS
 # ----------------------
 
 @app.websocket("/ws/comments")
-async def comments_ws(ws: WebSocket):
-    await comment_manager.connect(ws)
+async def comments_ws(websocket: WebSocket):
+    await comment_manager.connect(websocket)
     try:
         while True:
-            await ws.receive_text()  # keep alive
+            # Keep connection alive or process messages
+            data = await websocket.receive_text()
+            # You might want to process the message here
+            # For example: await comment_manager.handle_message(websocket, data)
     except WebSocketDisconnect:
-        comment_manager.disconnect(ws)
-
+        comment_manager.disconnect(websocket)
+    except Exception as e:
+        # Handle other exceptions
+        print(f"WebSocket error: {e}")
+        comment_manager.disconnect(websocket)
 
 @app.websocket("/ws/orders")
-async def orders_ws(ws: WebSocket):
-    await order_manager.connect(ws)
+async def orders_ws(websocket: WebSocket):
+    await order_manager.connect(websocket)
     try:
         while True:
-            await ws.receive_text()
+            data = await websocket.receive_text()
+            # Process order messages if needed
     except WebSocketDisconnect:
-        order_manager.disconnect(ws)
+        order_manager.disconnect(websocket)
+    except Exception as e:
+        print(f"WebSocket error: {e}")
+        order_manager.disconnect(websocket)
