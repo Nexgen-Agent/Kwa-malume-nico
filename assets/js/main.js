@@ -34,33 +34,27 @@ const $$ = (s, $c = document) => Array.from($c.querySelectorAll(s));
 // Button gold ripple
 //
 (function pressGlow(){
-  $$('.btn').forEach(btn => {
-    const handler = (e) => {
-      btn.classList.remove('glow-press');
-      void btn.offsetWidth;
-      btn.classList.add('glow-press');
-
+  // This function now only targets elements with the ".ripple-btn" class
+  $$('.ripple-btn').forEach(btn=>{
+    const handler = (e)=>{
+      btn.classList.remove('glow-press'); void btn.offsetWidth; btn.classList.add('glow-press');
       const x = (e.touches ? e.touches[0].clientX : e.clientX);
       const y = (e.touches ? e.touches[0].clientY : e.clientY);
-
       const r = document.createElement('span');
       r.className = 'gold-ripple';
-
       const rect = btn.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height) * 1.15;
-
       r.style.width = r.style.height = size + 'px';
       r.style.left = (x - rect.left) + 'px';
       r.style.top = (y - rect.top) + 'px';
       btn.appendChild(r);
-
-      r.addEventListener('animationend', () => r.remove());
+      r.addEventListener('animationend', ()=> r.remove());
     };
-
     btn.addEventListener('click', handler);
-    btn.addEventListener('touchstart', handler, {passive: true});
+    btn.addEventListener('touchstart', handler, {passive:true});
   });
 })();
+
 
 //
 // Rails: arrows + drag-to-scroll + swipe glow
