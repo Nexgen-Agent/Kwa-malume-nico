@@ -1,0 +1,290 @@
+/* ---------- Theme tokens ---------- */
+:root{
+  --gold:#c89b2d;
+  --gold-dark:#9a6f16;
+  --ink:#1c140b;
+  --ivory:#fffaf1;
+  --wash: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.45));
+}
+
+/* Base reset */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:#fff; background:#fff; overflow:hidden; /* we control scroll inside */
+}
+
+/* ---------- Background video ---------- */
+.bg-video{
+  position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2;
+  filter: saturate(1.1) brightness(.9) contrast(1.05);
+}
+.video-overlay{
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(60% 60% at 50% 20%, rgba(200,155,45,.20), transparent 60%),
+    var(--wash);
+}
+
+/* ---------- iOS-style translucent glass + water effect ---------- */
+.glass{
+  background: rgba(20,15,10,.28);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border-radius: 18px;
+}
+.water{
+  /* SVG turbulence-based ripple (GPU-friendly enough, with fallback) */
+  position: relative;
+  overflow: hidden;
+}
+.water::after{
+  content:""; position:absolute; inset:-30%;
+  background:
+    radial-gradient(120px 60px at 20% 30%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(80px 40px at 80% 70%, rgba(255,255,255,.09), transparent 60%);
+  mix-blend-mode: overlay; opacity:.5;
+  animation: caustics 12s linear infinite;
+  pointer-events:none;
+  filter: blur(14px);
+}
+@keyframes caustics { to { transform: translate3d(-3%,2%,0) rotate(1deg); } }
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position:sticky; top:12px; margin:12px; z-index:10;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px;
+  /* The padding here is what determines the overall height.
+     Keep this as is to avoid increasing the top bar size. */
+}
+.brand{display:flex; align-items:center; gap:10px}
+.logo{
+  width:100px; /* Logo is now doubled in size */
+  height:100px; /* Logo is now doubled in size */
+  border-radius:12px
+}
+.titles .name{font-weight:900; letter-spacing:.3px}
+.titles .tag{font-size:.85rem; opacity:.85}
+.links{
+  display:flex;
+  gap:14px;
+  align-items:center; /* This is crucial for vertical alignment. */
+}
+.links a img {
+  width: 40px; /* Icons are now the original logo size */
+  height: 40px; /* Icons are now the original logo size */
+  border-radius: 8px; /* Adds a bit of style. */
+  transition: transform 0.3s ease; /* Smooth hover effect. */
+}
+.links a img:hover {
+  transform: scale(1.1); /* Slight enlargement on hover. */
+}
+
+/* Comment bubble */
+.bubble{
+  display:inline-flex; align-items:center; gap:10px;
+  max-width:100%;
+  padding:10px 12px; border-radius:14px;
+  background: rgba(20,15,10,.30); /* Adds a dark transparent background */
+  backdrop-filter: blur(10px) saturate(120%); /* Creates the glass effect */
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border:1px solid rgba(255,255,255,.12); /* Adds a subtle white border */
+  transform: translateY(100vh);
+  opacity:0;
+  will-change: transform, opacity;
+}
+.bubble.show{ animation: rise 12s linear forwards }
+@keyframes rise {
+  0% {
+    transform: translateY(100vh); /* Start from the very bottom of the viewport */
+    opacity: 1; /* Stay fully visible as it moves up */
+  }
+  100% {
+    transform: translateY(-100vh); /* Move to the to the middle of the viewport and beyond */
+    opacity: 0; /* Fade out in the middle */
+  }
+}
+
+.user{font-weight:800; color:#fff}
+.text{opacity:.95}
+
+
+.user{font-weight:800; color:#fff}
+.text{opacity:.95}
+
+/* Composer */
+.composer {
+  position: fixed;
+  bottom: 62px; /* Lifted the entire box up by 50px (12px + 50px) */
+  left: 12px;
+  right: 12px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column; /* This stacks the rows vertically */
+  gap: 10px;
+  padding: 12px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-direction: column; /* This makes the inputs stack vertically within the row */
+  flex-wrap: nowrap;
+}
+
+    /* prevents overflow on small screens */
+}
+
+.row.buttons {
+  justify-content: space-between;
+}
+input{
+  flex:1;
+  padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.2);
+  background: rgba(0,0,0,.35); color:#fff;
+  outline:none;
+}
+input::placeholder{color:rgba(255,255,255,.7)}
+.hint{font-size:.85rem; opacity:.8}
+
+/* Buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:11px 16px; border-radius:999px; cursor:pointer; user-select:none;
+  border:1px solid rgba(255,255,255,.16);
+  color:#fff; background: rgba(0,0,0,.35);
+  position:relative; overflow:hidden; font-weight:800;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.btn:hover{ transform: translateY(-1px) }
+.btn.gold{
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  box-shadow: 0 12px 28px rgba(200,155,45,.22);
+}
+.btn.ghost{ background: transparent }
+
+/* Gold press ripple */
+.btn.glow-press{
+  box-shadow: 0 0 0 0 rgba(200,155,45,.45), 0 12px 28px rgba(150,110,20,.22);
+  animation: haloFade .8s ease forwards;
+}
+@keyframes haloFade{
+  to{ box-shadow: 0 0 0 18px rgba(200,155,45,0), 0 12px 28px rgba(150,110,20,.12) }
+}
+.gold-ripple{
+  position:absolute; border-radius:50%; pointer-events:none;
+  background: radial-gradient(circle, rgba(255,255,255,.85) 0%, rgba(255,255,255,.6) 30%, rgba(200,155,45,.35) 60%, rgba(200,155,45,0) 70%);
+  transform: translate(-50%,-50%) scale(0); opacity:.9;
+  animation: rippleOut .7s cubic-bezier(.2,.8,.2,1) forwards; mix-blend-mode: screen;
+}
+@keyframes rippleOut{ to{ transform: translate(-50%,-50%) scale(1.8); opacity:0 } }
+
+/* Floating hearts */
+.hearts{ position:fixed; inset:0; pointer-events:none }
+.heart{
+  position:absolute; font-size:24px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.35));
+  animation: float 2.2s ease-in forwards;
+}
+@keyframes float{
+  0% { transform: translateY(0) scale(.9); opacity:.0 }
+  10%{ opacity:1 }
+  80%{ opacity:1 }
+  100%{ transform: translateY(-180px) scale(1.25); opacity:0 }
+}
+
+/* Footer */
+.foot{
+  position:fixed; left:16px; right:16px; bottom:16px;
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+  font-size:.95rem;
+  z-index: 12;
+}
+.links{display:flex; gap:14px}
+.link{color:#fff; opacity:.9; text-decoration:none}
+.link:hover{opacity:1}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce){
+  .glass, .water, .btn, .bubble, .heart, .bg-video, .video-overlay{
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.links a img {
+  filter: brightness(0) invert(1);
+}
+
+/* Loader Overlay */
+#loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0a0a0a, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+}
+
+/* Loader Container */
+.loader {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Animated Rings */
+.loader .ring {
+  position: absolute;
+  border: 4px solid transparent;
+  border-top: 4px solid gold;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.loader .ring:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  animation-delay: 0s;
+}
+.loader .ring:nth-child(2) {
+  width: 90px;
+  height: 90px;
+  animation-delay: -0.3s;
+}
+.loader .ring:nth-child(3) {
+  width: 60px;
+  height: 60px;
+  animation-delay: -0.6s;
+}
+
+/* Text in the center */
+.loading-text {
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  color: gold;
+  letter-spacing: 2px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
