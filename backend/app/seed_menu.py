@@ -7,10 +7,25 @@ import os
 import sys
 import asyncio
 import logging
+<<<<<<< HEAD
+=======
+import os
+import sys
+
+# Add the parent directory to Python path to enable absolute imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Now use ABSOLUTE imports (not relative)
+from app.db import engine, AsyncSessionLocal, Base
+from app.models import MenuItem
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+>>>>>>> 765fdbc334cbad664aa5db1b05a3a1177f21a0c3
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
+<<<<<<< HEAD
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -37,6 +52,25 @@ def install_required_packages():
                 logger.error(f"❌ Failed to install {package}: {e}")
                 return False
     return True
+=======
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Menu items data
+menu_items = [
+    ("Titanic Family Kota", 100.0, "assets/img/menu/1.jpg"),
+    ("Dunked Wings", 75.0, "assets/img/menu/2.jpg"),  # Fixed "Danked" to "Dunked"
+    ("Bugatti Kota", 60.0, "assets/img/menu/3.jpg"),
+    ("Burger", 60.0, "assets/img/menu/4.jpg"),
+    ("Range Rover Kota", 50.0, "assets/img/menu/5.jpg"),
+    ("Dagwood", 45.0, "assets/img/menu/6.jpg"),
+    ("BMW M4 Kota", 40.0, "assets/img/menu/7.jpg"),
+    ("Dessert", 40.0, "assets/img/menu/8.jpg"),
+    ("Omoda Kota", 35.0, "assets/img/menu/9.jpg"),
+    ("Haval Kota", 30.0, "assets/img/menu/10.jpg"),
+]
+>>>>>>> 765fdbc334cbad664aa5db1b05a3a1177f21a0c3
 
 def setup_database():
     """Setup database connection and models without complex imports"""
@@ -94,7 +128,11 @@ async def create_tables(engine, Base):
             await conn.run_sync(Base.metadata.create_all)
         logger.info("✅ Database tables created successfully")
         return True
+<<<<<<< HEAD
     except Exception as e:
+=======
+    except SQLAlchemyError as e:
+>>>>>>> 765fdbc334cbad664aa5db1b05a3a1177f21a0c3
         logger.error(f"❌ Error creating tables: {e}")
         return False
 
@@ -120,6 +158,7 @@ async def seed_menu_items(AsyncSessionLocal, MenuItem, menu_items):
             logger.info(f"✅ Successfully seeded {len(menu_items)} menu items")
             return True
 
+<<<<<<< HEAD
     except Exception as e:
         logger.error(f"❌ Error seeding menu items: {e}")
         return False
@@ -143,6 +182,26 @@ async def main():
         
         # Seed data
         if not await seed_menu_items(AsyncSessionLocal, MenuItem, menu_items):
+=======
+    except SQLAlchemyError as e:
+        logger.error(f"❌ Database error seeding menu items: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"❌ Unexpected error: {e}")
+        return False
+
+async def main():
+    """Main function to run the seeding process"""
+    logger.info("🚀 Starting database seeding process...")
+    
+    try:
+        # Create tables
+        if not await create_tables():
+            return False
+        
+        # Seed data
+        if not await seed_menu_items():
+>>>>>>> 765fdbc334cbad664aa5db1b05a3a1177f21a0c3
             return False
         
         logger.info("🎉 Seeding completed successfully!")
@@ -151,6 +210,7 @@ async def main():
     except Exception as e:
         logger.error(f"💥 Seeding failed: {e}")
         return False
+<<<<<<< HEAD
     finally:
         # Clean up engine
         if engine:
@@ -162,3 +222,12 @@ if __name__ == "_main_":
     
     # Exit with appropriate code
     sys.exit(0 if success else 1)
+=======
+
+if __name__ == "__main__":
+    # Run the async main function
+    success = asyncio.run(main())
+    
+    # Exit with appropriate code
+    exit(0 if success else 1)
+>>>>>>> 765fdbc334cbad664aa5db1b05a3a1177f21a0c3
