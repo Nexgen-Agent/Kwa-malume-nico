@@ -92,3 +92,4 @@ async def get_oauth2_token(request: Request) -> Optional[str]:
     if auth_header and auth_header.startswith("Bearer "):
         return auth_header.split(" ")[1]
     return None
+    
