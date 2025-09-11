@@ -1,5 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from litestar import Router, post, get
+from litestar.exceptions import HTTPException
+from litestar.status_codes import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from litestar.params import Dependency
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from ..db import get_async_session
@@ -7,13 +9,14 @@ from .. import models, schemas
 from ..auth import get_password_hash, verify_password, create_access_token, get_current_user
 import os
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+# Create router - Litestar uses Router instead of APIRouter
+router = Router(path="/auth", route_handlers=[])
 
-@router.post("/register", response_model=schemas.UserOut)
+@post("/register", response_model=schemas.UserOut)
 async def register(
     user_data: schemas.UserCreate,
-    session: AsyncSession = Depends(get_async_session)
-):
+    session: AsyncSession = Dependency(get_async_session)
+) -> schemas.UserOut:
     # Check if user exists
     result = await session.execute(
         select(models.User).where(
@@ -22,13 +25,13 @@ async def register(
         )
     )
     existing_user = result.scalar_one_or_none()
-    
+
     if existing_user:
         raise HTTPException(
-            status_code=400,
+            status_code=HTTP_400_BAD_REQUEST,
             detail="Username or email already exists"
         )
-    
+
     # Create new user
     hashed_password = get_password_hash(user_data.password)
     user = models.User(
@@ -37,38 +40,43 @@ async def register(
         hashed_password=hashed_password,
         is_admin=user_data.is_admin
     )
-    
+
     session.add(user)
     await session.commit()
     await session.refresh(user)
-    
+
     return user
 
-@router.post("/token", response_model=schemas.Token)
+@post("/token", response_model=schemas.Token)
 async def login(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    session: AsyncSession = Depends(get_async_session)
-):
+    data: schemas.UserCreate,  # Changed from OAuth2PasswordRequestForm
+    session: AsyncSession = Dependency(get_async_session)
+) -> schemas.Token:
     result = await session.execute(
-        select(models.User).where(models.User.username == form_data.username)
+        select(models.User).where(models.User.username == data.username)
     )
     user = result.scalar_one_or_none()
-    
-    if not user or not verify_password(form_data.password, user.hashed_password):
+
+    if not user or not verify_password(data.password, user.hashed_password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     access_token = create_access_token(
         data={"sub": user.username}
     )
-    
+
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/me", response_model=schemas.UserOut)
+@get("/me", response_model=schemas.UserOut)
 async def get_current_user_info(
-    current_user: models.User = Depends(get_current_user)
-):
+    current_user: models.User = Dependency(get_current_user)
+) -> schemas.UserOut:
     return current_user
+
+# Add routes to router (Litestar requires explicit registration)
+router.register(register)
+router.register(login) 
+router.register(get_current_user_info)
