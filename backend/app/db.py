@@ -1,16 +1,26 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./malume.db")
 
 # Create async engine
-engine = create_async_engine(DATABASE_URL, echo=False, future=True, pool_pre_ping=True)
+engine = create_async_engine(
+    DATABASE_URL, 
+    echo=False, 
+    future=True, 
+    pool_pre_ping=True
+)
 
-# Async session maker (SQLAlchemy 1.4 compatible)
-AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+# Async session maker (SQLAlchemy 2.0 style)
+AsyncSessionLocal = async_sessionmaker(
+    engine, 
+    expire_on_commit=False,
+    class_=AsyncSession
+)
 
-class Base(declarative_base()):
+# Base model class (SQLAlchemy 2.0 style)
+class Base(DeclarativeBase):
     pass
 
 # Async session dependency
