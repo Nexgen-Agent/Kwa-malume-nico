@@ -94,3 +94,68 @@ emailjs.send("service_pdwcuat", "template_rq0e43j", templateParams)
 
 }
 
+// ==================== BACKEND CONNECTION (ADD THIS AT BOTTOM) ====================
+
+async function submitBookingToBackend(bookingData) {
+    try {
+        const response = await fetch('http://localhost:4000/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        });
+        
+        if (response.ok) {
+            return true; // Success!
+        } else {
+            console.error('Booking failed:', await response.json());
+            return false;
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+        return false;
+    }
+}
+
+// ==================== UPDATE EXISTING CODE ====================
+// Find your existing form submit handler and REPLACE the alert part with:
+
+bookingForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();  
+    const contact = document.getElementById("contact").value.trim();  
+    const occasion = occasionInput.value.trim();  
+    const otherOccasion = document.getElementById("otherOccasion").value.trim();  
+    const specialRequest = document.getElementById("specialRequest").value.trim();  
+
+    if (!name || !contact || !occasion) {  
+        alert("Please fill in all required fields.");  
+        return;  
+    }
+
+    // Create booking data for backend
+    const bookingData = {
+        name: name,
+        contact: contact,
+        occasion: occasion === "Other" ? otherOccasion : occasion,
+        special_request: specialRequest,
+        date: new Date().toISOString().split('T')[0], // Today's date
+        time: new Date().toLocaleTimeString() // Current time
+    };
+
+    // Send to backend instead of showing alert
+    const success = await submitBookingToBackend(bookingData);
+    
+    if (success) {
+        alert(`Booking Confirmed 🎉\n\nName: ${name}\nContact: ${contact}\nOccasion: ${occasion}${occasion === "Other" ? " - " + otherOccasion : ""}\nSpecial Request: ${specialRequest}`);
+        bookingForm.reset();  
+        optionButtons.forEach(b => b.classList.remove("active"));  
+        otherOccasionGroup.classList.add("hidden");  
+        specialRequestGroup.classList.add("hidden");
+    } else {
+        alert("Failed to submit booking. Please try again.");
+    }
+});
+
