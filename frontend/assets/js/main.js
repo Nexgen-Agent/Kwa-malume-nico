@@ -348,3 +348,64 @@ setTimeout(() => {
         });
     }
 }, 2000);
+
+// ==================== BACKEND CONNECTION ====================
+
+// Load menu items from backend
+async function loadMenuFromBackend() {
+    try {
+        const response = await fetch('http://localhost:4000/menu');
+        const menuItems = await response.json();
+        
+        // Update menu sections with real data
+        updateMenuSections(menuItems);
+        
+    } catch (error) {
+        console.error('Failed to load menu:', error);
+        // Fallback: keep existing menu items
+    }
+}
+
+// Update menu sections with real data
+function updateMenuSections(menuItems) {
+    // Update hero section with menu items count
+    const menuCountElement = document.querySelector('.hero-subtitle');
+    if (menuCountElement && menuItems.length > 0) {
+        const originalText = menuCountElement.textContent;
+        menuCountElement.textContent = originalText.replace(/\d+/, menuItems.length);
+    }
+    
+    // Update menu preview cards
+    const menuCards = document.querySelectorAll('.menu-preview-card');
+    if (menuCards.length > 0 && menuItems.length > 0) {
+        // Take first few menu items for preview
+        const previewItems = menuItems.slice(0, Math.min(menuItems.length, 6));
+        
+        menuCards.forEach((card, index) => {
+            if (previewItems[index]) {
+                const item = previewItems[index];
+                const img = card.querySelector('img');
+                const title = card.querySelector('h3');
+                const price = card.querySelector('.price');
+                
+                if (img && item.img) img.src = item.img;
+                if (title) title.textContent = item.name;
+                if (price) price.textContent = `R ${item.price.toFixed(2)}`;
+            }
+        });
+    }
+}
+
+// Load data when page is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // After your existing DOMContentLoaded code, add:
+    setTimeout(loadMenuFromBackend, 1500);
+});
+
+// Add this to your existing window.load event
+window.addEventListener('load', function() {
+    // Your existing load code...
+    
+    // Also load menu data
+    setTimeout(loadMenuFromBackend, 1000);
+});
