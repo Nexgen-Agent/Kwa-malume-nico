@@ -16,6 +16,37 @@
   </div>
 </div>
 
+<!-- Add this to your existing <head> section -->
+<script>
+    // ==================== BACKEND CONNECTION ====================
+    async function loadCommentsFromBackend() {
+        try {
+            const response = await fetch('http://localhost:4000/comments');
+            const comments = await response.json();
+            
+            // Clear existing seed comments
+            if (window.seedTimer) clearInterval(window.seedTimer);
+            const stage = document.getElementById('stage');
+            if (stage) stage.innerHTML = '';
+            
+            // Add real comments from backend
+            comments.forEach(comment => {
+                // You'll need to define addToStage in HTML scope or use your existing function
+                if (window.addToStage) {
+                    window.addToStage(comment.username, comment.message);
+                }
+            });
+        } catch (error) {
+            console.error('Failed to load comments:', error);
+        }
+    }
+
+    // Load comments when page is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(loadCommentsFromBackend, 1000);
+    });
+</script>
+
 </head>
 <body>
 
