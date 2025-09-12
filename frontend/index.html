@@ -19,6 +19,33 @@
   </div>
 </div>
 
+<!-- Add this to your existing <head> section -->
+<script>
+    // ==================== BACKEND CONNECTION ====================
+    async function loadMenuFromBackend() {
+        try {
+            const response = await fetch('http://localhost:4000/menu');
+            const menuItems = await response.json();
+            
+            // Update hero count
+            const menuCountElement = document.querySelector('.hero-subtitle');
+            if (menuCountElement && menuItems.length > 0) {
+                const originalText = menuCountElement.textContent;
+                menuCountElement.textContent = originalText.replace(/\d+/, menuItems.length);
+            }
+            
+            console.log('Menu loaded from backend:', menuItems.length + ' items');
+            
+        } catch (error) {
+            console.error('Failed to load menu:', error);
+        }
+    }
+
+    // Load menu data when page is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(loadMenuFromBackend, 1000);
+    });
+</script>
 
 </head>
 
