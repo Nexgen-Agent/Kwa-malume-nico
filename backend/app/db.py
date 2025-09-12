@@ -1,29 +1,43 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.pool import NullPool
 import os
+import ssl
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./malume.db")
 
-# Create async engine
-engine = create_async_engine(
-    DATABASE_URL, 
-    echo=False, 
-    future=True, 
-    pool_pre_ping=True
-)
+# For production PostgreSQL with SSL
+if DATABASE_URL.startswith("postgresql+asyncpg"):
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        future=True,
+        pool_pre_ping=True,
+        pool_size=20,
+        max_overflow=10,
+        pool_recycle=3600,
+        connect_args={
+            "ssl": ssl.create_default_context() if os.getenv("DB_SSL", "false").lower() == "true" else None
+        }
+    )
+else:
+    engine = create_async_engine(
+        DATABASE_URL, 
+        echo=False, 
+        future=True, 
+        pool_pre_ping=True
+    )
 
-# Async session maker (SQLAlchemy 2.0 style)
 AsyncSessionLocal = async_sessionmaker(
     engine, 
     expire_on_commit=False,
-    class_=AsyncSession
+    class_=AsyncSession,
+    autoflush=False
 )
 
-# Base model class (SQLAlchemy 2.0 style)
 class Base(DeclarativeBase):
     pass
 
-# Async session dependency
 async def get_async_session() -> AsyncSession:
     async with AsyncSessionLocal() as session:
         try:
