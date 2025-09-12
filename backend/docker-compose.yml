@@ -12,19 +12,27 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql/data
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U malume -d malume_nico"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   api:
     build: .
     container_name: malume_api
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgres://malume:malume_pw@db:5432/malume_nico
+      PYTHONPATH: /app
     ports:
       - "4000:4000"
     volumes:
       - ./app:/app/app
     restart: unless-stopped
+    command: hypercorn app.main:app --host 0.0.0.0 --port 4000 --bind "[::]:4000"
 
 volumes:
   dbdata:
