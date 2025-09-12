@@ -1,1 +1,1 @@
-.
+# (empty) just makes app a package
