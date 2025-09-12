@@ -185,3 +185,76 @@ function addToStage(user, text){
   // trigger reveal
   requestAnimationFrame(()=> bubble.classList.add('show'));
 }
+
+// ==================== BACKEND CONNECTION ====================
+
+// Load comments from backend
+async function loadCommentsFromBackend() {
+    try {
+        const response = await fetch('http://localhost:4000/comments');
+        const comments = await response.json();
+        
+        // Clear existing seed comments
+        clearInterval(seedTimer);
+        stage.innerHTML = '';
+        
+        // Add real comments from backend
+        comments.forEach(comment => {
+            addToStage(comment.username, comment.message);
+        });
+    } catch (error) {
+        console.error('Failed to load comments:', error);
+        // Keep seed comments if backend fails
+    }
+}
+
+// Submit comment to backend
+async function submitCommentToBackend(user, text) {
+    try {
+        const response = await fetch('http://localhost:4000/comments', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: user, message: text })
+        });
+        
+        return response.ok;
+    } catch (error) {
+        console.error('Failed to submit comment:', error);
+        return false;
+    }
+}
+
+// Update composer submit to use backend
+composer.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = nameInput.value.trim() || 'Guest';
+    const text = commentInput.value.trim();
+    if(!text) return;
+
+    // Submit to backend
+    const success = await submitCommentToBackend(user, text);
+    
+    if (success) {
+        addToStage(user, text);
+        const rect = sendBtn.getBoundingClientRect();
+        popHeart(rect.left + rect.width/2, rect.top);
+        prepareMailto(user, text);
+        commentInput.value = '';
+        commentInput.focus();
+    } else {
+        alert('Failed to post comment. Please try again.');
+    }
+});
+
+// Load real comments when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // Keep your existing loader code, then add:
+    window.addEventListener('load', () => {
+        // ... your existing load code ...
+        
+        // Load comments from backend after page loads
+        setTimeout(loadCommentsFromBackend, 1000);
+    });
+});
