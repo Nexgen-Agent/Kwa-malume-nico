@@ -436,3 +436,153 @@ async function loadMenu(){
     console.error("Failed to load menu:", error);
   }
 }
+
+// ==================== BACKEND CONNECTION ====================
+
+// Replace your existing loadMenu function with this:
+async function loadMenu(){
+    try {
+        const res = await fetch('http://localhost:4000/menu', { 
+            headers: { 'Accept': 'application/json' }
+        });
+        
+        if (res.status === 304) {
+            console.log('Menu data is cached and up-to-date.');
+            return menuItems; // Use existing local data
+        }
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const items = await res.json();
+        console.log('Menu items loaded from backend:', items.length);
+        
+        // Replace local menuItems with backend data
+        menuItems.length = 0; // Clear existing items
+        items.forEach(item => {
+            menuItems.push({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                img: item.img || `assets/img/menu/default.jpg`
+            });
+        });
+        
+        // Re-render menu with real data
+        renderMenu();
+        return items;
+        
+    } catch (error) {
+        console.error("Failed to load menu from backend, using local data:", error);
+        return menuItems; // Fallback to local data
+    }
+}
+
+// Replace your existing sendOrder function with this:
+async function sendOrder(payload){
+    try {
+        const res = await fetch('http://localhost:4000/orders', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+        });
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        console.log('Order submitted successfully:', data);
+        return data;
+        
+    } catch (error) {
+        console.error("Failed to send order:", error);
+        throw error; // Re-throw to handle in checkout
+    }
+}
+
+// Update your checkout function to use backend
+checkoutBtn.addEventListener('click', async () => {
+    if (cart.length === 0) { 
+        showToast('Cart is empty'); 
+        return; 
+    }
+
+    const subTotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+    
+    try {
+        if (orderMode === 'dinein') {
+            const table = document.getElementById('tableNumber').value.trim();
+            if (!table) { 
+                showToast('Enter table number'); 
+                return; 
+            }
+            
+            const orderData = {
+                mode: 'dinein',
+                customer_name: 'Guest', // You can add name input later
+                table_number: table,
+                items: cart.map(item => ({
+                    menu_item_id: item.id,
+                    qty: item.qty
+                })),
+                total: subTotal
+            };
+            
+            const result = await sendOrder(orderData);
+            showToast(`Order #${result.id} confirmed for Table ${table}!`);
+            
+        } else if (orderMode === 'delivery') {
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            if (!phone || !email) { 
+                showToast('Enter phone & email'); 
+                return; 
+            }
+            
+            const deliveryFee = subTotal >= 280 ? 0 : 30;
+            const grandTotal = subTotal + deliveryFee;
+            
+            const orderData = {
+                mode: 'delivery',
+                customer_name: 'Guest', // You can add name input later
+                phone: phone,
+                email: email,
+                items: cart.map(item => ({
+                    menu_item_id: item.id,
+                    qty: item.qty
+                })),
+                total: grandTotal
+            };
+            
+            const result = await sendOrder(orderData);
+            showToast(`Order #${result.id} confirmed! Total R${grandTotal}`);
+            
+        } else {
+            showToast('Select Dine-in or Delivery');
+            return;
+        }
+        
+        // Clear cart on success
+        cart = []; 
+        updateCartUI(); 
+        toggleDrawer(false);
+        
+    } catch (error) {
+        showToast('Failed to place order. Please try again.');
+        console.error('Checkout error:', error);
+    }
+});
+
+// Load real menu data when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    // After your existing loader code, add:
+    setTimeout(() => {
+        loadMenu().then(menuData => {
+            if (menuData && menuData.length > 0) {
+                console.log('Menu loaded successfully from backend');
+            }
+        });
+    }, 1000);
+});
