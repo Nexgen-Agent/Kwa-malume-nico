@@ -16,6 +16,32 @@
   </div>
 </div>
 
+<!-- Add this to your existing <head> section -->
+<script>
+    // ==================== BACKEND CONNECTION ====================
+    async function submitBookingToBackend(bookingData) {
+        try {
+            const response = await fetch('http://localhost:4000/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            });
+            
+            if (response.ok) {
+                return true; // Success!
+            } else {
+                console.error('Booking failed:', await response.json());
+                return false;
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+            return false;
+        }
+    }
+</script>
+
 </head>
 <body>  
 
