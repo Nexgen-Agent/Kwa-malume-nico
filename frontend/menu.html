@@ -16,6 +16,32 @@
   </div>
 </div>
 
+<!-- Add this to your existing <head> section -->
+<script>
+    // ==================== BACKEND CONNECTION ====================
+    async function preloadMenuData() {
+        try {
+            const response = await fetch('http://localhost:4000/menu');
+            if (response.ok) {
+                const menuData = await response.json();
+                console.log('Menu preloaded:', menuData.length + ' items');
+                
+                // Store for quick access (optional)
+                window.menuData = menuData;
+            }
+        } catch (error) {
+            console.error('Menu preload failed:', error);
+        }
+    }
+
+    // Preload menu data when page starts loading
+    if (document.body.classList.contains('menu-page')) {
+        window.addEventListener('load', function() {
+            setTimeout(preloadMenuData, 500);
+        });
+    }
+</script>
+
 </head>
 <body class="menu-page">
 
