@@ -66,8 +66,28 @@ if (!name || !contact || !occasion) {
   return;  
 }  
 
-alert(`Booking Confirmed 🎉\n\nName: ${name}\nContact: ${contact}\nOccasion: ${occasion}${occasion === "Other" ? " - " + otherOccasion : ""}\nSpecial Request: ${specialRequest}`);  
-bookingForm.reset();  
+// Create booking data for backend
+const bookingData = {
+    name: name,
+    contact: contact,
+    occasion: occasion === "Other" ? otherOccasion : occasion,
+    special_request: specialRequest,
+    date: new Date().toISOString().split('T')[0], // Today's date
+    time: new Date().toLocaleTimeString() // Current time
+};
+
+// Send to backend instead of showing alert
+const success = await submitBookingToBackend(bookingData);
+
+if (success) {
+    alert(`Booking Confirmed 🎉\n\nName: ${name}\nContact: ${contact}\nOccasion: ${occasion}${occasion === "Other" ? " - " + otherOccasion : ""}\nSpecial Request: ${specialRequest}`);
+    bookingForm.reset();  
+    optionButtons.forEach(b => b.classList.remove("active"));  
+    otherOccasionGroup.classList.add("hidden");  
+    specialRequestGroup.classList.add("hidden");
+} else {
+    alert("Failed to submit booking. Please try again.");
+}
 optionButtons.forEach(b => b.classList.remove("active"));  
 otherOccasionGroup.classList.add("hidden");  
 specialRequestGroup.classList.add("hidden");
