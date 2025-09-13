@@ -1,11 +1,15 @@
+
 from litestar import Litestar
 from litestar.middleware.cors import CORSMiddleware
 from .db import Base, engine
 from .routers import menu, comments, orders, auth
 from .config import settings
 from .security import rate_limit_middleware, trusted_host_middleware, security_headers_middleware
-from .middleware.logging import LoggingMiddleware
+from .logging import setup_logging
 from .exceptions import global_exception_handler
+
+# Ensure logging is set up before the app is created
+setup_logging()
 
 app = Litestar(
     title="Malume Nico API",
@@ -17,7 +21,6 @@ app = Litestar(
         auth.router
     ],
     middleware=[
-        LoggingMiddleware,
         rate_limit_middleware,
         trusted_host_middleware,
         security_headers_middleware,
