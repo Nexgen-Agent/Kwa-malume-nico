@@ -6,8 +6,16 @@ import re
 
 # ----- Enums -----
 class OrderMode(str, Enum):
-    DINEIN = "dinein"
+    DINE_IN = "dinein"
     DELIVERY = "delivery"
+    
+class OrderStatus(str, Enum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+    COMPLETED = "completed"
+    PREPARING = "preparing"
+    READY = "ready"
 
 # ----- Menu Items -----
 class MenuItemOut(BaseModel):
@@ -44,18 +52,17 @@ class OrderCreate(BaseModel):
 
     @field_validator('phone')
     @classmethod
-    def validate_phone(cls, v):
+    def validate_phone(cls, v: Optional[str]) -> Optional[str]:
         if v is not None:
-            # Basic phone validation - remove non-digits and check length
             digits = re.sub(r'\D', '', v)
-            if len(digits) < 7:  # Minimum phone number length
+            if len(digits) < 7:
                 raise ValueError('Invalid phone number format')
         return v
 
     @field_validator('table_number')
     @classmethod
-    def validate_table_number(cls, v, info):
-        if info.data.get('mode') == OrderMode.DINEIN and not v:
+    def validate_table_number(cls, v: Optional[str], info) -> Optional[str]:
+        if info.data.get('mode') == OrderMode.DINE_IN and not v:
             raise ValueError('Table number is required for dine-in orders')
         return v
 
@@ -68,9 +75,9 @@ class OrderOut(BaseModel):
     customer_name: str
     phone: Optional[str]
     email: Optional[str]
-    mode: str
+    mode: OrderMode
     table_number: Optional[str]
-    status: str
+    status: OrderStatus
     total: float
     note: Optional[str]
     created_at: datetime
@@ -104,7 +111,7 @@ class BookingIn(BaseModel):
 
     @field_validator('date')
     @classmethod
-    def validate_date_not_in_past(cls, v):
+    def validate_date_not_in_past(cls, v: date) -> date:
         if v < date.today():
             raise ValueError('Booking date cannot be in the past')
         return v
@@ -145,12 +152,8 @@ class TokenData(BaseModel):
 
 # ----- Order Status -----
 class OrderStatusUpdate(BaseModel):
-    status: str
+    status: OrderStatus
 
-    @field_validator('status')
-    @classmethod
-    def validate_status(cls, v):
-        valid_statuses = ['pending', 'accepted', 'rejected', 'completed', 'preparing', 'ready']
-        if v not in valid_statuses:
-            raise ValueError(f"Status must be one of: {valid_statuses}")
-        return v
+    model_config = {
+        "use_enum_values": True
+    }
