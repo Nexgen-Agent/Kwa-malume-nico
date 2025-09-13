@@ -1,3 +1,9 @@
+"""
+This module contains dependency injection functions for API endpoints.
+
+These functions are used to parse and validate request parameters
+before they are passed to the route handlers.
+"""
 from litestar.params import Parameter
 from typing import Optional
 from datetime import date
