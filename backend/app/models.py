@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from sqlalchemy import (
-    Integer, String, Float, ForeignKey, DateTime, Text, Enum as SQLEnum, 
+    Integer, String, Float, ForeignKey, DateTime, Text, Enum as SQLEnum,
     Date, Time, Boolean
 )
 from sqlalchemy.orm import relationship, Mapped, mapped_column
@@ -23,22 +23,21 @@ class OrderStatus(str, Enum):
 # MENU
 # ------------------------
 class MenuItem(Base):
-    _tablename_ = "menu_items"  # FIXED: Double underscores
+    __tablename__ = "menu_items"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False, index=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     img: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), onupdate=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 
     order_items: Mapped[list["OrderItem"]] = relationship("OrderItem", back_populates="menu_item")
-
 
 # ------------------------
 # ORDERS
 # ------------------------
 class Order(Base):
-    _tablename_ = "orders"  # FIXED: Double underscores
+    __tablename__ = "orders"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     customer_name: Mapped[str] = mapped_column(String(200), nullable=False)
@@ -52,15 +51,14 @@ class Order(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     items: Mapped[list["OrderItem"]] = relationship(
-        "OrderItem", 
-        back_populates="order", 
+        "OrderItem",
+        back_populates="order",
         cascade="all, delete-orphan",
         lazy="selectin"
     )
 
-
 class OrderItem(Base):
-    _tablename_ = "order_items"  # FIXED: Double underscores
+    __tablename__ = "order_items"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
@@ -70,24 +68,22 @@ class OrderItem(Base):
     order: Mapped["Order"] = relationship("Order", back_populates="items")
     menu_item: Mapped["MenuItem"] = relationship("MenuItem", back_populates="order_items")
 
-
 # ------------------------
 # COMMENTS
 # ------------------------
 class Comment(Base):
-    _tablename_ = "comments"  # FIXED: Double underscores
+    __tablename__ = "comments"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(100), nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-
 # ------------------------
 # BOOKINGS
 # ------------------------
 class Booking(Base):
-    _tablename_ = "bookings"  # FIXED: Double underscores
+    __tablename__ = "bookings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(200), nullable=False)
@@ -98,12 +94,11 @@ class Booking(Base):
     time: Mapped[Time] = mapped_column(Time, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-
 # ------------------------
 # USERS
 # ------------------------
 class User(Base):
-    _tablename_ = "users"  # FIXED: Double underscores
+    __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
