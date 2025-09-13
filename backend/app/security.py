@@ -1,7 +1,7 @@
 from litestar.middleware import DefineMiddleware
 from litestar.middleware.rate_limit import RateLimitMiddleware
-from litestar.middleware.compression import CompressionMiddleware
 from litestar.middleware.trusted_host import TrustedHostMiddleware
+from litestar.types import ASGIApp, Receive, Scope, Send
 import os
 from datetime import timedelta
 
@@ -19,8 +19,11 @@ trusted_host_middleware = DefineMiddleware(
 )
 
 # Security headers middleware
-async def security_headers_middleware(request, call_next):
-    response = await call_next(request)
+async def security_headers_middleware(
+    scope: Scope, receive: Receive, send: Send, app: ASGIApp
+) -> None:
+    """Adds various security headers to the response."""
+    response = await app(scope, receive, send)
     response.headers.update({
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
