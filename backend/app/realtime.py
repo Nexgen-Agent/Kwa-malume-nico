@@ -6,7 +6,7 @@ import json
 
 # Use thread-safe data structures
 class ConnectionManager:
-    def _init_(self):
+    def __init__(self):
         self.rooms: Dict[str, Set[WebSocket]] = {}
         self._lock = asyncio.Lock()  # Lock for thread safety
 
@@ -32,9 +32,11 @@ class ConnectionManager:
         async with self._lock:
             connections = self.rooms.get(room, set()).copy()
 
+        message = {"type": event, "data": data}
+
         for connection in connections:
             try:
-                await connection.send_json({"type": event, "data": data})
+                await connection.send_json(message)
             except (RuntimeError, ConnectionError):
                 dead_connections.append(connection)
 
@@ -56,29 +58,10 @@ async def comments_websocket(websocket: WebSocket) -> None:
     """WebSocket endpoint for comments."""
     await comment_manager.connect("comments", websocket)
     try:
-        while True:
-            # Receive and potentially process messages
-            data = await websocket.receive_data()
-            
-            # Convert bytes to string if needed
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            
-            try:
-                # Parse and handle incoming messages
-                message = json.loads(data)
-                if message.get("type") == "new_comment":
-                    # Broadcast to all clients in the comments room
-                    await comment_manager.broadcast(
-                        "comments", 
-                        "new_comment", 
-                        message.get("data", {})
-                    )
-            except json.JSONDecodeError:
-                # Handle non-JSON messages (keep-alive pings)
-                pass
-    except Exception as e:
-        print(f"Unexpected error in comments WebSocket: {e}")
+        # The loop below keeps the connection alive, waiting for it to close
+        async for _ in websocket.iter_bytes():
+            pass
+    finally:
         await comment_manager.disconnect("comments", websocket)
 
 @websocket("/ws/orders")
@@ -86,59 +69,26 @@ async def orders_websocket(websocket: WebSocket) -> None:
     """WebSocket endpoint for orders."""
     await order_manager.connect("orders", websocket)
     try:
-        while True:
-            data = await websocket.receive_data()
-            
-            # Convert bytes to string if needed
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            
-            try:
-                message = json.loads(data)
-                if message.get("type") == "new_order":
-                    await order_manager.broadcast(
-                        "orders", 
-                        "new_order", 
-                        message.get("data", {})
-                    )
-                elif message.get("type") == "status_update":
-                    await order_manager.broadcast(
-                        "orders", 
-                        "status_update", 
-                        message.get("data", {})
-                    )
-            except json.JSONDecodeError:
-                # Keep connection alive
-                pass
-    except Exception as e:
-        print(f"Unexpected error in orders WebSocket: {e}")
+        # The loop below keeps the connection alive, waiting for it to close
+        async for _ in websocket.iter_bytes():
+            pass
+    finally:
         await order_manager.disconnect("orders", websocket)
 
 # Optional: Generic room-based endpoint
 @websocket("/ws/room/{room_name:str}")
 async def room_websocket(websocket: WebSocket, room_name: str) -> None:
     """Generic WebSocket endpoint for any room."""
-    # Add authentication/validation here
     if not room_name.isalnum() or len(room_name) > 50:
         await websocket.close(code=WS_1008_POLICY_VIOLATION)
         return
 
-    manager = ConnectionManager()
-    await manager.connect(room_name, websocket)
+    # Use a shared manager or one from a dependency
+    # This example re-uses the comment_manager for simplicity.
+    await comment_manager.connect(room_name, websocket)
     try:
-        while True:
-            data = await websocket.receive_data()
-            
-            # Convert bytes to string if needed
-            if isinstance(data, bytes):
-                data = data.decode('utf-8')
-            
-            # Echo message to all in room (or process as needed)
-            try:
-                message = json.loads(data)
-                await manager.broadcast(room_name, "message", message)
-            except json.JSONDecodeError:
-                pass
-    except Exception as e:
-        print(f"Unexpected error in room WebSocket: {e}")
-        await manager.disconnect(room_name, websocket)
+        # The loop below keeps the connection alive, waiting for it to close
+        async for _ in websocket.iter_bytes():
+            pass
+    finally:
+        await comment_manager.disconnect(room_name, websocket)
