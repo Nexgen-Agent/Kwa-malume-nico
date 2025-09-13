@@ -7,13 +7,15 @@ import asyncio
 import logging
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
+from .db import engine, Base, AsyncSessionLocal
+from .models import MenuItem
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 # Menu items data
 menu_items = [
@@ -29,10 +31,9 @@ menu_items = [
     ("Haval Kota", 30.0, "assets/img/menu/10.jpg"),
 ]
 
-async def create_tables():
+async def create_tables() -> bool:
     """Create database tables if they don't exist"""
     try:
-        from .db import engine, Base
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created successfully")
@@ -41,12 +42,9 @@ async def create_tables():
         logger.error(f"Error creating tables: {e}")
         return False
 
-async def seed_menu_items():
+async def seed_menu_items() -> bool:
     """Seed menu items into the database"""
     try:
-        from .db import AsyncSessionLocal
-        from .models import MenuItem
-        
         async with AsyncSessionLocal() as session:
             # Check if menu items already exist
             result = await session.execute(select(MenuItem))
@@ -72,29 +70,29 @@ async def seed_menu_items():
         logger.error(f"Unexpected error: {e}")
         return False
 
-async def main():
+async def main() -> bool:
     """Main function to run the seeding process"""
     logger.info("Starting database seeding process...")
-    
+
     try:
         # Create tables
         if not await create_tables():
             return False
-        
+
         # Seed data
         if not await seed_menu_items():
             return False
-        
+
         logger.info("Seeding completed successfully!")
         return True
-        
+
     except Exception as e:
         logger.error(f"Seeding failed: {e}")
         return False
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     # Run the async main function
     success = asyncio.run(main())
-    
+
     # Exit with appropriate code
     exit(0 if success else 1)
