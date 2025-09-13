@@ -1,13 +1,13 @@
+
 #!/usr/bin/env python3
 import hypercorn
-from hypercorn.config import Config
 from app.main import app
 from app.config import settings
+from hypercorn.config import Config
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     config = Config()
     config.bind = ["0.0.0.0:4000"]
-    config.use_reload = settings.debug
-    config.loglevel = "info"
-    
+    config.use_reloader = settings.debug
+
     hypercorn.run(app, config)
