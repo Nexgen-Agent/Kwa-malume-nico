@@ -2,7 +2,7 @@
 from litestar import Litestar
 from litestar.middleware.cors import CORSMiddleware
 from .db import Base, engine
-from .routers import menu, comments, orders, auth
+from .routers import menu, comments, orders, auth, bookings
 from .config import settings
 from .security import rate_limit_middleware, trusted_host_middleware, security_headers_middleware
 from .logging import setup_logging
@@ -18,7 +18,7 @@ app = Litestar(
         menu.router,
         comments.router, 
         orders.router,
-        auth.router
+        auth, bookings.router
     ],
     middleware=[
         rate_limit_middleware,

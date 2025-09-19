@@ -11,3 +11,13 @@ if __name__ == "__main__":
     config.use_reloader = settings.debug
 
     hypercorn.run(app, config)
+    
+import pdb
+
+def my_function():
+    print("This line will execute before the breakpoint.")
+    # Add a breakpoint right here
+    pdb.set_trace()
+    print("This line will execute after you continue the debugger.")
+
+my_function()

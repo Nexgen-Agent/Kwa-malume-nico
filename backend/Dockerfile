@@ -1,10 +1,11 @@
-FROM python:3.12-slim  # Use 3.12 for better compatibility
+FROM python:3.13-slim
 
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install
