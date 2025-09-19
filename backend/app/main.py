@@ -18,7 +18,8 @@ app = Litestar(
         menu.router,
         comments.router, 
         orders.router,
-        auth, bookings.router
+        auth.router,
+        bookings.router,
     ],
     middleware=[
         rate_limit_middleware,
