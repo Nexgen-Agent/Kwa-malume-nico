@@ -6,7 +6,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.sql import func
-from .db import Base
+from .database import Base
 
 # Enums for constrained values
 class OrderMode(str, Enum):

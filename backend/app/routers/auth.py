@@ -4,7 +4,7 @@ from litestar.status_codes import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from litestar.params import Dependency
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from ..db import get_async_session
+from ..database import get_async_session
 from .. import models, schemas
 from ..auth import get_password_hash, verify_password, create_access_token, get_current_user
 
@@ -14,7 +14,7 @@ router = Router(path="/auth", route_handlers=[])
 @post("/register", response_model=schemas.UserOut)
 async def register(
     user_data: schemas.UserCreate,
-    session: AsyncSession = Dependency(get_async_session)
+   dependencies={"session": get_async_session},  # <-- injects here
 ) -> schemas.UserOut:
     """
     Registers a new user and adds them to the database.
@@ -52,7 +52,7 @@ async def register(
 @post("/token", response_model=schemas.Token)
 async def login(
     data: schemas.UserCreate,
-    session: AsyncSession = Dependency(get_async_session)
+   dependencies={"session": get_async_session},  # <-- injects here
 ) -> schemas.Token:
     """
     Authenticates a user and returns a JWT access token.
@@ -77,7 +77,7 @@ async def login(
 
 @get("/me", response_model=schemas.UserOut)
 async def get_current_user_info(
-    current_user: models.User = Dependency(get_current_user)
+current_user: models.User
 ) -> schemas.UserOut:
     """
     Retrieves the information of the currently authenticated user.

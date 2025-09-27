@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from authlib.jose import JWTError, jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from litestar import Request
 from litestar.exceptions import HTTPException
@@ -8,7 +8,7 @@ from litestar.status_codes import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 from litestar.params import Dependency
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from .db import get_async_session, AsyncSessionLocal
+from .database import get_async_session, AsyncSessionLocal
 from .models import User
 from .settings import settings
 
@@ -41,7 +41,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 async def get_current_user(
     request: Request,
-    session: AsyncSession = Dependency(get_async_session)
+   dependencies={"session": get_async_session},  # <-- injects here
 ) -> User:
     """
     Dependency to get the current authenticated user from request headers.

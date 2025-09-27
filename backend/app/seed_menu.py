@@ -7,7 +7,7 @@ import asyncio
 import logging
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from .db import engine, Base, AsyncSessionLocal
+from .database import engine, Base, AsyncSessionLocal
 from .models import MenuItem
 
 # Configure logging

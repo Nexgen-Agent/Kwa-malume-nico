@@ -7,19 +7,23 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
 from datetime import date, datetime
-from .. import models, schemas, db, realtime
+from .. import models, schemas, database, realtime
 from ..auth import get_current_user, get_current_admin, get_current_user_from_token
-from ..dependencies import order_filter_params
+from ..depandencies import order_filter_params
 from ..filters import filter_orders
+from ..database import get_async_session
+from app.depandencies import get_current_admin
+from app.depandencies import get_admin_panel
+from app.models import User
 
 # Create router - Litestar uses Router instead of APIRouter
 router = Router(path="/orders", route_handlers=[])
 
 # Create order (no auth required for customers)
-@post("/", response_model=schemas.OrderOut)
+@post("/", response_model=schemas.OrderOut, dependencies={"session": get_async_session})
 async def create_order(
-    order_data: schemas.OrderCreate, 
-    session: AsyncSession = Dependency(db.get_async_session)
+    order_data: schemas.OrderCreate,
+    session: AsyncSession
 ) -> schemas.OrderOut:
     """
     Creates a new order from customer data.
@@ -39,13 +43,17 @@ async def create_order(
         )
 
 # Get orders with filtering (admin only)
-@get("/", response_model=List[schemas.OrderOut])
+@get("/", response_model=List[schemas.OrderOut], dependencies={
+    "session": get_async_session,
+    "filters": order_filter_params,
+    "current_user": get_current_admin  # admin-only
+})
 async def get_orders(
-    filters: dict = Dependency(order_filter_params),
+    filters: dict,
     skip: int = 0,
     limit: int = 100,
-    session: AsyncSession = Dependency(db.get_async_session),
-    current_user: models.User = Dependency(get_current_admin)
+    session: AsyncSession = None,
+    current_user: models.User = None
 ) -> List[schemas.OrderOut]:
     """
     Retrieves a filtered and paginated list of orders (admin only).
@@ -60,11 +68,14 @@ async def get_orders(
         )
 
 # Get single order
-@get("/{order_id:int}", response_model=schemas.OrderOut)
+@get("/{order_id:int}", response_model=schemas.OrderOut, dependencies={
+    "session": get_async_session,
+    "current_user": get_current_user
+})
 async def get_order(
     order_id: int,
-    session: AsyncSession = Dependency(db.get_async_session),
-    current_user: models.User = Dependency(get_current_user)
+    session: AsyncSession,
+    current_user: models.User
 ) -> schemas.OrderOut:
     """
     Retrieves a single order by ID.
@@ -97,12 +108,15 @@ async def get_order(
         )
 
 # Update order status (admin only)
-@patch("/{order_id:int}/status", response_model=schemas.OrderOut)
+@patch("/{order_id:int}/status", response_model=schemas.OrderOut, dependencies={
+    "session": get_async_session,
+    "current_user": get_current_admin
+})
 async def update_order_status(
     order_id: int,
     status_update: schemas.OrderStatusUpdate,
-    session: AsyncSession = Dependency(db.get_async_session),
-    current_user: models.User = Dependency(get_current_admin)
+    session: AsyncSession,
+    current_user: models.User
 ) -> schemas.OrderOut:
     """
     Updates the status of an order (admin only).

@@ -5,7 +5,8 @@ from litestar.status_codes import HTTP_500_INTERNAL_SERVER_ERROR
 from litestar.params import Dependency
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from .. import models, schemas, db, realtime
+from .. import models, schemas, database, realtime
+from ..database import get_async_session
 
 # Create router - Litestar uses Router instead of APIRouter
 router = Router(path="/comments", route_handlers=[])
@@ -13,8 +14,8 @@ router = Router(path="/comments", route_handlers=[])
 # Create comment
 @post("/", response_model=schemas.CommentOut)
 async def create_comment(
-    comment: schemas.CommentCreate, 
-    session: AsyncSession = Dependency(db.get_async_session)
+    comment: schemas.CommentIn, 
+   dependencies={"session": get_async_session},  # <-- injects here
 ) -> schemas.CommentOut:
     """
     Creates a new comment and broadcasts it to all connected WebSocket clients.
@@ -53,7 +54,7 @@ async def create_comment(
 async def get_comments(
     skip: int = 0, 
     limit: int = 100,
-    session: AsyncSession = Dependency(db.get_async_session)
+   dependencies={"session": get_async_session},  # <-- injects here
 ) -> list[schemas.CommentOut]:
     """
     Retrieves a paginated list of comments.

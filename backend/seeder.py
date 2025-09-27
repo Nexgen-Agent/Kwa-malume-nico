@@ -7,9 +7,9 @@ sys.path.insert(0, '/app')
 
 async def seed_database():
     try:
-        from app.db import engine, Base
+        from app.database import engine, Base
         from app.models import MenuItem
-        from app.db.session import AsyncSessionLocal
+        from app.database import AsyncSessionLocal
         
         # Create tables
         async with engine.begin() as conn:

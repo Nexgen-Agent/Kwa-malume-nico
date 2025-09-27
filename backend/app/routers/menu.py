@@ -8,10 +8,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 import hashlib
-from ..db import get_async_session
 from ..models import MenuItem
 from ..schemas import MenuItemOut
-from litestar.response_headers import ResponseHeader, set_response_headers
+from litestar.datastructures import ResponseHeader
+from ..database import get_async_session
 
 # Create router - Litestar uses Router instead of APIRouter
 router = Router(path="/menu", route_handlers=[])
@@ -43,7 +43,9 @@ def generate_etag(data: List[dict]) -> str:
 )
 async def list_menu(
     headers: Headers,
-    db: AsyncSession = Dependency(get_async_session)
+
+    dependencies={"session": get_async_session},  # <-- injects here
+
 ) -> List[MenuItemOut] | Response:
     """
     Lists all menu items and implements client-side caching with ETag.
@@ -84,7 +86,7 @@ async def list_menu(
 @get("/{item_id:int}", response_model=MenuItemOut)
 async def get_menu_item(
     item_id: int, 
-    db: AsyncSession = Dependency(get_async_session)
+     dependencies={"session": get_async_session},  # <-- injects here
 ) -> MenuItemOut:
     """
     Retrieves a single menu item by ID.
