@@ -1,19 +1,15 @@
-from typing import TYPE_CHECKING
-
+try:
+    import rich_click as click
+except ImportError:
+    import click  # type: ignore[no-redef]
 from rich.prompt import Confirm
 
 from litestar import Litestar
-from litestar.cli._utils import RICH_CLICK_INSTALLED, LitestarCLIException, LitestarGroup, console
+from litestar.cli._utils import LitestarCLIException, LitestarGroup, console
 from litestar.middleware import DefineMiddleware
 from litestar.middleware.session import SessionMiddleware
 from litestar.middleware.session.server_side import ServerSideSessionBackend
 from litestar.utils import is_class_and_subclass
-
-if TYPE_CHECKING or not RICH_CLICK_INSTALLED:  # pragma: no cover
-    from click import argument, group
-else:
-    from rich_click import argument, group
-
 
 __all__ = ("clear_sessions_command", "delete_session_command", "get_session_backend", "sessions_group")
 
@@ -31,13 +27,13 @@ def get_session_backend(app: Litestar) -> ServerSideSessionBackend:
     raise LitestarCLIException("Session middleware not installed")
 
 
-@group(cls=LitestarGroup, name="sessions")
+@click.group(cls=LitestarGroup, name="sessions")
 def sessions_group() -> None:
     """Manage server-side sessions."""
 
 
-@sessions_group.command("delete")  # type: ignore
-@argument("session-id")
+@sessions_group.command("delete")  # type: ignore[misc]
+@click.argument("session-id")
 def delete_session_command(session_id: str, app: Litestar) -> None:
     """Delete a specific session."""
     import anyio
@@ -50,7 +46,7 @@ def delete_session_command(session_id: str, app: Litestar) -> None:
         console.print(f"[green]Deleted session {session_id!r}")
 
 
-@sessions_group.command("clear")  # type: ignore
+@sessions_group.command("clear")  # type: ignore[misc]
 def clear_sessions_command(app: Litestar) -> None:
     """Delete all sessions."""
     import anyio

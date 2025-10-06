@@ -1,109 +1,93 @@
-from datetime import datetime, timedelta
-from typing import Optional
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from litestar import Request
-from litestar.exceptions import HTTPException
-from litestar.status_codes import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
-from litestar.params import Dependency
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from .database import get_async_session, AsyncSessionLocal
-from .models import User
-from .settings import settings
+# app/config.py
+from pydantic_settings import BaseSettings
+from pydantic import Field, field_validator
+from typing import List, Optional
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifies a plain-text password against a hashed one."""
-    return pwd_context.verify(plain_password, hashed_password)
+class Settings(BaseSettings):
+    # -- App
+    app_name: str = Field("Malume Nico API", env="APP_NAME")
+    debug: bool = Field(True, env="DEBUG")
+    environment: str = Field("development", env="ENVIRONMENT")
+    port: int = Field(4000, env="PORT")
 
-def get_password_hash(password: str) -> str:
-    """Hashes a plain-text password."""
-    return pwd_context.hash(password)
+    # -- Security / JWT
+    secret_key: str = Field(..., env="SECRET_KEY")
+    algorithm: str = Field("HS256", env="ALGORITHM")
+    access_token_expire_minutes: int = Field(30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Creates a new JWT access token."""
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
-    to_encode.update({"exp": expire})
+    # -- Database
+    database_url: str = Field("sqlite+aiosqlite:///./malume.db", env="DATABASE_URL")
 
-    encoded_jwt = jwt.encode(
-        {'alg': settings.algorithm},
-        to_encode,
-        settings.secret_key
-    )
-    return encoded_jwt.decode('utf-8')
+    # -- CORS: accepts comma-separated string or JSON-like list
+    cors_origins: List[str] = Field([], env="CORS_ORIGINS")
 
-async def get_current_user(
-    request: Request,
-   dependencies={"session": get_async_session},  # <-- injects here
-) -> User:
-    """
-    Dependency to get the current authenticated user from request headers.
-    """
-    credentials_exception = HTTPException(
-        status_code=HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    # -- Rate limiting
+    rate_limit_per_minute: int = Field(100, env="RATE_LIMIT_PER_MINUTE")
+    rate_limit_per_hour: int = Field(1000, env="RATE_LIMIT_PER_HOUR")
 
-    try:
-        auth_header = request.headers.get("authorization")
-        if not auth_header or not auth_header.startswith("Bearer "):
-            raise credentials_exception
+    # -- DB pooling (optional/postgres)
+    db_pool_size: int = Field(20, env="DB_POOL_SIZE")
+    db_max_overflow: int = Field(10, env="DB_MAX_OVERFLOW")
+    db_pool_recycle: int = Field(3600, env="DB_POOL_RECYCLE")
+    db_ssl: bool = Field(False, env="DB_SSL")
 
-        token = auth_header.split(" ")[1]
+    # -- SMTP (optional) — allow blank values safely
+    smtp_server: Optional[str] = Field(None, env="SMTP_SERVER")
+    smtp_port: Optional[int] = Field(None, env="SMTP_PORT")
+    smtp_username: Optional[str] = Field(None, env="SMTP_USERNAME")
+    smtp_password: Optional[str] = Field(None, env="SMTP_PASSWORD")
+    notification_email: Optional[str] = Field(None, env="NOTIFICATION_EMAIL")
 
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
+    # ------------------- Validators -------------------
+    @field_validator("cors_origins", mode="before")
+    def _parse_cors_origins(cls, v):
+        # Accept a JSON-style list, a CSV string, or already-a-list
+        if v is None:
+            return []
+        if isinstance(v, (list, tuple)):
+            return [str(x).strip() for x in v if str(x).strip()]
+        if isinstance(v, str):
+            s = v.strip()
+            if s.startswith("[") and s.endswith("]"):
+                # try to parse JSON-like list safely (no json import to avoid failure)
+                inner = s[1:-1].strip()
+                # split naive by comma — OK for simple lists like ["a","b"]
+                parts = [p.strip().strip('"').strip("'") for p in inner.split(",") if p.strip()]
+                return [p for p in parts if p]
+            # fallback: comma-separated
+            return [part.strip() for part in s.split(",") if part.strip()]
+        return v
 
-    except JWTError:
-        raise credentials_exception
+    @field_validator("debug", mode="before")
+    def _parse_bool_debug(cls, v):
+        if isinstance(v, str):
+            return v.lower() in ("true", "1", "yes", "on")
+        return bool(v)
 
-    result = await session.execute(select(User).where(User.username == username))
-    user = result.scalar_one_or_none()
-    if user is None:
-        raise credentials_exception
-    return user
+    @field_validator("db_ssl", mode="before")
+    def _parse_bool_db_ssl(cls, v):
+        if isinstance(v, str):
+            return v.lower() in ("true", "1", "yes", "on")
+        return bool(v)
 
-async def get_current_admin(current_user: User = Dependency(get_current_user)) -> User:
-    """
-    Dependency to get the current authenticated admin user.
-    """
-    if not current_user.is_admin:
-        raise HTTPException(
-            status_code=HTTP_403_FORBIDDEN,
-            detail="Insufficient permissions"
-        )
-    return current_user
-
-async def get_current_user_from_token(token: str) -> Optional[User]:
-    """
-    Helper function to authenticate a user from a token,
-    used specifically for WebSocket connections.
-    """
-    try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
-        username: str = payload.get("sub")
-
-        if username is None:
+    @field_validator("smtp_port", mode="before")
+    def _smtp_port_to_int_or_none(cls, v):
+        # Accept empty strings as None, or int strings
+        if v is None or v == "":
             return None
-
-        async with AsyncSessionLocal() as session:
-            result = await session.execute(
-                select(User).where(User.username == username)
-            )
-            return result.scalar_one_or_none()
-
-    except JWTError:
+        if isinstance(v, str) and v.isdigit():
+            return int(v)
+        if isinstance(v, (int, float)):
+            return int(v)
         return None
-    except Exception as e:
-        print(f"Error during token authentication: {e}")
-        return None
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        # ignore any stray env fields you don't care about
+        extra = "ignore"
+
+
+# instantiate once and import from everywhere
+settings = Settings()

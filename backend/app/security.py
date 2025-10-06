@@ -1,6 +1,6 @@
 from litestar.middleware import DefineMiddleware
 from litestar.middleware.rate_limit import RateLimitMiddleware
-from litestar.middleware.trusted_host import TrustedHostMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from litestar.types import ASGIApp, Receive, Scope, Send
 import os
 from datetime import timedelta

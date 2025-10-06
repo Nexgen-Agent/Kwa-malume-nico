@@ -21,6 +21,7 @@ class HttpMethod(str, Enum):
     PATCH = "PATCH"
     POST = "POST"
     PUT = "PUT"
+    TRACE = "TRACE"
 
 
 class MediaType(str, Enum):
@@ -76,3 +77,15 @@ class CompressionEncoding(str, Enum):
 
     GZIP = "gzip"
     BROTLI = "br"
+
+
+class ASGIExtension(str, Enum):
+    """ASGI extension keys: https://asgi.readthedocs.io/en/latest/extensions.html"""
+
+    WS_DENIAL = "websocket.http.response"
+    SERVER_PUSH = "http.response.push"
+    ZERO_COPY_SEND_EXTENSION = "http.response.zerocopysend"
+    PATH_SEND = "http.response.pathsend"
+    TLS = "tls"
+    EARLY_HINTS = "http.response.early_hint"
+    HTTP_TRAILERS = "http.response.trailers"

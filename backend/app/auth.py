@@ -44,11 +44,11 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         SECRET_KEY
     )
     return encoded_jwt.decode('utf-8')
-
 async def get_current_user(
     request: Request,
-   dependencies={"session": get_async_session},  # <-- injects here
+    session: AsyncSession,
 ) -> User:
+    ...
     """
     Dependency to get the current authenticated user from request headers.
     """
