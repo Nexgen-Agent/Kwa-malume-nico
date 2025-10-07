@@ -289,8 +289,10 @@ body{
 
 /* Footer */
 .foot{
-  margin:24px 12px; padding:10px 12px;
-  display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
+  position:fixed; left:16px; right:16px; bottom:16px;
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+  font-size:.95rem;
+  z-index: 12;
 }
 
 /* Reduced motion */
