@@ -1,7 +1,7 @@
-/* Malume Nico - Main JavaScript */
+// Enhanced Malume Nico JavaScript
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Malume Nico - DOM loaded");
-    
+    console.log("🍔 Malume Nico - Enhanced DOM loaded");
+
     // ========================
     // LOADER FUNCTIONALITY
     // ========================
@@ -21,159 +21,28 @@ document.addEventListener("DOMContentLoaded", function() {
                 loaderOverlay.style.opacity = "0";
                 setTimeout(() => {
                     loaderOverlay.style.display = "none";
-                }, 600);
-            }, 1000);
+                    console.log("✅ Loader hidden");
+                }, 500);
+            }, 1200);
         });
 
-        // Fallback in case load event doesn't fire
+        // Fallback
         setTimeout(() => {
             if (body.classList.contains("loading")) {
                 body.classList.remove("loading");
                 loaderOverlay.style.opacity = "0";
                 setTimeout(() => {
                     loaderOverlay.style.display = "none";
-                }, 600);
+                    console.log("🔄 Loader fallback triggered");
+                }, 500);
             }
-        }, 5000);
+        }, 4000);
     }
 
     // ========================
-    // HERO TEXT ROTATION
+    // ENHANCED CAROUSELS
     // ========================
-    function initHeroRotation() {
-        const swaps = document.querySelectorAll('.hero-title .swap');
-        if (!swaps.length) return;
-
-        let i = 0;
-        function show() {
-            swaps.forEach((el, idx) => {
-                el.classList.toggle('active', idx === i);
-            });
-        }
-
-        // Show first one immediately
-        show();
-        
-        // Rotate every 3.8 seconds
-        setInterval(() => {
-            i = (i + 1) % swaps.length;
-            show();
-        }, 3800);
-    }
-    initHeroRotation();
-
-    // ========================
-    // BUTTON EFFECTS
-    // ========================
-    function initButtonEffects() {
-        const buttons = document.querySelectorAll('.btn');
-        
-        buttons.forEach(btn => {
-            const handler = (e) => {
-                // Remove and re-add glow effect
-                btn.classList.remove('glow-press');
-                void btn.offsetWidth; // Trigger reflow
-                btn.classList.add('glow-press');
-
-                // Create ripple effect
-                const x = e.clientX || (e.touches && e.touches[0].clientX);
-                const y = e.clientY || (e.touches && e.touches[0].clientY);
-
-                if (x && y) {
-                    const r = document.createElement('span');
-                    r.className = 'gold-ripple';
-
-                    const rect = btn.getBoundingClientRect();
-                    const size = Math.max(rect.width, rect.height) * 1.15;
-
-                    r.style.width = r.style.height = size + 'px';
-                    r.style.left = (x - rect.left) + 'px';
-                    r.style.top = (y - rect.top) + 'px';
-                    
-                    btn.appendChild(r);
-                    r.addEventListener('animationend', () => r.remove());
-                }
-            };
-
-            btn.addEventListener('click', handler);
-            btn.addEventListener('touchstart', handler, { passive: true });
-        });
-    }
-    initButtonEffects();
-
-    // ========================
-    // SCROLLING RAILS
-    // ========================
-    function initScrollingRails() {
-        const moments = document.querySelectorAll('.moment');
-        
-        moments.forEach(section => {
-            const wrap = section.querySelector('.rail-wrap');
-            const rail = section.querySelector('.rail');
-            const left = section.querySelector('.arrow.left');
-            const right = section.querySelector('.arrow.right');
-            
-            if (!rail || !left || !right) return;
-
-            const SCROLL = () => Math.max(rail.clientWidth, 260) * 0.6;
-
-            // Arrow click handlers
-            left.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: -SCROLL(), behavior: 'smooth' });
-            });
-
-            right.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: SCROLL(), behavior: 'smooth' });
-            });
-
-            // Remove glow after scrolling
-            rail.addEventListener('scroll', () => {
-                clearTimeout(rail._glowT);
-                rail._glowT = setTimeout(() => {
-                    section.classList.remove('swipe-glow');
-                }, 400);
-            }, { passive: true });
-
-            // Drag to scroll functionality
-            let isDown = false, startX = 0, startLeft = 0;
-            
-            rail.addEventListener('pointerdown', e => {
-                isDown = true;
-                rail.setPointerCapture(e.pointerId);
-                startX = e.clientX;
-                startLeft = rail.scrollLeft;
-                section.classList.add('swipe-glow');
-            });
-
-            rail.addEventListener('pointermove', e => {
-                if (!isDown) return;
-                const dx = e.clientX - startX;
-                rail.scrollLeft = startLeft - dx;
-                
-                // Add tilt effect during drag
-                const tilt = Math.max(-1, Math.min(1, dx / 80));
-                if (wrap) wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
-            });
-
-            const release = () => {
-                if (!isDown) return;
-                isDown = false;
-                if (wrap) wrap.style.transform = "";
-                setTimeout(() => section.classList.remove('swipe-glow'), 420);
-            };
-            
-            rail.addEventListener('pointerup', release);
-            rail.addEventListener('pointercancel', release);
-        });
-    }
-    initScrollingRails();
-
-    // ========================
-    // FADE CAROUSELS
-    // ========================
-    class FadeCarousel {
+    class EnhancedCarousel {
         constructor(container) {
             this.container = container;
             this.track = container.querySelector('.carousel-track');
@@ -181,72 +50,117 @@ document.addEventListener("DOMContentLoaded", function() {
             this.indicators = Array.from(container.querySelectorAll('.carousel-indicator'));
             this.prevBtn = container.querySelector('.carousel-prev');
             this.nextBtn = container.querySelector('.carousel-next');
-            
+
             this.currentIndex = 0;
             this.isTransitioning = false;
             this.autoPlayInterval = null;
-            this.autoPlayDelay = 4000;
-            
+            this.autoPlayDelay = 5000;
+            this.touchStartX = 0;
+            this.touchEndX = 0;
+
             this.init();
         }
 
         init() {
-            if (!this.slides.length) return;
-            
+            if (!this.slides.length) {
+                console.warn("No slides found in carousel");
+                return;
+            }
+
             this.showSlide(this.currentIndex);
-            
+
             // Event listeners
-            if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
-            if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
-            
+            if (this.prevBtn) {
+                this.prevBtn.addEventListener('click', () => this.prev());
+            }
+            if (this.nextBtn) {
+                this.nextBtn.addEventListener('click', () => this.next());
+            }
+
             // Indicator clicks
             this.indicators.forEach((indicator, index) => {
                 indicator.addEventListener('click', () => this.goToSlide(index));
             });
-            
+
+            // Touch support
+            this.container.addEventListener('touchstart', (e) => {
+                this.touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            this.container.addEventListener('touchend', (e) => {
+                this.touchEndX = e.changedTouches[0].screenX;
+                this.handleSwipe();
+            }, { passive: true });
+
             this.startAutoPlay();
-            
+
             // Pause on hover/touch
             this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
             this.container.addEventListener('mouseleave', () => this.startAutoPlay());
             this.container.addEventListener('touchstart', () => this.stopAutoPlay(), { passive: true });
             this.container.addEventListener('touchend', () => this.startAutoPlay(), { passive: true });
+
+            console.log(`🎠 Carousel initialized with ${this.slides.length} slides`);
         }
 
         showSlide(index) {
             if (this.isTransitioning || !this.slides.length) return;
-            
+
             this.isTransitioning = true;
-            
+
             // Hide current slide
             this.slides[this.currentIndex].classList.remove('active');
             if (this.indicators[this.currentIndex]) {
                 this.indicators[this.currentIndex].classList.remove('active');
             }
-            
+
             // Update index with looping
             this.currentIndex = index;
             if (this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
             if (this.currentIndex >= this.slides.length) this.currentIndex = 0;
-            
+
             // Show new slide
             this.slides[this.currentIndex].classList.add('active');
             if (this.indicators[this.currentIndex]) {
                 this.indicators[this.currentIndex].classList.add('active');
             }
-            
+
+            // Add glow effect to container
+            this.container.classList.add('carousel-changing');
+            setTimeout(() => {
+                this.container.classList.remove('carousel-changing');
+            }, 600);
+
             // Reset transition state
             setTimeout(() => {
                 this.isTransitioning = false;
-            }, 500);
+            }, 600);
         }
 
-        next() { this.showSlide(this.currentIndex + 1); }
-        prev() { this.showSlide(this.currentIndex - 1); }
+        next() { 
+            this.showSlide(this.currentIndex + 1); 
+        }
         
+        prev() { 
+            this.showSlide(this.currentIndex - 1); 
+        }
+
         goToSlide(index) {
             if (index === this.currentIndex) return;
             this.showSlide(index);
+        }
+
+        handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = this.touchStartX - this.touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    this.next();
+                } else {
+                    this.prev();
+                }
+            }
         }
 
         startAutoPlay() {
@@ -266,85 +180,197 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function initCarousels() {
         const carousels = document.querySelectorAll('.fade-carousel');
+        if (carousels.length === 0) {
+            console.warn("No carousels found");
+            return;
+        }
+
         carousels.forEach(container => {
-            new FadeCarousel(container);
+            new EnhancedCarousel(container);
         });
+        
+        console.log(`✅ ${carousels.length} carousel(s) initialized`);
     }
     initCarousels();
 
     // ========================
-    // LIQUID LIGHT EFFECTS
+    // ENHANCED LIGHT BEAMS
     // ========================
-    function initLiquidLight() {
-        // Add enhanced classes
-        document.querySelectorAll('.glass.water').forEach(glass => {
-            glass.classList.add('enhanced-water');
+    function initEnhancedLightBeams() {
+        const lightBeams = document.querySelectorAll('.light-beam');
+        const backgroundCaustics = document.querySelector('.background-caustics');
+
+        if (lightBeams.length === 0) {
+            console.warn("No light beams found");
+            return;
+        }
+
+        // Enhanced beam customization
+        lightBeams.forEach((beam, index) => {
+            const randomDelay = Math.random() * 6;
+            const randomDuration = 16 + Math.random() * 8;
+            const randomRotation = -5 + Math.random() * 10;
+            
+            beam.style.setProperty('--beam-rotate', `${randomRotation}deg`);
+            beam.style.animationDelay = `${randomDelay}s`;
+            beam.style.animationDuration = `${randomDuration}s`;
+            
+            // Dynamic opacity changes
+            setInterval(() => {
+                const randomOpacity = 0.3 + Math.random() * 0.4;
+                beam.style.opacity = randomOpacity;
+            }, 2000 + Math.random() * 3000);
         });
+
+        // Enhanced background caustics
+        if (backgroundCaustics) {
+            setInterval(() => {
+                const positions = Array.from({length: 8}, () => Math.random() * 100);
+                backgroundCaustics.style.background = `
+                    radial-gradient(circle at ${positions[0]}% ${positions[1]}%, rgba(100, 130, 255, 0.08) 0%, transparent 30%),
+                    radial-gradient(circle at ${positions[2]}% ${positions[3]}%, rgba(150, 180, 255, 0.06) 0%, transparent 30%),
+                    radial-gradient(circle at ${positions[4]}% ${positions[5]}%, rgba(120, 150, 255, 0.05) 0%, transparent 30%),
+                    radial-gradient(circle at ${positions[6]}% ${positions[7]}%, rgba(180, 200, 255, 0.04) 0%, transparent 30%)
+                `;
+            }, 10000);
+        }
+
+        console.log(`💫 ${lightBeams.length} light beam(s) enhanced`);
+    }
+    initEnhancedLightBeams();
+
+    // ========================
+    // INTERACTIVE EFFECTS
+    // ========================
+    function initInteractiveEffects() {
+        // Button ripple effects
+        const buttons = document.querySelectorAll('.btn, .nav-btn, .carousel-prev, .carousel-next');
         
-        document.querySelectorAll('.btn.gold').forEach(btn => {
-            btn.classList.add('enhanced');
-        });
-
-        // Randomize light beam animations
-        document.querySelectorAll('.light-beam').forEach((beam, index) => {
-            beam.style.animationDelay = `${Math.random() * 5}s`;
-        });
-
-        // Adjust for reduced motion preference
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reducedMotion) {
-            document.querySelectorAll('.light-beam').forEach(beam => {
-                beam.style.animationDuration = '20s';
-                beam.style.opacity = '0.1';
+        buttons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Ripple effect
+                const ripple = document.createElement('span');
+                ripple.className = 'gold-ripple';
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                
+                this.appendChild(ripple);
+                
+                // Remove ripple after animation
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
             });
-        }
+        });
+
+        // Enhanced hover effects for moments
+        const moments = document.querySelectorAll('.moment');
+        moments.forEach(moment => {
+            moment.addEventListener('mouseenter', () => {
+                moment.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            moment.addEventListener('mouseleave', () => {
+                moment.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        console.log("🎭 Interactive effects initialized");
     }
-    initLiquidLight();
+    initInteractiveEffects();
 
     // ========================
-    // BACKGROUND VIDEO
+    // PERFORMANCE OPTIMIZATIONS
     // ========================
-    function initBackgroundVideo() {
+    function initPerformance() {
+        // Lazy load images
+        const images = document.querySelectorAll('img');
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src || img.src;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        images.forEach(img => {
+            if (img.complete) {
+                img.classList.add('loaded');
+            } else {
+                img.addEventListener('load', () => {
+                    img.classList.add('loaded');
+                });
+            }
+            imageObserver.observe(img);
+        });
+
+        // Debounced scroll events
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                // Scroll-based effects here
+            }, 100);
+        }, { passive: true });
+
+        console.log("⚡ Performance optimizations applied");
+    }
+    initPerformance();
+
+    // ========================
+    // ERROR HANDLING
+    // ========================
+    function initErrorHandling() {
+        // Image error handling
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+                console.warn(`Image failed to load: ${this.src}`);
+                this.style.background = 'linear-gradient(135deg, #2d3746, #1a202c)';
+                this.alt = 'Image coming soon';
+            });
+        });
+
+        // Video error handling
         const video = document.querySelector('.bg-video');
-        if (video && video.paused) {
-            video.play().catch(() => {
-                console.log("Video autoplay prevented");
+        if (video) {
+            video.addEventListener('error', () => {
+                console.warn('Background video failed to load');
+                document.body.style.background = 'linear-gradient(135deg, #0a0a1a, #1a1a2e)';
             });
         }
-    }
-    window.addEventListener('load', initBackgroundVideo);
 
-    // ========================
-    // ERROR HANDLING FOR IMAGES
-    // ========================
-    function handleImageErrors() {
-        document.querySelectorAll('.card img').forEach(img => {
-            img.addEventListener('error', () => {
-                img.style.background = '#222';
-                img.alt = 'Photo coming soon';
-            });
+        window.addEventListener('error', (e) => {
+            console.error('Script error:', e.error);
         });
-    }
-    handleImageErrors();
 
-    console.log("All JavaScript features initialized");
+        console.log("🛡️ Error handling initialized");
+    }
+    initErrorHandling();
+
+    console.log("🎉 All Malume Nico features initialized successfully!");
 });
 
-// Fallback for slow loading elements
+// Fallback for carousels
 setTimeout(() => {
-    // Re-initialize carousels if they didn't load properly
     const carousels = document.querySelectorAll('.fade-carousel');
-    const anyActive = document.querySelector('.carousel-slide.active');
-    
-    if (carousels.length > 0 && !anyActive) {
-        carousels.forEach(container => {
-            const track = container.querySelector('.carousel-track');
-            const slides = container.querySelectorAll('.carousel-slide');
-            if (track && slides.length > 0) {
-                slides[0].classList.add('active');
-                const indicator = container.querySelector('.carousel-indicator');
-                if (indicator) indicator.classList.add('active');
-            }
-        });
-    }
-}, 2000);
+    carousels.forEach(container => {
+        const activeSlide = container.querySelector('.carousel-slide.active');
+        if (!activeSlide) {
+            const firstSlide = container.querySelector('.carousel-slide');
+            const firstIndicator = container.querySelector('.carousel-indicator');
+            if (firstSlide) firstSlide.classList.add('active');
+            if (firstIndicator) firstIndicator.classList.add('active');
+            console.log("🔄 Carousel fallback applied");
+        }
+    });
+}, 3000);
