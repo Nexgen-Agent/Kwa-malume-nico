@@ -1,280 +1,290 @@
-// Enhanced Malume Nico JavaScript
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🍔 Malume Nico - Enhanced DOM loaded");
+// Complete Malume Nico JavaScript with Swipe Navigation
+class MalumeNicoApp {
+    constructor() {
+        this.currentPageIndex = 0;
+        this.pages = ['index.html', 'menu.html', 'booking.html', 'comments.html'];
+        this.currentPage = this.getCurrentPage();
+        this.isTransitioning = false;
+        this.touchStartX = 0;
+        this.touchStartY = 0;
+        this.touchEndX = 0;
+        this.touchEndY = 0;
+        
+        this.init();
+    }
+
+    init() {
+        console.log("🍔 Malume Nico - Initializing Enhanced App");
+        
+        this.initLoader();
+        this.initBackgroundVideo();
+        this.initCarousels();
+        this.initLightBeams();
+        this.initSwipeNavigation();
+        this.initInteractiveEffects();
+        this.initPerformance();
+        
+        console.log("🎉 Malume Nico App Fully Initialized");
+    }
 
     // ========================
     // LOADER FUNCTIONALITY
     // ========================
-    const loaderOverlay = document.getElementById("loader-overlay");
-    const body = document.body;
+    initLoader() {
+        const loaderOverlay = document.getElementById("loader-overlay");
+        const body = document.body;
 
-    if (loaderOverlay) {
-        // Show loader immediately
-        body.classList.add("loading");
-        loaderOverlay.style.display = "flex";
-        loaderOverlay.style.opacity = "1";
+        if (loaderOverlay) {
+            body.classList.add("loading");
+            loaderOverlay.style.display = "flex";
+            loaderOverlay.style.opacity = "1";
 
-        // Hide loader when everything is loaded
-        window.addEventListener("load", function() {
-            setTimeout(() => {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
+            window.addEventListener("load", () => {
                 setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                    console.log("✅ Loader hidden");
-                }, 500);
-            }, 1200);
-        });
-
-        // Fallback
-        setTimeout(() => {
-            if (body.classList.contains("loading")) {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                    console.log("🔄 Loader fallback triggered");
-                }, 500);
-            }
-        }, 4000);
-    }
-
-    // ========================
-    // ENHANCED CAROUSELS
-    // ========================
-    class EnhancedCarousel {
-        constructor(container) {
-            this.container = container;
-            this.track = container.querySelector('.carousel-track');
-            this.slides = Array.from(container.querySelectorAll('.carousel-slide'));
-            this.indicators = Array.from(container.querySelectorAll('.carousel-indicator'));
-            this.prevBtn = container.querySelector('.carousel-prev');
-            this.nextBtn = container.querySelector('.carousel-next');
-
-            this.currentIndex = 0;
-            this.isTransitioning = false;
-            this.autoPlayInterval = null;
-            this.autoPlayDelay = 5000;
-            this.touchStartX = 0;
-            this.touchEndX = 0;
-
-            this.init();
-        }
-
-        init() {
-            if (!this.slides.length) {
-                console.warn("No slides found in carousel");
-                return;
-            }
-
-            this.showSlide(this.currentIndex);
-
-            // Event listeners
-            if (this.prevBtn) {
-                this.prevBtn.addEventListener('click', () => this.prev());
-            }
-            if (this.nextBtn) {
-                this.nextBtn.addEventListener('click', () => this.next());
-            }
-
-            // Indicator clicks
-            this.indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => this.goToSlide(index));
+                    body.classList.remove("loading");
+                    loaderOverlay.style.opacity = "0";
+                    setTimeout(() => {
+                        loaderOverlay.style.display = "none";
+                        console.log("✅ Loader hidden");
+                    }, 500);
+                }, 1200);
             });
 
-            // Touch support
-            this.container.addEventListener('touchstart', (e) => {
-                this.touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            this.container.addEventListener('touchend', (e) => {
-                this.touchEndX = e.changedTouches[0].screenX;
-                this.handleSwipe();
-            }, { passive: true });
-
-            this.startAutoPlay();
-
-            // Pause on hover/touch
-            this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
-            this.container.addEventListener('mouseleave', () => this.startAutoPlay());
-            this.container.addEventListener('touchstart', () => this.stopAutoPlay(), { passive: true });
-            this.container.addEventListener('touchend', () => this.startAutoPlay(), { passive: true });
-
-            console.log(`🎠 Carousel initialized with ${this.slides.length} slides`);
-        }
-
-        showSlide(index) {
-            if (this.isTransitioning || !this.slides.length) return;
-
-            this.isTransitioning = true;
-
-            // Hide current slide
-            this.slides[this.currentIndex].classList.remove('active');
-            if (this.indicators[this.currentIndex]) {
-                this.indicators[this.currentIndex].classList.remove('active');
-            }
-
-            // Update index with looping
-            this.currentIndex = index;
-            if (this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
-            if (this.currentIndex >= this.slides.length) this.currentIndex = 0;
-
-            // Show new slide
-            this.slides[this.currentIndex].classList.add('active');
-            if (this.indicators[this.currentIndex]) {
-                this.indicators[this.currentIndex].classList.add('active');
-            }
-
-            // Add glow effect to container
-            this.container.classList.add('carousel-changing');
+            // Fallback
             setTimeout(() => {
-                this.container.classList.remove('carousel-changing');
-            }, 600);
-
-            // Reset transition state
-            setTimeout(() => {
-                this.isTransitioning = false;
-            }, 600);
-        }
-
-        next() { 
-            this.showSlide(this.currentIndex + 1); 
-        }
-        
-        prev() { 
-            this.showSlide(this.currentIndex - 1); 
-        }
-
-        goToSlide(index) {
-            if (index === this.currentIndex) return;
-            this.showSlide(index);
-        }
-
-        handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = this.touchStartX - this.touchEndX;
-
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0) {
-                    this.next();
-                } else {
-                    this.prev();
+                if (body.classList.contains("loading")) {
+                    body.classList.remove("loading");
+                    loaderOverlay.style.opacity = "0";
+                    setTimeout(() => {
+                        loaderOverlay.style.display = "none";
+                        console.log("🔄 Loader fallback triggered");
+                    }, 500);
                 }
-            }
-        }
-
-        startAutoPlay() {
-            this.stopAutoPlay();
-            this.autoPlayInterval = setInterval(() => {
-                this.next();
-            }, this.autoPlayDelay);
-        }
-
-        stopAutoPlay() {
-            if (this.autoPlayInterval) {
-                clearInterval(this.autoPlayInterval);
-                this.autoPlayInterval = null;
-            }
+            }, 4000);
         }
     }
 
-    function initCarousels() {
-        const carousels = document.querySelectorAll('.fade-carousel');
-        if (carousels.length === 0) {
-            console.warn("No carousels found");
+    // ========================
+    // BACKGROUND VIDEO
+    // ========================
+    initBackgroundVideo() {
+        const video = document.querySelector('.bg-video');
+        if (!video) {
+            console.warn('🎥 Background video element not found');
             return;
         }
 
+        // Force video attributes
+        video.setAttribute('autoplay', '');
+        video.setAttribute('muted', '');
+        video.setAttribute('loop', '');
+        video.setAttribute('playsinline', '');
+        video.controls = false;
+
+        const playVideo = () => {
+            video.play().then(() => {
+                console.log('✅ Background video playing');
+            }).catch((error) => {
+                console.warn('⚠️ Video autoplay prevented:', error);
+            });
+        };
+
+        if (video.readyState >= 3) {
+            playVideo();
+        } else {
+            video.addEventListener('loadeddata', playVideo);
+            video.addEventListener('canplay', playVideo);
+        }
+
+        video.addEventListener('error', (e) => {
+            console.error('❌ Video error:', e);
+            document.body.style.background = 'linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e)';
+        });
+
+        video.style.pointerEvents = 'none';
+    }
+
+    // ========================
+    // ENHANCED CAROUSELS WITH SWIPE
+    // ========================
+    initCarousels() {
+        const carousels = document.querySelectorAll('.fade-carousel');
+        
         carousels.forEach(container => {
             new EnhancedCarousel(container);
         });
         
-        console.log(`✅ ${carousels.length} carousel(s) initialized`);
+        console.log(`🎠 ${carousels.length} carousel(s) initialized`);
     }
-    initCarousels();
 
     // ========================
-    // ENHANCED LIGHT BEAMS
+    // BLUE LIGHT BEAMS
     // ========================
-    function initEnhancedLightBeams() {
+    initLightBeams() {
         const lightBeams = document.querySelectorAll('.light-beam');
-        const backgroundCaustics = document.querySelector('.background-caustics');
-
+        
         if (lightBeams.length === 0) {
-            console.warn("No light beams found");
+            console.warn('💡 No light beams found');
             return;
         }
 
-        // Enhanced beam customization
         lightBeams.forEach((beam, index) => {
-            const randomDelay = Math.random() * 6;
-            const randomDuration = 16 + Math.random() * 8;
-            const randomRotation = -5 + Math.random() * 10;
+            const randomDelay = Math.random() * 8;
+            const randomDuration = 18 + Math.random() * 12;
+            const randomRotation = -6 + Math.random() * 12;
             
             beam.style.setProperty('--beam-rotate', `${randomRotation}deg`);
             beam.style.animationDelay = `${randomDelay}s`;
             beam.style.animationDuration = `${randomDuration}s`;
             
-            // Dynamic opacity changes
+            // Dynamic opacity for water-like effect
             setInterval(() => {
-                const randomOpacity = 0.3 + Math.random() * 0.4;
+                const randomOpacity = 0.4 + Math.random() * 0.4;
                 beam.style.opacity = randomOpacity;
-            }, 2000 + Math.random() * 3000);
+            }, 3000 + Math.random() * 4000);
         });
 
-        // Enhanced background caustics
-        if (backgroundCaustics) {
-            setInterval(() => {
-                const positions = Array.from({length: 8}, () => Math.random() * 100);
-                backgroundCaustics.style.background = `
-                    radial-gradient(circle at ${positions[0]}% ${positions[1]}%, rgba(100, 130, 255, 0.08) 0%, transparent 30%),
-                    radial-gradient(circle at ${positions[2]}% ${positions[3]}%, rgba(150, 180, 255, 0.06) 0%, transparent 30%),
-                    radial-gradient(circle at ${positions[4]}% ${positions[5]}%, rgba(120, 150, 255, 0.05) 0%, transparent 30%),
-                    radial-gradient(circle at ${positions[6]}% ${positions[7]}%, rgba(180, 200, 255, 0.04) 0%, transparent 30%)
-                `;
-            }, 10000);
+        console.log(`💫 ${lightBeams.length} blue light beam(s) activated`);
+    }
+
+    // ========================
+    // SWIPE NAVIGATION SYSTEM
+    // ========================
+    initSwipeNavigation() {
+        const swipeContainer = document.body;
+        let currentSwipeTarget = null;
+
+        // Touch start
+        swipeContainer.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.changedTouches[0].screenX;
+            this.touchStartY = e.changedTouches[0].screenY;
+            currentSwipeTarget = e.target;
+        }, { passive: true });
+
+        // Touch end
+        swipeContainer.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.touchEndY = e.changedTouches[0].screenY;
+            this.handleSwipeGesture(currentSwipeTarget);
+        }, { passive: true });
+
+        // Mouse swipe simulation for desktop
+        let mouseDownX = 0;
+        let mouseDownY = 0;
+        
+        swipeContainer.addEventListener('mousedown', (e) => {
+            mouseDownX = e.clientX;
+            mouseDownY = e.clientY;
+            currentSwipeTarget = e.target;
+        });
+
+        swipeContainer.addEventListener('mouseup', (e) => {
+            const mouseUpX = e.clientX;
+            const mouseUpY = e.clientY;
+            const deltaX = mouseUpX - mouseDownX;
+            const deltaY = mouseUpY - mouseDownY;
+            
+            // Only trigger if it's a horizontal swipe and not a click
+            if (Math.abs(deltaX) > 50 && Math.abs(deltaY) < 30) {
+                this.touchStartX = mouseDownX;
+                this.touchEndX = mouseUpX;
+                this.handleSwipeGesture(currentSwipeTarget);
+            }
+        });
+
+        console.log("👆 Swipe navigation initialized");
+    }
+
+    handleSwipeGesture(target) {
+        const swipeThreshold = 50;
+        const deltaX = this.touchStartX - this.touchEndX;
+        const deltaY = this.touchStartY - this.touchEndY;
+
+        // Check if it's a horizontal swipe (not vertical scroll)
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            // Check if target is inside a carousel
+            const isInCarousel = target.closest('.fade-carousel') || 
+                                target.closest('.carousel-slide') ||
+                                target.closest('.carousel-container');
+
+            if (isInCarousel) {
+                // Handle carousel swipe
+                this.handleCarouselSwipe(deltaX > 0 ? 'right' : 'left', target);
+            } else {
+                // Handle page navigation swipe
+                this.handlePageSwipe(deltaX > 0 ? 'right' : 'left');
+            }
+        }
+    }
+
+    handleCarouselSwipe(direction, target) {
+        const carousel = target.closest('.fade-carousel');
+        if (carousel) {
+            const carouselInstance = carousel._carouselInstance;
+            if (carouselInstance) {
+                if (direction === 'left') {
+                    carouselInstance.next();
+                } else {
+                    carouselInstance.prev();
+                }
+                console.log(`🔄 Carousel swiped ${direction}`);
+            }
+        }
+    }
+
+    handlePageSwipe(direction) {
+        if (this.isTransitioning) return;
+
+        const currentIndex = this.pages.indexOf(this.currentPage);
+        let nextIndex;
+
+        if (direction === 'left') {
+            nextIndex = (currentIndex + 1) % this.pages.length;
+        } else {
+            nextIndex = (currentIndex - 1 + this.pages.length) % this.pages.length;
         }
 
-        console.log(`💫 ${lightBeams.length} light beam(s) enhanced`);
+        const nextPage = this.pages[nextIndex];
+        console.log(`🌐 Swiping to ${nextPage}`);
+
+        this.navigateToPage(nextPage);
     }
-    initEnhancedLightBeams();
+
+    navigateToPage(page) {
+        this.isTransitioning = true;
+        
+        // Create page transition effect
+        const transition = document.createElement('div');
+        transition.className = 'page-transition active';
+        document.body.appendChild(transition);
+
+        setTimeout(() => {
+            window.location.href = page;
+        }, 400);
+    }
+
+    getCurrentPage() {
+        const path = window.location.pathname;
+        return path.substring(path.lastIndexOf('/') + 1) || 'index.html';
+    }
 
     // ========================
     // INTERACTIVE EFFECTS
     // ========================
-    function initInteractiveEffects() {
-        // Button ripple effects
+    initInteractiveEffects() {
+        // Button effects
         const buttons = document.querySelectorAll('.btn, .nav-btn, .carousel-prev, .carousel-next');
         
         buttons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                // Ripple effect
-                const ripple = document.createElement('span');
-                ripple.className = 'gold-ripple';
-                
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-                
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = x + 'px';
-                ripple.style.top = y + 'px';
-                
-                this.appendChild(ripple);
-                
-                // Remove ripple after animation
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            });
+            btn.addEventListener('click', this.createRippleEffect);
         });
 
-        // Enhanced hover effects for moments
+        // Hover effects for moments
         const moments = document.querySelectorAll('.moment');
         moments.forEach(moment => {
             moment.addEventListener('mouseenter', () => {
-                moment.style.transform = 'translateY(-5px) scale(1.02)';
+                moment.style.transform = 'translateY(-8px) scale(1.02)';
+                moment.style.transition = 'transform 0.3s ease';
             });
             
             moment.addEventListener('mouseleave', () => {
@@ -284,93 +294,191 @@ document.addEventListener("DOMContentLoaded", function() {
 
         console.log("🎭 Interactive effects initialized");
     }
-    initInteractiveEffects();
+
+    createRippleEffect(e) {
+        const ripple = document.createElement('span');
+        ripple.className = 'gold-ripple';
+        
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = (e.clientX || e.touches[0].clientX) - rect.left - size / 2;
+        const y = (e.clientY || e.touches[0].clientY) - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(168,192,255,0.4) 30%, rgba(100,130,255,0.2) 60%, transparent 70%);
+            transform: scale(0);
+            animation: rippleOut 0.6s ease-out forwards;
+            pointer-events: none;
+        `;
+        
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+    }
 
     // ========================
     // PERFORMANCE OPTIMIZATIONS
     // ========================
-    function initPerformance() {
+    initPerformance() {
         // Lazy load images
-        const images = document.querySelectorAll('img');
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src || img.src;
-                    img.classList.add('loaded');
-                    observer.unobserve(img);
-                }
-            });
-        });
-
-        images.forEach(img => {
-            if (img.complete) {
-                img.classList.add('loaded');
-            } else {
-                img.addEventListener('load', () => {
-                    img.classList.add('loaded');
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    }
                 });
-            }
-            imageObserver.observe(img);
-        });
+            });
 
-        // Debounced scroll events
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                // Scroll-based effects here
-            }, 100);
-        }, { passive: true });
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
 
         console.log("⚡ Performance optimizations applied");
     }
-    initPerformance();
+}
 
-    // ========================
-    // ERROR HANDLING
-    // ========================
-    function initErrorHandling() {
-        // Image error handling
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('error', function() {
-                console.warn(`Image failed to load: ${this.src}`);
-                this.style.background = 'linear-gradient(135deg, #2d3746, #1a202c)';
-                this.alt = 'Image coming soon';
-            });
+// Enhanced Carousel Class
+class EnhancedCarousel {
+    constructor(container) {
+        this.container = container;
+        this.track = container.querySelector('.carousel-track');
+        this.slides = Array.from(container.querySelectorAll('.carousel-slide'));
+        this.indicators = Array.from(container.querySelectorAll('.carousel-indicator'));
+        this.prevBtn = container.querySelector('.carousel-prev');
+        this.nextBtn = container.querySelector('.carousel-next');
+
+        this.currentIndex = 0;
+        this.isTransitioning = false;
+        this.autoPlayInterval = null;
+        this.autoPlayDelay = 5000;
+
+        // Store instance for swipe access
+        container._carouselInstance = this;
+
+        this.init();
+    }
+
+    init() {
+        if (!this.slides.length) return;
+
+        this.showSlide(this.currentIndex);
+
+        // Button events
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
+
+        // Indicator events
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => this.goToSlide(index));
         });
 
-        // Video error handling
-        const video = document.querySelector('.bg-video');
-        if (video) {
-            video.addEventListener('error', () => {
-                console.warn('Background video failed to load');
-                document.body.style.background = 'linear-gradient(135deg, #0a0a1a, #1a1a2e)';
-            });
+        // Touch events for carousel
+        this.container.addEventListener('touchstart', (e) => {
+            this.touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.container.addEventListener('touchend', (e) => {
+            this.touchEndX = e.changedTouches[0].screenX;
+            this.handleCarouselSwipe();
+        }, { passive: true });
+
+        this.startAutoPlay();
+
+        // Pause on interaction
+        this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
+        this.container.addEventListener('mouseleave', () => this.startAutoPlay());
+        this.container.addEventListener('touchstart', () => this.stopAutoPlay(), { passive: true });
+    }
+
+    showSlide(index) {
+        if (this.isTransitioning) return;
+
+        this.isTransitioning = true;
+
+        // Hide current
+        this.slides[this.currentIndex].classList.remove('active');
+        if (this.indicators[this.currentIndex]) {
+            this.indicators[this.currentIndex].classList.remove('active');
         }
 
-        window.addEventListener('error', (e) => {
-            console.error('Script error:', e.error);
-        });
+        // Update index
+        this.currentIndex = index;
+        if (this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
+        if (this.currentIndex >= this.slides.length) this.currentIndex = 0;
 
-        console.log("🛡️ Error handling initialized");
+        // Show new
+        this.slides[this.currentIndex].classList.add('active');
+        if (this.indicators[this.currentIndex]) {
+            this.indicators[this.currentIndex].classList.add('active');
+        }
+
+        setTimeout(() => {
+            this.isTransitioning = false;
+        }, 600);
     }
-    initErrorHandling();
 
-    console.log("🎉 All Malume Nico features initialized successfully!");
+    next() { this.showSlide(this.currentIndex + 1); }
+    prev() { this.showSlide(this.currentIndex - 1); }
+    goToSlide(index) { this.showSlide(index); }
+
+    handleCarouselSwipe() {
+        const swipeThreshold = 30;
+        const deltaX = this.touchStartX - this.touchEndX;
+
+        if (Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX > 0) {
+                this.next();
+            } else {
+                this.prev();
+            }
+        }
+    }
+
+    startAutoPlay() {
+        this.stopAutoPlay();
+        this.autoPlayInterval = setInterval(() => {
+            this.next();
+        }, this.autoPlayDelay);
+    }
+
+    stopAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
+            this.autoPlayInterval = null;
+        }
+    }
+}
+
+// Initialize the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    new MalumeNicoApp();
 });
 
-// Fallback for carousels
-setTimeout(() => {
-    const carousels = document.querySelectorAll('.fade-carousel');
-    carousels.forEach(container => {
-        const activeSlide = container.querySelector('.carousel-slide.active');
-        if (!activeSlide) {
-            const firstSlide = container.querySelector('.carousel-slide');
-            const firstIndicator = container.querySelector('.carousel-indicator');
-            if (firstSlide) firstSlide.classList.add('active');
-            if (firstIndicator) firstIndicator.classList.add('active');
-            console.log("🔄 Carousel fallback applied");
+// Add ripple animation to CSS
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes rippleOut {
+        to {
+            transform: scale(2.5);
+            opacity: 0;
         }
-    });
-}, 3000);
+    }
+    
+    .gold-ripple {
+        animation: rippleOut 0.6s ease-out forwards;
+    }
+`;
+document.head.appendChild(style);
