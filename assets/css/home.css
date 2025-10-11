@@ -749,3 +749,14 @@ body{
     opacity: 0.1 !important;
   }
 }
+
+/* Footer */
+.foot{
+  position:fixed; left:16px; right:16px; bottom:16px;
+  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
+  font-size:.95rem;
+  z-index: 12;
+}
+.links{display:flex; gap:14px}
+.link{color:#fff; opacity:.9; text-decoration:none}
+.link:hover{opacity:1}
