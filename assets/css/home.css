@@ -35,7 +35,6 @@ body{
   background: radial-gradient(60% 60% at 50% 20%, rgba(200, 155, 45, .16), transparent 60%),
     var(--wash);
 }
-
 /* ---------- Glass & Water (same look) ---------- */
 .glass{
   background: rgba(20,15,10,.30);
