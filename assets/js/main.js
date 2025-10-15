@@ -1,74 +1,179 @@
-/* Malume Nico - Enhanced JavaScript with Swipe Navigation */
+/* Malume Nico - Main JavaScript */
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Malume Nico - DOM loaded with enhanced features");
+    console.log("Malume Nico - DOM loaded");
 
     // ========================
-    // SWIPE NAVIGATION SYSTEM
+    // LOADER FUNCTIONALITY
     // ========================
-    let touchStartX = 0;
-    let touchEndX = 0;
-    const swipeThreshold = 50; // Minimum swipe distance
+    const loaderOverlay = document.getElementById("loader-overlay");
+    const body = document.body;
 
-    // Page navigation map
-    const pageNavigation = {
-        'index.html': { left: 'menu.html', right: 'comments.html' },
-        'menu.html': { left: 'booking.html', right: 'index.html' },
-        'booking.html': { left: 'comments.html', right: 'menu.html' },
-        'comments.html': { left: 'index.html', right: 'booking.html' }
-    };
+    if (loaderOverlay) {
+        // Show loader immediately
+        body.classList.add("loading");
+        loaderOverlay.style.display = "flex";
+        loaderOverlay.style.opacity = "1";
 
-    function getCurrentPage() {
-        const path = window.location.pathname;
-        return path.substring(path.lastIndexOf('/') + 1) || 'index.html';
-    }
+        // Hide loader when everything is loaded
+        window.addEventListener("load", function() {
+            setTimeout(() => {
+                body.classList.remove("loading");
+                loaderOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    loaderOverlay.style.display = "none";
+                }, 600);
+            }, 1000);
+        });
 
-    function handleSwipeGesture() {
-        const swipeDistance = touchStartX - touchEndX;
-        
-        // Check if it's a significant horizontal swipe
-        if (Math.abs(swipeDistance) > swipeThreshold) {
-            const currentPage = getCurrentPage();
-            const direction = swipeDistance > 0 ? 'left' : 'right';
-            const nextPage = pageNavigation[currentPage]?.[direction];
-            
-            if (nextPage) {
-                console.log(`Swiping ${direction} to ${nextPage}`);
-                navigateToPage(nextPage);
-            }
-        }
-    }
-
-    function navigateToPage(page) {
-        // Add transition effect
-        const transition = document.createElement('div');
-        transition.className = 'page-swipe-transition active';
-        document.body.appendChild(transition);
-        
+        // Fallback in case load event doesn't fire
         setTimeout(() => {
-            window.location.href = page;
-        }, 300);
+            if (body.classList.contains("loading")) {
+                body.classList.remove("loading");
+                loaderOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    loaderOverlay.style.display = "none";
+                }, 600);
+            }
+        }, 5000);
     }
 
-    // Touch event handlers for page navigation
-    document.addEventListener('touchstart', e => {
-        // Only handle swipes outside of carousels
-        if (!e.target.closest('.fade-carousel') && !e.target.closest('.carousel-slide')) {
-            touchStartX = e.changedTouches[0].screenX;
-        }
-    }, { passive: true });
+    // ========================
+    // HERO TEXT ROTATION
+    // ========================
+    function initHeroRotation() {
+        const swaps = document.querySelectorAll('.hero-title .swap');
+        if (!swaps.length) return;
 
-    document.addEventListener('touchend', e => {
-        // Only handle swipes outside of carousels
-        if (!e.target.closest('.fade-carousel') && !e.target.closest('.carousel-slide')) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
+        let i = 0;
+        function show() {
+            swaps.forEach((el, idx) => {
+                el.classList.toggle('active', idx === i);
+            });
         }
-    }, { passive: true });
+
+        // Show first one immediately
+        show();
+
+        // Rotate every 3.8 seconds
+        setInterval(() => {
+            i = (i + 1) % swaps.length;
+            show();
+        }, 3800);
+    }
+    initHeroRotation();
 
     // ========================
-    // ENHANCED CAROUSELS WITH SWIPE
+    // BUTTON EFFECTS
     // ========================
-    class EnhancedCarousel {
+    function initButtonEffects() {
+        const buttons = document.querySelectorAll('.btn');
+
+        buttons.forEach(btn => {
+            const handler = (e) => {
+                // Remove and re-add glow effect
+                btn.classList.remove('glow-press');
+                void btn.offsetWidth; // Trigger reflow
+                btn.classList.add('glow-press');
+
+                // Create ripple effect
+                const x = e.clientX || (e.touches && e.touches[0].clientX);
+                const y = e.clientY || (e.touches && e.touches[0].clientY);
+
+                if (x && y) {
+                    const r = document.createElement('span');
+                    r.className = 'gold-ripple';
+
+                    const rect = btn.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height) * 1.15;
+
+                    r.style.width = r.style.height = size + 'px';
+                    r.style.left = (x - rect.left) + 'px';
+                    r.style.top = (y - rect.top) + 'px';
+
+                    btn.appendChild(r);
+                    r.addEventListener('animationend', () => r.remove());
+                }
+            };
+
+            btn.addEventListener('click', handler);
+            btn.addEventListener('touchstart', handler, { passive: true });
+        });
+    }
+    initButtonEffects();
+
+    // ========================
+    // SCROLLING RAILS
+    // ========================
+    function initScrollingRails() {
+        const moments = document.querySelectorAll('.moment');
+
+        moments.forEach(section => {
+            const wrap = section.querySelector('.rail-wrap');
+            const rail = section.querySelector('.rail');
+            const left = section.querySelector('.arrow.left');
+            const right = section.querySelector('.arrow.right');
+
+            if (!rail || !left || !right) return;
+
+            const SCROLL = () => Math.max(rail.clientWidth, 260) * 0.6;
+
+            // Arrow click handlers
+            left.addEventListener('click', () => {
+                section.classList.add('swipe-glow');
+                rail.scrollBy({ left: -SCROLL(), behavior: 'smooth' });
+            });
+
+            right.addEventListener('click', () => {
+                section.classList.add('swipe-glow');
+                rail.scrollBy({ left: SCROLL(), behavior: 'smooth' });
+            });
+
+            // Remove glow after scrolling
+            rail.addEventListener('scroll', () => {
+                clearTimeout(rail._glowT);
+                rail._glowT = setTimeout(() => {
+                    section.classList.remove('swipe-glow');
+                }, 400);
+            }, { passive: true });
+
+            // Drag to scroll functionality
+            let isDown = false, startX = 0, startLeft = 0;
+
+            rail.addEventListener('pointerdown', e => {
+                isDown = true;
+                rail.setPointerCapture(e.pointerId);
+                startX = e.clientX;
+                startLeft = rail.scrollLeft;
+                section.classList.add('swipe-glow');
+            });
+
+            rail.addEventListener('pointermove', e => {
+                if (!isDown) return;
+                const dx = e.clientX - startX;
+                rail.scrollLeft = startLeft - dx;
+
+                // Add tilt effect during drag
+                const tilt = Math.max(-1, Math.min(1, dx / 80));
+                if (wrap) wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
+            });
+
+            const release = () => {
+                if (!isDown) return;
+                isDown = false;
+                if (wrap) wrap.style.transform = "";
+                setTimeout(() => section.classList.remove('swipe-glow'), 420);
+            };
+
+            rail.addEventListener('pointerup', release);
+            rail.addEventListener('pointercancel', release);
+        });
+    }
+    initScrollingRails();
+
+    // ========================
+    // FADE CAROUSELS
+    // ========================
+    class FadeCarousel {
         constructor(container) {
             this.container = container;
             this.track = container.querySelector('.carousel-track');
@@ -81,9 +186,6 @@ document.addEventListener("DOMContentLoaded", function() {
             this.isTransitioning = false;
             this.autoPlayInterval = null;
             this.autoPlayDelay = 4000;
-            
-            this.touchStartX = 0;
-            this.touchEndX = 0;
 
             this.init();
         }
@@ -93,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             this.showSlide(this.currentIndex);
 
-            // Event listeners for buttons
+            // Event listeners
             if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
             if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
 
@@ -101,16 +203,6 @@ document.addEventListener("DOMContentLoaded", function() {
             this.indicators.forEach((indicator, index) => {
                 indicator.addEventListener('click', () => this.goToSlide(index));
             });
-
-            // Touch events for carousel swipe
-            this.container.addEventListener('touchstart', (e) => {
-                this.touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            this.container.addEventListener('touchend', (e) => {
-                this.touchEndX = e.changedTouches[0].screenX;
-                this.handleCarouselSwipe();
-            }, { passive: true });
 
             this.startAutoPlay();
 
@@ -149,19 +241,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }, 500);
         }
 
-        handleCarouselSwipe() {
-            const swipeThreshold = 30;
-            const deltaX = this.touchStartX - this.touchEndX;
-
-            if (Math.abs(deltaX) > swipeThreshold) {
-                if (deltaX > 0) {
-                    this.next();
-                } else {
-                    this.prev();
-                }
-            }
-        }
-
         next() { this.showSlide(this.currentIndex + 1); }
         prev() { this.showSlide(this.currentIndex - 1); }
 
@@ -188,62 +267,39 @@ document.addEventListener("DOMContentLoaded", function() {
     function initCarousels() {
         const carousels = document.querySelectorAll('.fade-carousel');
         carousels.forEach(container => {
-            new EnhancedCarousel(container);
+            new FadeCarousel(container);
         });
-        console.log(`Enhanced ${carousels.length} carousel(s) with swipe support`);
     }
+    initCarousels();
 
     // ========================
-    // LOADER FUNCTIONALITY
+    // LIQUID LIGHT EFFECTS
     // ========================
-    const loaderOverlay = document.getElementById("loader-overlay");
-    const body = document.body;
-
-    if (loaderOverlay) {
-        // Show loader immediately
-        body.classList.add("loading");
-        loaderOverlay.style.display = "flex";
-        loaderOverlay.style.opacity = "1";
-
-        // Hide loader when everything is loaded
-        window.addEventListener("load", function() {
-            setTimeout(() => {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                }, 600);
-            }, 1000);
+    function initLiquidLight() {
+        // Add enhanced classes
+        document.querySelectorAll('.glass.water').forEach(glass => {
+            glass.classList.add('enhanced-water');
         });
 
-        // Fallback in case load event doesn't fire
-        setTimeout(() => {
-            if (body.classList.contains("loading")) {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                }, 600);
-            }
-        }, 5000);
-    }
-
-    // ========================
-    // BLUE LIGHT BEAMS
-    // ========================
-    function initBlueLightBeams() {
-        const lightBeams = document.querySelectorAll('.light-beam');
-        
-        // Randomize light beam animations for more natural effect
-        lightBeams.forEach((beam, index) => {
-            const randomDelay = Math.random() * 8;
-            const randomDuration = 12 + Math.random() * 10;
-            beam.style.animationDelay = `${randomDelay}s`;
-            beam.style.animationDuration = `${randomDuration}s`;
+        document.querySelectorAll('.btn.gold').forEach(btn => {
+            btn.classList.add('enhanced');
         });
 
-        console.log(`Blue light beams activated: ${lightBeams.length} beams`);
+        // Randomize light beam animations
+        document.querySelectorAll('.light-beam').forEach((beam, index) => {
+            beam.style.animationDelay = `${Math.random() * 5}s`;
+        });
+
+        // Adjust for reduced motion preference
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reducedMotion) {
+            document.querySelectorAll('.light-beam').forEach(beam => {
+                beam.style.animationDuration = '20s';
+                beam.style.opacity = '0.1';
+            });
+        }
     }
+    initLiquidLight();
 
     // ========================
     // BACKGROUND VIDEO
@@ -252,141 +308,31 @@ document.addEventListener("DOMContentLoaded", function() {
         const video = document.querySelector('.bg-video');
         if (video && video.paused) {
             video.play().catch(() => {
-                console.log("Video autoplay prevented - user interaction required");
+                console.log("Video autoplay prevented");
             });
         }
     }
+    window.addEventListener('load', initBackgroundVideo);
 
     // ========================
-    // EXISTING FUNCTIONALITY
+    // ERROR HANDLING FOR IMAGES
     // ========================
-    function initHeroRotation() {
-        const swaps = document.querySelectorAll('.hero-title .swap');
-        if (!swaps.length) return;
-
-        let i = 0;
-        function show() {
-            swaps.forEach((el, idx) => {
-                el.classList.toggle('active', idx === i);
+    function handleImageErrors() {
+        document.querySelectorAll('.card img').forEach(img => {
+            img.addEventListener('error', () => {
+                img.style.background = '#222';
+                img.alt = 'Photo coming soon';
             });
-        }
-
-        show();
-        setInterval(() => {
-            i = (i + 1) % swaps.length;
-            show();
-        }, 3800);
-    }
-
-    function initButtonEffects() {
-        const buttons = document.querySelectorAll('.btn');
-
-        buttons.forEach(btn => {
-            const handler = (e) => {
-                btn.classList.remove('glow-press');
-                void btn.offsetWidth;
-                btn.classList.add('glow-press');
-
-                const x = e.clientX || (e.touches && e.touches[0].clientX);
-                const y = e.clientY || (e.touches && e.touches[0].clientY);
-
-                if (x && y) {
-                    const r = document.createElement('span');
-                    r.className = 'gold-ripple';
-
-                    const rect = btn.getBoundingClientRect();
-                    const size = Math.max(rect.width, rect.height) * 1.15;
-
-                    r.style.width = r.style.height = size + 'px';
-                    r.style.left = (x - rect.left) + 'px';
-                    r.style.top = (y - rect.top) + 'px';
-
-                    btn.appendChild(r);
-                    r.addEventListener('animationend', () => r.remove());
-                }
-            };
-
-            btn.addEventListener('click', handler);
-            btn.addEventListener('touchstart', handler, { passive: true });
         });
     }
+    handleImageErrors();
 
-    function initScrollingRails() {
-        const moments = document.querySelectorAll('.moment');
-
-        moments.forEach(section => {
-            const wrap = section.querySelector('.rail-wrap');
-            const rail = section.querySelector('.rail');
-            const left = section.querySelector('.arrow.left');
-            const right = section.querySelector('.arrow.right');
-
-            if (!rail || !left || !right) return;
-
-            const SCROLL = () => Math.max(rail.clientWidth, 260) * 0.6;
-
-            left.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: -SCROLL(), behavior: 'smooth' });
-            });
-
-            right.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: SCROLL(), behavior: 'smooth' });
-            });
-
-            rail.addEventListener('scroll', () => {
-                clearTimeout(rail._glowT);
-                rail._glowT = setTimeout(() => {
-                    section.classList.remove('swipe-glow');
-                }, 400);
-            }, { passive: true });
-
-            let isDown = false, startX = 0, startLeft = 0;
-
-            rail.addEventListener('pointerdown', e => {
-                isDown = true;
-                rail.setPointerCapture(e.pointerId);
-                startX = e.clientX;
-                startLeft = rail.scrollLeft;
-                section.classList.add('swipe-glow');
-            });
-
-            rail.addEventListener('pointermove', e => {
-                if (!isDown) return;
-                const dx = e.clientX - startX;
-                rail.scrollLeft = startLeft - dx;
-
-                const tilt = Math.max(-1, Math.min(1, dx / 80));
-                if (wrap) wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
-            });
-
-            const release = () => {
-                if (!isDown) return;
-                isDown = false;
-                if (wrap) wrap.style.transform = "";
-                setTimeout(() => section.classList.remove('swipe-glow'), 420);
-            };
-
-            rail.addEventListener('pointerup', release);
-            rail.addEventListener('pointercancel', release);
-        });
-    }
-
-    // ========================
-    // INITIALIZE EVERYTHING
-    // ========================
-    initHeroRotation();
-    initButtonEffects();
-    initScrollingRails();
-    initCarousels();
-    initBlueLightBeams();
-    initBackgroundVideo();
-
-    console.log("All enhanced features initialized - Swipe navigation ready!");
+    console.log("All JavaScript features initialized");
 });
 
 // Fallback for slow loading elements
 setTimeout(() => {
+    // Re-initialize carousels if they didn't load properly
     const carousels = document.querySelectorAll('.fade-carousel');
     const anyActive = document.querySelector('.carousel-slide.active');
 
