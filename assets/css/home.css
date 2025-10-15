@@ -11,7 +11,6 @@ html,body{margin:0;padding:0}
 body{
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
   color:#fff; background:#fff;
-  touch-action: pan-y; /* Enable vertical scroll, prevent horizontal */
 }
 
 /* ---------- Background video (duplicated from home.css) ---------- */
@@ -35,6 +34,7 @@ body{
   background: radial-gradient(60% 60% at 50% 20%, rgba(200, 155, 45, .16), transparent 60%),
     var(--wash);
 }
+
 /* ---------- Glass & Water (same look) ---------- */
 .glass{
   background: rgba(20,15,10,.30);
@@ -60,17 +60,16 @@ body{
 }
 @keyframes caustics{ to{ transform: translate3d(-3%,2%,0) rotate(1deg) } }
 
-/* ---------- Topbar - 10px BIGGER ---------- */
+/* ---------- Topbar ---------- */
 .topbar{
-  position:sticky; top:22px; margin:22px; z-index:10; /* Increased from 12px to 22px */
+  position:sticky; top:12px; margin:12px; z-index:10;
   display:flex; align-items:center; justify-content:space-between;
-  padding:20px 22px; /* Increased from 10px 12px */
-  min-height: 80px; /* Added minimum height */
+  padding:10px 12px;
 }
 .brand{display:flex; align-items:center; gap:10px}
 .logo{
-  width:110px; /* Increased from 100px */
-  height:110px; /* Increased from 100px */
+  width:100px;
+  height:100px;
   border-radius:12px
 }
 .titles .name{font-weight:900; letter-spacing:.3px}
@@ -81,8 +80,8 @@ body{
   align-items:center;
 }
 .links a img {
-  width: 50px; /* Increased from 40px */
-  height: 50px; /* Increased from 40px */
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   transition: transform 0.3s ease;
   transform: translateZ(0);
@@ -93,7 +92,7 @@ body{
 
 /* ---------- Hero ---------- */
 .hero{
-  margin:130px 12px 24px; padding:32px 20px; text-align:center; /* Increased top margin for bigger topbar */
+  margin:110px 12px 24px; padding:32px 20px; text-align:center;
 }
 .hero-title{ font-size: clamp(28px, 6vw, 54px); line-height:1.05; font-weight:900; letter-spacing:.5px; }
 .hero-title .swap{ position:absolute; left:50%; transform:translateX(-50%); opacity:0; transition:opacity 1.2s }
@@ -130,7 +129,7 @@ body{
 
 /* ---------- Moments Sections ---------- */
 .moment{
-  margin:34px 12px; padding:18px 12px; /* Increased top margin for bigger topbar */
+  margin:24px 12px; padding:18px 12px;
 }
 .moment-head h2{
   margin:0 0 6px; font-size: clamp(22px, 4.8vw, 34px); font-weight:900;
@@ -248,23 +247,6 @@ body{
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .topbar {
-    top: 15px; /* Adjusted for mobile */
-    margin: 15px;
-    padding: 15px 18px;
-    min-height: 70px;
-  }
-  
-  .logo {
-    width: 90px;
-    height: 90px;
-  }
-  
-  .links a img {
-    width: 42px;
-    height: 42px;
-  }
-  
   .rail-wrap {
     padding: 6px 40px;
   }
@@ -276,10 +258,6 @@ body{
 
   .card {
     width: clamp(200px, 70vw, 280px);
-  }
-  
-  .hero {
-    margin: 110px 12px 24px; /* Adjusted for mobile */
   }
 }
 
@@ -460,7 +438,6 @@ body{
   max-width: 800px;
   margin: 0 auto;
   height: 400px;
-  touch-action: pan-y pinch-zoom; /* Enable touch for carousels */
 }
 
 .carousel-container {
@@ -501,8 +478,6 @@ body{
   height: 100%;
   object-fit: cover;
   border-radius: 14px;
-  user-select: none;
-  -webkit-user-drag: none;
 }
 
 /* Navigation buttons */
@@ -597,22 +572,21 @@ body{
 .foot{
   margin:24px 12px; padding:10px 12px;
   display:flex; align-items:center; justify-content:space-between; font-size:.95rem;
-}
 
 /* ==================== */
-/* BLUE WATER SHADOW LIGHT BEAMS */
+/* LIQUID LIGHT TRAVEL ANIMATION */
 /* ==================== */
 
-@keyframes blueWaterBeamTravel {
+@keyframes waterCausticsTravel {
   0% {
     transform: translateX(-100%) rotate(-5deg);
     opacity: 0.3;
   }
   15% {
-    opacity: 0.7;
+    opacity: 0.6;
   }
   50% {
-    opacity: 0.9;
+    opacity: 0.8;
   }
   85% {
     opacity: 0.6;
@@ -623,7 +597,7 @@ body{
   }
 }
 
-@keyframes blueWaterPulse {
+@keyframes waterCausticsPulse {
   0%, 100% {
     opacity: 0.4;
     filter: blur(15px) brightness(1.1);
@@ -646,63 +620,58 @@ body{
   overflow: hidden;
 }
 
-/* BLUE Moving light beams - across whole screen */
+/* Moving light beams */
 .light-beam {
   position: absolute;
   width: 200%;
-  height: 200px;
+  height: 150px;
   background: radial-gradient(ellipse at center, 
-    rgba(100, 150, 255, 0.25) 0%,
-    rgba(80, 130, 255, 0.2) 20%,
-    rgba(60, 110, 255, 0.15) 40%,
+    rgba(200, 155, 45, 0.15) 0%,
+    rgba(200, 155, 45, 0.1) 20%,
+    rgba(200, 155, 45, 0.05) 40%,
     transparent 70%);
-  mix-blend-mode: screen;
-  animation: blueWaterBeamTravel 15s linear infinite;
-  filter: blur(20px);
+  mix-blend-mode: overlay;
+  animation: waterCausticsTravel 8s linear infinite;
+  filter: blur(10px);
   will-change: transform, opacity;
 }
 
-/* Multiple blue beams for richer effect */
+/* Multiple beams for richer effect */
 .light-beam:nth-child(1) {
   top: 15%;
   animation-delay: 0s;
-  animation-duration: 18s;
-  height: 180px;
+  animation-duration: 12s;
+  height: 120px;
   transform: rotate(3deg);
-  background: radial-gradient(ellipse at center, 
-    rgba(120, 170, 255, 0.3) 0%,
-    rgba(100, 150, 255, 0.22) 20%,
-    rgba(80, 130, 255, 0.15) 40%,
-    transparent 75%);
 }
 
 .light-beam:nth-child(2) {
-  top: 45%;
-  animation-delay: 5s;
-  animation-duration: 22s;
-  height: 220px;
-  transform: rotate(-4deg);
+  top: 40%;
+  animation-delay: 2s;
+  animation-duration: 10s;
+  height: 180px;
+  transform: rotate(-2deg);
   background: radial-gradient(ellipse at center, 
-    rgba(140, 190, 255, 0.28) 0%,
-    rgba(120, 170, 255, 0.2) 20%,
-    rgba(100, 150, 255, 0.12) 40%,
-    transparent 75%);
+    rgba(255, 220, 120, 0.12) 0%,
+    rgba(255, 220, 120, 0.08) 20%,
+    rgba(255, 220, 120, 0.04) 40%,
+    transparent 70%);
 }
 
 .light-beam:nth-child(3) {
-  top: 75%;
-  animation-delay: 8s;
-  animation-duration: 20s;
-  height: 160px;
-  transform: rotate(6deg);
+  top: 70%;
+  animation-delay: 5s;
+  animation-duration: 15s;
+  height: 100px;
+  transform: rotate(5deg);
   background: radial-gradient(ellipse at center, 
-    rgba(80, 130, 255, 0.26) 0%,
-    rgba(60, 110, 255, 0.18) 20%,
-    rgba(40, 90, 255, 0.1) 40%,
-    transparent 75%);
+    rgba(180, 140, 40, 0.1) 0%,
+    rgba(180, 140, 40, 0.06) 20%,
+    rgba(180, 140, 40, 0.03) 40%,
+    transparent 70%);
 }
 
-/* Blue background caustics */
+/* Subtle background caustics */
 .background-caustics {
   position: fixed;
   top: 0;
@@ -712,36 +681,107 @@ body{
   pointer-events: none;
   z-index: -1;
   background:
-    radial-gradient(circle at 20% 30%, rgba(100, 150, 255, 0.1) 0%, transparent 30%),
-    radial-gradient(circle at 80% 70%, rgba(120, 170, 255, 0.08) 0%, transparent 30%),
-    radial-gradient(circle at 40% 80%, rgba(140, 190, 255, 0.06) 0%, transparent 30%),
-    radial-gradient(circle at 60% 20%, rgba(160, 210, 255, 0.04) 0%, transparent 30%);
-  animation: blueWaterPulse 12s ease-in-out infinite;
+    radial-gradient(circle at 20% 30%, rgba(200, 155, 45, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, rgba(200, 155, 45, 0.06) 0%, transparent 25%),
+    radial-gradient(circle at 40% 80%, rgba(255, 220, 120, 0.05) 0%, transparent 25%),
+    radial-gradient(circle at 60% 20%, rgba(255, 220, 120, 0.04) 0%, transparent 25%);
+  animation: waterCausticsPulse 9s ease-in-out infinite;
   will-change: opacity, filter;
 }
 
-/* Page transition for swipe navigation */
-.page-swipe-transition {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, #1a1a2e, #16213e);
-  z-index: 9998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
+/* Enhanced water effect for glass elements */
+.glass.enhanced-water::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: 
+    radial-gradient(ellipse at 30% 40%, rgba(255, 255, 255, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  mix-blend-mode: overlay;
+  opacity: 0.4;
+  filter: blur(20px);
+  animation: waterCausticsTravel 15s linear infinite, waterCausticsPulse 12s ease-in-out infinite;
+  will-change: transform, opacity, filter;
 }
 
-.page-swipe-transition.active {
-  opacity: 0.7;
+/* Add shimmer to specific elements */
+.moment-head h2 {
+  position: relative;
+  display: inline-block;
+}
+
+.moment-head h2::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: textShimmer 8s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+@keyframes textShimmer {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Enhanced gold buttons */
+.btn.gold.enhanced {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.gold.enhanced::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: buttonShine 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes buttonShine {
+  0% {
+    left: -100%;
+  }
+  15% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   .light-beam,
-  .background-caustics {
+  .background-caustics,
+  .glass.enhanced-water::after,
+  .moment-head h2::after,
+  .btn.gold.enhanced::before {
     animation: none !important;
   }
 
@@ -750,13 +790,4 @@ body{
   }
 }
 
-/* Footer */
-.foot{
-  position:fixed; left:16px; right:16px; bottom:16px;
-  padding:10px 12px; display:flex; align-items:center; justify-content:space-between;
-  font-size:.95rem;
-  z-index: 12;
-}
-.links{display:flex; gap:14px}
-.link{color:#fff; opacity:.9; text-decoration:none}
-.link:hover{opacity:1}
+
