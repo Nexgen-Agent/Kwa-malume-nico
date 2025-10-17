@@ -1,358 +1,265 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malume Nico — Home</title>
-    
-    <!-- Alpine.js CDN - NO BUILD NEEDED -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <style>
-        /* YOUR EXACT CSS GOES HERE */
-        :root{
-          --gold:#c89b2d;
-          --gold-dark:#9a6f16;
-          --ink:#1c140b;
-          --ivory:#fffaf1;
-          --wash: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.55));
-        }
-        *{box-sizing:border-box}
-        html,body{margin:0;padding:0}
-        body{
-          font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
-          color:#fff; background:#fff;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Malume Nico — Home</title>
+  <link rel="stylesheet" href="assets/css/home.css" />
 
-        /* Include ALL your existing CSS here */
-        .bg-video {
-          position: fixed;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: -2;
-          filter: saturate(1.05) brightness(.9) contrast(1.05);
-        }
+<!-- Load JavaScript -->
+<script src="assets/js/main.js" defer></script>
 
-        .video-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: -1;
-          pointer-events: none;
-          background: radial-gradient(60% 60% at 50% 20%, rgba(200, 155, 45, .16), transparent 60%),
-            var(--wash);
-        }
+<!-- Loader Overlay -->
+<div id="loader-overlay">
+  <div class="loader">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <span class="loading-text">Loading...</span>
+  </div>
+</div>
 
-        .glass{
-          background: rgba(20,15,10,.30);
-          border: 1px solid rgba(255,255,255,.18);
-          box-shadow: 0 12px 40px rgba(0,0,0,.25);
-          backdrop-filter: blur(14px) saturate(120%);
-          border-radius: 18px;
-        }
 
-        /* ... Include ALL your other CSS styles ... */
-
-        /* Light beams - PURE CSS */
-        .liquid-light-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 1;
-          overflow: hidden;
-        }
-
-        .light-beam {
-          position: absolute;
-          width: 150%;
-          height: 120px;
-          background: radial-gradient(ellipse at center, 
-            rgba(200, 155, 45, 0.18) 0%,
-            rgba(200, 155, 45, 0.12) 25%,
-            rgba(200, 155, 45, 0.06) 45%,
-            transparent 70%);
-          mix-blend-mode: overlay;
-          animation: waterCausticsTravel 12s linear infinite;
-          filter: blur(15px);
-          transform-origin: left center;
-          left: -50%;
-        }
-
-        .light-beam:nth-child(1) {
-          top: 15%;
-          animation-delay: 0s;
-          animation-duration: 15s;
-        }
-
-        .light-beam:nth-child(2) {
-          top: 45%;
-          animation-delay: 3s;
-          animation-duration: 18s;
-          transform: rotate(-3deg);
-        }
-
-        .light-beam:nth-child(3) {
-          top: 75%;
-          animation-delay: 7s;
-          animation-duration: 20s;
-          transform: rotate(2deg);
-        }
-
-        @keyframes waterCausticsTravel {
-          0% { transform: translateX(-100%) rotate(-5deg); opacity: 0.3; }
-          50% { opacity: 0.8; }
-          100% { transform: translateX(100vw) rotate(5deg); opacity: 0.3; }
-        }
-    </style>
 </head>
-<body 
-    x-data="{
-        // ALL YOUR WEBSITE LOGIC IN ONE PLACE
-        isLoading: true,
-        currentHero: 0,
-        heroTexts: [
-            'Welcome Kwa Malume-Nico',
-            'The Best Kota in Town', 
-            'Come and Chill With Us'
-        ],
-        
-        // Carousel states
-        kotaSlide: 0,
-        weekendSlide: 0,
-        couplesSlide: 0,
-        friendsSlide: 0,
-        birthdaysSlide: 0,
-        
-        // Carousel data
-        kotaImages: ['assets/img/kota/1.jpg', 'assets/img/kota/2.jpg', 'assets/img/kota/3.jpg', 'assets/img/kota/4.jpg', 'assets/img/kota/5.jpg'],
-        weekendImages: ['assets/img/every bite/1.jpg', 'assets/img/every bite/2.jpg'],
-        couplesImages: ['assets/img/couples/1.jpg', 'assets/img/couples/2.jpg'],
-        friendsImages: ['assets/img/friends/1.jpg', 'assets/img/friends/2.jpg', 'assets/img/friends/3.jpg', 'assets/img/friends/4.jpg', 'assets/img/friends/5.jpg'],
-        birthdaysImages: ['assets/img/celebrations/1.jpg', 'assets/img/celebrations/2.jpg', 'assets/img/celebrations/3.jpg', 'assets/img/celebrations/4.jpg', 'assets/img/celebrations/5.jpg'],
-        
-        // Initialize function
-        init() {
-            // Loader timeout
-            setTimeout(() => {
-                this.isLoading = false;
-            }, 1500);
-            
-            // Hero text rotation
-            setInterval(() => {
-                this.currentHero = (this.currentHero + 1) % this.heroTexts.length;
-            }, 3800);
-            
-            // Auto-play carousels
-            this.autoPlayCarousels();
-        },
-        
-        // Carousel functions
-        autoPlayCarousels() {
-            setInterval(() => this.nextSlide('kota'), 4000);
-            setInterval(() => this.nextSlide('weekend'), 4000);
-            setInterval(() => this.nextSlide('couples'), 4000);
-            setInterval(() => this.nextSlide('friends'), 4000);
-            setInterval(() => this.nextSlide('birthdays'), 4000);
-        },
-        
-        nextSlide(carousel) {
-            this[carousel + 'Slide'] = (this[carousel + 'Slide'] + 1) % this[carousel + 'Images'].length;
-        },
-        
-        prevSlide(carousel) {
-            const length = this[carousel + 'Images'].length;
-            this[carousel + 'Slide'] = (this[carousel + 'Slide'] - 1 + length) % length;
-        },
-        
-        goToSlide(carousel, index) {
-            this[carousel + 'Slide'] = index;
-        },
-        
-        // Button effects
-        createRipple(event) {
-            const button = event.currentTarget;
-            const rect = button.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height) * 1.15;
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            
-            const ripple = document.createElement('span');
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: radial-gradient(circle, rgba(255,255,255,.85) 0%, rgba(255,255,255,.6) 30%, rgba(200,155,45,.35) 60%, rgba(200,155,45,0) 70%);
-                transform: translate(-50%, -50%) scale(0);
-                animation: rippleOut 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-                width: ${size}px;
-                height: ${size}px;
-                left: ${x}px;
-                top: ${y}px;
-                pointer-events: none;
-                mix-blend-mode: screen;
-            `;
-            
-            button.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 700);
-        }
-    }"
-    x-init="init()"
->
 
-    <!-- LOADER -->
-    <template x-if="isLoading">
-        <div id="loader-overlay" class="loader-overlay">
-            <div class="loader">
-                <div class="ring"></div>
-                <div class="ring"></div>
-                <div class="ring"></div>
-                <span class="loading-text">Loading...</span>
-            </div>
-        </div>
-    </template>
+<body>
 
-    <!-- MAIN CONTENT -->
-    <div x-show="!isLoading">
-        <!-- Liquid Light Effects -->
-        <div class="liquid-light-overlay">
-            <div class="light-beam"></div>
-            <div class="light-beam"></div>
-            <div class="light-beam"></div>
-        </div>
+<!-- Liquid Light Overlay -->
+<div class="liquid-light-overlay">
+  <div class="light-beam"></div>
+  <div class="light-beam"></div>
+  <div class="light-beam"></div>
+</div>
 
-        <div class="background-caustics"></div>
+<!-- Background Caustics -->
+<div class="background-caustics"></div>
 
-        <!-- Background Video -->
-        <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
-            <source src="assets/video/venue.webm" type="video/webm" />
-            <source src="assets/video/venue.mp4" type="video/mp4" />
-        </video>
-        <div class="video-overlay"></div>
+  <!-- Background video (same as comments page) -->
+  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
+    <source src="assets/video/venue.webm" type="video/webm" />
+    <source src="assets/video/venue.mp4" type="video/mp4" />
+  </video>
+  <div class="video-overlay"></div>
 
-        <!-- Top Navigation -->
-        <header class="topbar glass">
-            <div class="brand">
-                <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
-            </div>
-            <nav class="links">
-                <a href="index.html">
-                    <img src="assets/img/icons/home.svg" alt="Home"/>
-                </a>
-                <a href="menu.html">
-                    <img src="assets/img/icons/menu.svg" alt="Menu"/>
-                </a>
-                <a href="booking.html">
-                    <img src="assets/img/icons/booking.svg" alt="Bookings"/>
-                </a>
-                <a href="comments.html">
-                    <img src="assets/img/icons/comments.svg" alt="Comments"/>
-                </a>
-            </nav>
-        </header>
-
-        <!-- Hero Section -->
-        <section class="moment glass water" id="welcome">
-            <header class="moment-head">
-                <h2 x-text="heroTexts[currentHero]"></h2>
-                <p>
-                    The kota the mmmhh.<br>
-                    Kuna meh kitchen. <em>Come and chill with us.</em>
-                </p>
-            </header>
-
-            <!-- Kota Carousel -->
-            <div class="fade-carousel">
-                <div class="carousel-container">
-                    <div class="carousel-track">
-                        <template x-for="(image, index) in kotaImages" :key="index">
-                            <div class="carousel-slide" :class="{ 'active': kotaSlide === index }">
-                                <img :src="image" :alt="'Kota image ' + (index + 1)" />
-                            </div>
-                        </template>
-                    </div>
-
-                    <button class="carousel-prev" @click="prevSlide('kota')">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </button>
-                    <button class="carousel-next" @click="nextSlide('kota')">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </button>
-
-                    <div class="carousel-indicators">
-                        <template x-for="(_, index) in kotaImages" :key="index">
-                            <div class="carousel-indicator" 
-                                 :class="{ 'active': kotaSlide === index }"
-                                 @click="goToSlide('kota', index)"></div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Weekend Vibes Section -->
-        <section class="moment glass water" id="weekend">
-            <header class="moment-head">
-                <h2>It's worth every bite</h2>
-                <p>
-                    Music in the air. Sun on your face. Zero rush, all joy.<br>
-                    Weekends are better here — <em>come and chill with us.</em>
-                </p>
-            </header>
-
-            <div class="fade-carousel">
-                <div class="carousel-container">
-                    <div class="carousel-track">
-                        <template x-for="(image, index) in weekendImages" :key="index">
-                            <div class="carousel-slide" :class="{ 'active': weekendSlide === index }">
-                                <img :src="image" :alt="'Weekend image ' + (index + 1)" />
-                            </div>
-                        </template>
-                    </div>
-
-                    <button class="carousel-prev" @click="prevSlide('weekend')">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </button>
-                    <button class="carousel-next" @click="nextSlide('weekend')">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </button>
-
-                    <div class="carousel-indicators">
-                        <template x-for="(_, index) in weekendImages" :key="index">
-                            <div class="carousel-indicator" 
-                                 :class="{ 'active': weekendSlide === index }"
-                                 @click="goToSlide('weekend', index)"></div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Add other sections following same pattern -->
-
-        <!-- Call to Action Buttons -->
-        <div class="hero-actions">
-            <button class="btn gold" @click="createRipple($event)">View Menu</button>
-            <button class="btn ghost" @click="createRipple($event)">Book a Table</button>
-        </div>
-
-        <!-- Footer -->
-        <footer class="foot glass">
-            <div class="footer-content">
-                <p>&copy; 2024 Malume Nico. All rights reserved.</p>
-            </div>
-        </footer>
+<header class="topbar glass">
+    <div class="brand">
+      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
     </div>
+    <nav class="links">
+      <a href="index.html">
+        <img src="assets/img/icons/home.svg" alt="Home"/>
+      </a>
+      <a href="menu.html">
+        <img src="assets/img/icons/menu.svg" alt="Menu"/>
+      </a>
+      <a href="booking.html">
+        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
+      </a>
+      <a href="comments.html">
+        <img src="assets/img/icons/comments.svg" alt="Comments"/>
+      </a>
+    </nav>
+  </header>
+
+<!-- HERO -->
+<section class="moment glass water" id="welcome">
+  <header class="moment-head">
+    <h2>Welcome Kwa Malume-Nico</h2>
+    <p>The kota the mmmhh.<br>
+       Kuna meh kitchen. <em>Come and chill with us.</em></p>
+  </header>
+
+  <!-- FADE CAROUSEL FOR KOTA SECTION -->
+  <div class="fade-carousel" data-section="kota">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/kota/1.jpg" alt="Couple enjoying Malume Nico" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/kota/2.jpg" alt="Smiles and snacks" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/kota/3.jpg" alt="Date night at Malume Nico" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/kota/4.jpg" alt="Joyful cheers" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/kota/5.jpg" alt="Golden hour, golden vibes" />
+        </div>
+      </div>
+
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="carousel-indicators">
+        <div class="carousel-indicator active"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Weekend Vibes -->
+<section class="moment glass water" id="weekend">
+  <header class="moment-head">
+    <h2>It's worth every bite</h2>
+    <p>Music in the air. Sun on your face. Zero rush, all joy.<br>
+       Weekends are better here — <em>come and chill with us.</em></p>
+  </header>
+
+  <!-- FADE CAROUSEL FOR WEEKEND SECTION -->
+  <div class="fade-carousel" data-section="weekend">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/every bite/1.jpg" alt="Chill weekend table" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/every bite/2.jpg" alt="Golden hour outdoors" />
+        </div>
+      </div>
+
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="carousel-indicators">
+        <div class="carousel-indicator active"></div>
+        <div class="carousel-indicator"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Couples -->
+<section class="moment glass water" id="couples">
+  <header class="moment-head">
+    <h2>love birds</h2>
+    <p>Laughs that linger. Shared bites. Soft music and softer looks.<br>
+       Make the date a memory. <em>Come and chill with us.</em></p>
+  </header>
+
+  <!-- FADE CAROUSEL FOR COUPLES SECTION -->
+  <div class="fade-carousel" data-section="couples">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/couples/1.jpg" alt="Couple enjoying Malume Nico" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/couples/2.jpg" alt="Smiles and snacks" />
+        </div>
+      </div>
+
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="carousel-indicators">
+        <div class="carousel-indicator active"></div>
+        <div class="carousel-indicator"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Friends -->
+<section class="moment glass water" id="friends">
+  <header class="moment-head">
+    <h2>Chilling with Friends</h2>
+    <p>Inside jokes. Shared plates. Loud stories that get louder.<br>
+       Pull up with the crew — <em>come and chill with us.</em></p>
+  </header>
+
+  <!-- FADE CAROUSEL FOR FRIENDS SECTION -->
+  <div class="fade-carousel" data-section="friends">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/friends/1.jpg" alt="Friends laughing" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/friends/2.jpg" alt="Group selfie vibes" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/friends/3.jpg" alt="Snack time together" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/friends/4.jpg" alt="High energy hangout" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/friends/5.jpg" alt="Cheers to good times" />
+        </div>
+      </div>
+
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="carousel-indicators">
+        <div class="carousel-indicator active"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+        <div class="carousel-indicator"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Birthdays & Celebrations -->
+<section class="moment glass water" id="birthdays">
+  <header class="moment-head">
+    <h2>Birthdays &amp; Celebrations</h2>
+    <p>Candles, choruses and a hundred photos. We’ll hype you up.<br>
+       Mark the moment — <em>come and chill with us.</em></p>
+  </header>
+
+  <!-- FADE CAROUSEL FOR BIRTHDAYS SECTION -->
+  <div class="fade-carousel" data-section="birthdays">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/celebrations/1.jpg" alt="Birthday crew" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/2.jpg" alt="Cake and cheers" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/3.jpg" alt="Big smiles, big moments" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/4.jpg" alt="Confetti and joy" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/5.jpg" alt="Unforgettable night" />
+        </div>
+      </div>
+
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 
 
 </body>
 </html>
+
