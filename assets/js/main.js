@@ -5,40 +5,37 @@ document.addEventListener("DOMContentLoaded", function() {
     // ========================
     // LOADER FUNCTIONALITY
     // ========================
-    function initLoader() {
-        const loaderOverlay = document.getElementById("loader-overlay");
-        const body = document.body;
+    const loaderOverlay = document.getElementById("loader-overlay");
+    const body = document.body;
 
-        if (loaderOverlay) {
-            // Show loader immediately
-            body.classList.add("loading");
-            loaderOverlay.style.display = "flex";
-            loaderOverlay.style.opacity = "1";
+    if (loaderOverlay) {
+        // Show loader immediately
+        body.classList.add("loading");
+        loaderOverlay.style.display = "flex";
+        loaderOverlay.style.opacity = "1";
 
-            // Hide loader when everything is loaded
-            window.addEventListener("load", function() {
-                setTimeout(() => {
-                    body.classList.remove("loading");
-                    loaderOverlay.style.opacity = "0";
-                    setTimeout(() => {
-                        loaderOverlay.style.display = "none";
-                    }, 600);
-                }, 1000);
-            });
-
-            // Fallback in case load event doesn't fire
+        // Hide loader when everything is loaded
+        window.addEventListener("load", function() {
             setTimeout(() => {
-                if (body.classList.contains("loading")) {
-                    body.classList.remove("loading");
-                    loaderOverlay.style.opacity = "0";
-                    setTimeout(() => {
-                        loaderOverlay.style.display = "none";
-                    }, 600);
-                }
-            }, 5000);
-        }
+                body.classList.remove("loading");
+                loaderOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    loaderOverlay.style.display = "none";
+                }, 600);
+            }, 1000);
+        });
+
+        // Fallback in case load event doesn't fire
+        setTimeout(() => {
+            if (body.classList.contains("loading")) {
+                body.classList.remove("loading");
+                loaderOverlay.style.opacity = "0";
+                setTimeout(() => {
+                    loaderOverlay.style.display = "none";
+                }, 600);
+            }
+        }, 5000);
     }
-    initLoader();
 
     // ========================
     // HERO TEXT ROTATION
@@ -276,12 +273,10 @@ document.addEventListener("DOMContentLoaded", function() {
     initCarousels();
 
     // ========================
-    // LIQUID LIGHT BEAM EFFECTS
+    // LIQUID LIGHT EFFECTS
     // ========================
     function initLiquidLight() {
-        console.log("Initializing liquid light effects...");
-        
-        // Add enhanced classes for water effects
+        // Add enhanced classes
         document.querySelectorAll('.glass.water').forEach(glass => {
             glass.classList.add('enhanced-water');
         });
@@ -290,228 +285,21 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.classList.add('enhanced');
         });
 
-        // Initialize light beams with random delays and enhanced performance
-        const lightOverlay = document.querySelector('.liquid-light-overlay');
-        if (lightOverlay) {
-            optimizeLightBeams(lightOverlay);
-            setupLightBeamInteractions();
-        }
+        // Randomize light beam animations
+        document.querySelectorAll('.light-beam').forEach((beam, index) => {
+            beam.style.animationDelay = `${Math.random() * 5}s`;
+        });
 
         // Adjust for reduced motion preference
-        handleReducedMotion();
-
-        // Setup resize handler for responsive light beams
-        setupLightBeamResizeHandler();
-
-        console.log("Liquid light effects initialized");
-    }
-
-    function optimizeLightBeams(container) {
-        const beams = container.querySelectorAll('.light-beam');
-        
-        beams.forEach((beam, index) => {
-            // Randomize animation delays for more natural effect
-            const randomDelay = Math.random() * 8;
-            beam.style.animationDelay = `${randomDelay}s`;
-            
-            // Add performance optimizations
-            beam.style.willChange = 'transform, opacity';
-            beam.style.backfaceVisibility = 'hidden';
-            beam.style.transform = 'translateZ(0)';
-            
-            // Add data attributes for tracking
-            beam.setAttribute('data-beam-index', index);
-            beam.setAttribute('data-animation-state', 'running');
-        });
-
-        // Add mutation observer to handle visibility changes
-        setupBeamVisibilityObserver(container);
-    }
-
-    function setupLightBeamInteractions() {
-        // Pause beams when user interacts with important content
-        const interactiveElements = document.querySelectorAll('.moment, .carousel-container, .btn');
-        
-        interactiveElements.forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                reduceBeamIntensity(0.3);
-            });
-            
-            element.addEventListener('mouseleave', () => {
-                restoreBeamIntensity();
-            });
-            
-            element.addEventListener('touchstart', () => {
-                reduceBeamIntensity(0.2);
-            }, { passive: true });
-            
-            element.addEventListener('touchend', () => {
-                setTimeout(restoreBeamIntensity, 1000);
-            }, { passive: true });
-        });
-
-        // Handle page visibility changes (tab switching)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                pauseBeams();
-            } else {
-                resumeBeams();
-            }
-        });
-    }
-
-    function reduceBeamIntensity(factor = 0.5) {
-        const beams = document.querySelectorAll('.light-beam');
-        beams.forEach(beam => {
-            beam.style.opacity = factor;
-        });
-    }
-
-    function restoreBeamIntensity() {
-        const beams = document.querySelectorAll('.light-beam');
-        beams.forEach(beam => {
-            beam.style.opacity = '';
-        });
-    }
-
-    function pauseBeams() {
-        const beams = document.querySelectorAll('.light-beam');
-        beams.forEach(beam => {
-            beam.style.animationPlayState = 'paused';
-            beam.setAttribute('data-animation-state', 'paused');
-        });
-    }
-
-    function resumeBeams() {
-        const beams = document.querySelectorAll('.light-beam');
-        beams.forEach(beam => {
-            beam.style.animationPlayState = 'running';
-            beam.setAttribute('data-animation-state', 'running');
-        });
-    }
-
-    function handleReducedMotion() {
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
         if (reducedMotion) {
-            console.log("Reduced motion preference detected - adjusting light effects");
-            
-            const beams = document.querySelectorAll('.light-beam');
-            beams.forEach(beam => {
+            document.querySelectorAll('.light-beam').forEach(beam => {
                 beam.style.animationDuration = '20s';
                 beam.style.opacity = '0.1';
-                beam.style.animationTimingFunction = 'linear';
-            });
-
-            // Also adjust background caustics
-            const backgroundCaustics = document.querySelector('.background-caustics');
-            if (backgroundCaustics) {
-                backgroundCaustics.style.animationDuration = '30s';
-                backgroundCaustics.style.opacity = '0.05';
-            }
-        }
-    }
-
-    function setupLightBeamResizeHandler() {
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                console.log("Window resized - optimizing light beams");
-                optimizeLightBeamsForViewport();
-            }, 250);
-        });
-    }
-
-    function optimizeLightBeamsForViewport() {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        const beams = document.querySelectorAll('.light-beam');
-        
-        // Adjust beam sizes based on viewport
-        if (viewportWidth < 768) {
-            // Mobile optimization
-            beams.forEach(beam => {
-                beam.style.height = '80px';
-                beam.style.filter = 'blur(12px)';
-            });
-        } else {
-            // Desktop settings
-            beams.forEach(beam => {
-                beam.style.height = '120px';
-                beam.style.filter = 'blur(15px)';
             });
         }
-        
-        // Adjust beam count for very small screens
-        if (viewportWidth < 480) {
-            const lightOverlay = document.querySelector('.liquid-light-overlay');
-            const existingBeams = lightOverlay.querySelectorAll('.light-beam');
-            
-            if (existingBeams.length > 2) {
-                // Remove extra beams on very small screens
-                for (let i = 2; i < existingBeams.length; i++) {
-                    existingBeams[i].remove();
-                }
-            }
-        }
     }
-
-    function setupBeamVisibilityObserver(container) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Beams are visible, ensure they're running
-                    resumeBeams();
-                } else {
-                    // Beams are not visible, pause to save resources
-                    pauseBeams();
-                }
-            });
-        }, {
-            threshold: 0.1 // Trigger when at least 10% visible
-        });
-
-        observer.observe(container);
-    }
-
-    // Enhanced light beam performance monitoring
-    function monitorLightBeamPerformance() {
-        let frameCount = 0;
-        let lastTime = performance.now();
-        
-        function checkPerformance(currentTime) {
-            frameCount++;
-            
-            if (currentTime - lastTime >= 1000) {
-                const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-                
-                if (fps < 50) {
-                    // If FPS is low, reduce beam complexity
-                    reduceBeamComplexity();
-                }
-                
-                frameCount = 0;
-                lastTime = currentTime;
-            }
-            
-            requestAnimationFrame(checkPerformance);
-        }
-        
-        requestAnimationFrame(checkPerformance);
-    }
-
-    function reduceBeamComplexity() {
-        const beams = document.querySelectorAll('.light-beam');
-        beams.forEach(beam => {
-            beam.style.filter = 'blur(8px)';
-            beam.style.opacity = '0.4';
-        });
-    }
-
-    // Initialize liquid light effects
     initLiquidLight();
-    monitorLightBeamPerformance();
 
     // ========================
     // BACKGROUND VIDEO
@@ -530,38 +318,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // ERROR HANDLING FOR IMAGES
     // ========================
     function handleImageErrors() {
-        document.querySelectorAll('.card img, .carousel-slide img').forEach(img => {
+        document.querySelectorAll('.card img').forEach(img => {
             img.addEventListener('error', () => {
-                img.style.background = 'linear-gradient(135deg, #333, #555)';
+                img.style.background = '#222';
                 img.alt = 'Photo coming soon';
-                img.style.display = 'flex';
-                img.style.alignItems = 'center';
-                img.style.justifyContent = 'center';
-                img.style.color = '#fff';
-                img.style.fontSize = '16px';
-                img.innerHTML = 'Photo Coming Soon';
             });
         });
     }
     handleImageErrors();
-
-    // ========================
-    // NAVIGATION BUTTONS
-    // ========================
-    function initNavigationButtons() {
-        const navButtons = document.querySelectorAll('.nav-btn');
-        
-        navButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Add click effect
-                btn.classList.add('glow-press');
-                setTimeout(() => {
-                    btn.classList.remove('glow-press');
-                }, 800);
-            });
-        });
-    }
-    initNavigationButtons();
 
     console.log("All JavaScript features initialized");
 });
@@ -583,56 +347,3 @@ setTimeout(() => {
             }
         });
     }
-
-    // Fallback for light beams if they don't initialize properly
-    const beams = document.querySelectorAll('.light-beam');
-    const anyBeamsAnimated = document.querySelector('.light-beam[style*="animation-delay"]');
-    
-    if (beams.length > 0 && !anyBeamsAnimated) {
-        console.log("Light beams not animated - applying fallback");
-        const lightOverlay = document.querySelector('.liquid-light-overlay');
-        if (lightOverlay) {
-            beams.forEach((beam, index) => {
-                beam.style.animationDelay = `${index * 2}s`;
-            });
-        }
-    }
-}, 2000);
-
-// Handle page exit with smooth transition
-window.addEventListener('beforeunload', function() {
-    // Add a subtle fade out effect when leaving the page
-    document.body.style.opacity = '0.7';
-    document.body.style.transition = 'opacity 0.3s ease';
-});
-
-// Export functions for potential manual control
-window.MalumeNicoApp = {
-    lightBeams: {
-        init: function() {
-            const lightOverlay = document.querySelector('.liquid-light-overlay');
-            if (lightOverlay) optimizeLightBeams(lightOverlay);
-        },
-        pause: pauseBeams,
-        resume: resumeBeams,
-        reduceIntensity: reduceBeamIntensity,
-        restoreIntensity: restoreBeamIntensity
-    },
-    carousels: {
-        refresh: function() {
-            document.querySelectorAll('.fade-carousel').forEach(container => {
-                new FadeCarousel(container);
-            });
-        }
-    }
-};
-
-// Performance optimization for slow devices
-if ('connection' in navigator) {
-    if (navigator.connection.saveData || navigator.connection.effectiveType.includes('2g')) {
-        // Reduce animations on slow connections
-        document.documentElement.style.setProperty('--animation-duration', '0.1s');
-    }
-}
-
-console.log("Malume Nico JavaScript loaded successfully");
