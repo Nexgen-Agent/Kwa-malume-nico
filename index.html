@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/home.css" />
 
 <!-- Load JavaScript -->
-<script src="assets/js/home.js" defer></script>
+<script src="assets/js/main.js" defer></script>
 
 <!-- Loader Overlay -->
 <div id="loader-overlay">
@@ -89,14 +89,14 @@
           <img src="assets/img/kota/5.jpg" alt="Golden hour, golden vibes" />
         </div>
       </div>
-      
+
       <button class="carousel-prev" aria-label="Previous image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="carousel-next" aria-label="Next image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      
+
       <div class="carousel-indicators">
         <div class="carousel-indicator active"></div>
         <div class="carousel-indicator"></div>
@@ -108,7 +108,7 @@
   </div>
 </section>
 
-<!-- worth every bite-->
+<!-- Weekend Vibes -->
 <section class="moment glass water" id="weekend">
   <header class="moment-head">
     <h2>It's worth every bite</h2>
@@ -127,14 +127,14 @@
           <img src="assets/img/every bite/2.jpg" alt="Golden hour outdoors" />
         </div>
       </div>
-      
+
       <button class="carousel-prev" aria-label="Previous image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="carousel-next" aria-label="Next image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      
+
       <div class="carousel-indicators">
         <div class="carousel-indicator active"></div>
         <div class="carousel-indicator"></div>
@@ -162,14 +162,14 @@
           <img src="assets/img/couples/2.jpg" alt="Smiles and snacks" />
         </div>
       </div>
-      
+
       <button class="carousel-prev" aria-label="Previous image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="carousel-next" aria-label="Next image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      
+
       <div class="carousel-indicators">
         <div class="carousel-indicator active"></div>
         <div class="carousel-indicator"></div>
@@ -206,14 +206,14 @@
           <img src="assets/img/friends/5.jpg" alt="Cheers to good times" />
         </div>
       </div>
-      
+
       <button class="carousel-prev" aria-label="Previous image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <button class="carousel-next" aria-label="Next image">
         <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      
+
       <div class="carousel-indicators">
         <div class="carousel-indicator active"></div>
         <div class="carousel-indicator"></div>
@@ -225,194 +225,42 @@
   </div>
 </section>
 
-
-
-</body>
-</html><!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Malume Nico — Home</title>
-  <link rel="stylesheet" href="assets/css/home.css" />
-
-  <!-- Load JavaScript -->
-  <script src="assets/js/main.js" defer></script>
-
-  <style>
-    /* Critical CSS to ensure light beams work immediately */
-    .liquid-light-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .light-beam {
-      position: absolute;
-      width: 150%;
-      height: 120px;
-      background: radial-gradient(ellipse at center, 
-        rgba(200, 155, 45, 0.18) 0%,
-        rgba(200, 155, 45, 0.12) 25%,
-        rgba(200, 155, 45, 0.06) 45%,
-        transparent 70%);
-      mix-blend-mode: overlay;
-      animation: waterCausticsTravel 12s linear infinite;
-      filter: blur(15px);
-      transform-origin: left center;
-      will-change: transform;
-      left: -50%;
-    }
-
-    .light-beam:nth-child(1) {
-      top: 15%;
-      animation-delay: 0s;
-      animation-duration: 15s;
-    }
-
-    .light-beam:nth-child(2) {
-      top: 45%;
-      animation-delay: 3s;
-      animation-duration: 18s;
-      transform: rotate(-3deg);
-    }
-
-    .light-beam:nth-child(3) {
-      top: 75%;
-      animation-delay: 7s;
-      animation-duration: 20s;
-      transform: rotate(2deg);
-    }
-
-    @keyframes waterCausticsTravel {
-      0% {
-        transform: translateX(0) rotate(-5deg);
-        opacity: 0.3;
-      }
-      15% {
-        opacity: 0.6;
-      }
-      50% {
-        opacity: 0.8;
-      }
-      85% {
-        opacity: 0.6;
-      }
-      100% {
-        transform: translateX(100vw) rotate(5deg);
-        opacity: 0.3;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- Loader Overlay -->
-  <div id="loader-overlay">
-    <div class="loader">
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <span class="loading-text">Loading...</span>
-    </div>
-  </div>
-
-  <!-- Liquid Light Overlay -->
-  <div class="liquid-light-overlay">
-    <div class="light-beam"></div>
-    <div class="light-beam"></div>
-    <div class="light-beam"></div>
-  </div>
-
-  <!-- Background Caustics -->
-  <div class="background-caustics"></div>
-
-  <!-- Background video -->
-  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
-    <source src="assets/video/venue.webm" type="video/webm" />
-    <source src="assets/video/venue.mp4" type="video/mp4" />
-  </video>
-  <div class="video-overlay"></div>
-
-  <header class="topbar glass">
-    <div class="brand">
-      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
-    </div>
-    <nav class="links">
-      <a href="index.html">
-        <img src="assets/img/icons/home.svg" alt="Home"/>
-      </a>
-      <a href="menu.html">
-        <img src="assets/img/icons/menu.svg" alt="Menu"/>
-      </a>
-      <a href="booking.html">
-        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
-      </a>
-      <a href="comments.html">
-        <img src="assets/img/icons/comments.svg" alt="Comments"/>
-      </a>
-    </nav>
+<!-- Birthdays & Celebrations -->
+<section class="moment glass water" id="birthdays">
+  <header class="moment-head">
+    <h2>Birthdays &amp; Celebrations</h2>
+    <p>Candles, choruses and a hundred photos. We’ll hype you up.<br>
+       Mark the moment — <em>come and chill with us.</em></p>
   </header>
 
- 
-  <!-- Birthdays & Celebrations -->
-  <section class="moment glass water" id="birthdays">
-    <header class="moment-head">
-      <h2>Birthdays &amp; Celebrations</h2>
-      <p>Candles, choruses and a hundred photos. We'll hype you up.<br>
-         Mark the moment — <em>come and chill with us.</em></p>
-    </header>
-
-    <!-- FADE CAROUSEL FOR BIRTHDAYS SECTION -->
-    <div class="fade-carousel" data-section="birthdays">
-      <div class="carousel-container">
-        <div class="carousel-track">
-          <div class="carousel-slide active">
-            <img src="assets/img/celebrations/1.jpg" alt="Birthday crew" />
-          </div>
-          <div class="carousel-slide">
-            <img src="assets/img/celebrations/2.jpg" alt="Cake and cheers" />
-          </div>
-          <div class="carousel-slide">
-            <img src="assets/img/celebrations/3.jpg" alt="Big smiles, big moments" />
-          </div>
-          <div class="carousel-slide">
-            <img src="assets/img/celebrations/4.jpg" alt="Confetti and joy" />
-          </div>
-          <div class="carousel-slide">
-            <img src="assets/img/celebrations/5.jpg" alt="Unforgettable night" />
-          </div>
+  <!-- FADE CAROUSEL FOR BIRTHDAYS SECTION -->
+  <div class="fade-carousel" data-section="birthdays">
+    <div class="carousel-container">
+      <div class="carousel-track">
+        <div class="carousel-slide active">
+          <img src="assets/img/celebrations/1.jpg" alt="Birthday crew" />
         </div>
-
-        <button class="carousel-prev" aria-label="Previous image">
-          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="carousel-next" aria-label="Next image">
-          <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-
-        <div class="carousel-indicators">
-          <div class="carousel-indicator active"></div>
-          <div class="carousel-indicator"></div>
-          <div class="carousel-indicator"></div>
-          <div class="carousel-indicator"></div>
-          <div class="carousel-indicator"></div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/2.jpg" alt="Cake and cheers" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/3.jpg" alt="Big smiles, big moments" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/4.jpg" alt="Confetti and joy" />
+        </div>
+        <div class="carousel-slide">
+          <img src="assets/img/celebrations/5.jpg" alt="Unforgettable night" />
         </div>
       </div>
-    </div>
-  </section>
 
-  <footer class="foot glass">
-    <div class="footer-content">
-      <p>&copy; 2025 Malume Nico. All rights reserved.</p>
-    </div>
-  </footer>
+      <button class="carousel-prev" aria-label="Previous image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M15 4L7 12l8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="carousel-next" aria-label="Next image">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path d="M9 4l8 
 
 </body>
 </html>
+
+
