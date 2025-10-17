@@ -1,281 +1,201 @@
-/* Malume Nico - Main JavaScript */
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("Malume Nico - DOM loaded");
-
-    // ========================
-    // LOADER FUNCTIONALITY
-    // ========================
-    const loaderOverlay = document.getElementById("loader-overlay");
-    const body = document.body;
-
-    if (loaderOverlay) {
-        // Show loader immediately
-        body.classList.add("loading");
-        loaderOverlay.style.display = "flex";
-        loaderOverlay.style.opacity = "1";
-
-        // Hide loader when everything is loaded
-        window.addEventListener("load", function() {
-            setTimeout(() => {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                }, 600);
-            }, 1000);
-        });
-
-        // Fallback in case load event doesn't fire
+// Malume Nico - Web Components Replacement for JavaScript
+class MalumeLoader extends HTMLElement {
+    connectedCallback() {
         setTimeout(() => {
-            if (body.classList.contains("loading")) {
-                body.classList.remove("loading");
-                loaderOverlay.style.opacity = "0";
-                setTimeout(() => {
-                    loaderOverlay.style.display = "none";
-                }, 600);
-            }
-        }, 5000);
+            this.style.opacity = '0';
+            setTimeout(() => {
+                this.style.display = 'none';
+            }, 600);
+        }, 1500);
+    }
+}
+
+class MalumeHero extends HTMLElement {
+    connectedCallback() {
+        this.texts = [
+            "Welcome Kwa Malume-Nico",
+            "The Best Kota in Town", 
+            "Come and Chill With Us"
+        ];
+        this.currentIndex = 0;
+        this.element = this.querySelector('h2');
+        this.startRotation();
     }
 
-    // ========================
-    // HERO TEXT ROTATION
-    // ========================
-    function initHeroRotation() {
-        const swaps = document.querySelectorAll('.hero-title .swap');
-        if (!swaps.length) return;
-
-        let i = 0;
-        function show() {
-            swaps.forEach((el, idx) => {
-                el.classList.toggle('active', idx === i);
-            });
-        }
-
-        // Show first one immediately
-        show();
-
-        // Rotate every 3.8 seconds
+    startRotation() {
         setInterval(() => {
-            i = (i + 1) % swaps.length;
-            show();
+            this.currentIndex = (this.currentIndex + 1) % this.texts.length;
+            this.element.textContent = this.texts[this.currentIndex];
         }, 3800);
     }
-    initHeroRotation();
+}
 
-    // ========================
-    // BUTTON EFFECTS
-    // ========================
-    function initButtonEffects() {
-        const buttons = document.querySelectorAll('.btn');
-
-        buttons.forEach(btn => {
-            const handler = (e) => {
-                // Remove and re-add glow effect
-                btn.classList.remove('glow-press');
-                void btn.offsetWidth; // Trigger reflow
-                btn.classList.add('glow-press');
-
-                // Create ripple effect
-                const x = e.clientX || (e.touches && e.touches[0].clientX);
-                const y = e.clientY || (e.touches && e.touches[0].clientY);
-
-                if (x && y) {
-                    const r = document.createElement('span');
-                    r.className = 'gold-ripple';
-
-                    const rect = btn.getBoundingClientRect();
-                    const size = Math.max(rect.width, rect.height) * 1.15;
-
-                    r.style.width = r.style.height = size + 'px';
-                    r.style.left = (x - rect.left) + 'px';
-                    r.style.top = (y - rect.top) + 'px';
-
-                    btn.appendChild(r);
-                    r.addEventListener('animationend', () => r.remove());
-                }
-            };
-
-            btn.addEventListener('click', handler);
-            btn.addEventListener('touchstart', handler, { passive: true });
-        });
+class MalumeCarousel extends HTMLElement {
+    connectedCallback() {
+        this.slides = Array.from(this.querySelectorAll('.carousel-slide'));
+        this.indicators = Array.from(this.querySelectorAll('.carousel-indicator'));
+        this.prevBtn = this.querySelector('.carousel-prev');
+        this.nextBtn = this.querySelector('.carousel-next');
+        
+        this.currentIndex = 0;
+        this.initCarousel();
     }
-    initButtonEffects();
 
-    // ========================
-    // SCROLLING RAILS
-    // ========================
-    function initScrollingRails() {
-        const moments = document.querySelectorAll('.moment');
-
-        moments.forEach(section => {
-            const wrap = section.querySelector('.rail-wrap');
-            const rail = section.querySelector('.rail');
-            const left = section.querySelector('.arrow.left');
-            const right = section.querySelector('.arrow.right');
-
-            if (!rail || !left || !right) return;
-
-            const SCROLL = () => Math.max(rail.clientWidth, 260) * 0.6;
-
-            // Arrow click handlers
-            left.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: -SCROLL(), behavior: 'smooth' });
-            });
-
-            right.addEventListener('click', () => {
-                section.classList.add('swipe-glow');
-                rail.scrollBy({ left: SCROLL(), behavior: 'smooth' });
-            });
-
-            // Remove glow after scrolling
-            rail.addEventListener('scroll', () => {
-                clearTimeout(rail._glowT);
-                rail._glowT = setTimeout(() => {
-                    section.classList.remove('swipe-glow');
-                }, 400);
-            }, { passive: true });
-
-            // Drag to scroll functionality
-            let isDown = false, startX = 0, startLeft = 0;
-
-            rail.addEventListener('pointerdown', e => {
-                isDown = true;
-                rail.setPointerCapture(e.pointerId);
-                startX = e.clientX;
-                startLeft = rail.scrollLeft;
-                section.classList.add('swipe-glow');
-            });
-
-            rail.addEventListener('pointermove', e => {
-                if (!isDown) return;
-                const dx = e.clientX - startX;
-                rail.scrollLeft = startLeft - dx;
-
-                // Add tilt effect during drag
-                const tilt = Math.max(-1, Math.min(1, dx / 80));
-                if (wrap) wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
-            });
-
-            const release = () => {
-                if (!isDown) return;
-                isDown = false;
-                if (wrap) wrap.style.transform = "";
-                setTimeout(() => section.classList.remove('swipe-glow'), 420);
-            };
-
-            rail.addEventListener('pointerup', release);
-            rail.addEventListener('pointercancel', release);
+    initCarousel() {
+        // Set up navigation
+        this.prevBtn?.addEventListener('click', () => this.prev());
+        this.nextBtn?.addEventListener('click', () => this.next());
+        
+        // Set up indicators
+        this.indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => this.goToSlide(index));
         });
+
+        // Auto-play
+        this.startAutoPlay();
+
+        // Pause on hover
+        this.addEventListener('mouseenter', () => this.stopAutoPlay());
+        this.addEventListener('mouseleave', () => this.startAutoPlay());
     }
-    initScrollingRails();
 
-    // ========================
-    // FADE CAROUSELS
-    // ========================
-    class FadeCarousel {
-        constructor(container) {
-            this.container = container;
-            this.track = container.querySelector('.carousel-track');
-            this.slides = Array.from(container.querySelectorAll('.carousel-slide'));
-            this.indicators = Array.from(container.querySelectorAll('.carousel-indicator'));
-            this.prevBtn = container.querySelector('.carousel-prev');
-            this.nextBtn = container.querySelector('.carousel-next');
+    showSlide(index) {
+        // Hide current
+        this.slides[this.currentIndex]?.classList.remove('active');
+        this.indicators[this.currentIndex]?.classList.remove('active');
 
-            this.currentIndex = 0;
-            this.isTransitioning = false;
+        // Show new
+        this.currentIndex = index;
+        this.slides[this.currentIndex]?.classList.add('active');
+        this.indicators[this.currentIndex]?.classList.add('active');
+    }
+
+    next() { this.showSlide((this.currentIndex + 1) % this.slides.length); }
+    prev() { this.showSlide((this.currentIndex - 1 + this.slides.length) % this.slides.length); }
+    goToSlide(index) { this.showSlide(index); }
+
+    startAutoPlay() {
+        this.stopAutoPlay();
+        this.autoPlayInterval = setInterval(() => this.next(), 4000);
+    }
+
+    stopAutoPlay() {
+        if (this.autoPlayInterval) {
+            clearInterval(this.autoPlayInterval);
             this.autoPlayInterval = null;
-            this.autoPlayDelay = 4000;
-
-            this.init();
-        }
-
-        init() {
-            if (!this.slides.length) return;
-
-            this.showSlide(this.currentIndex);
-
-            // Event listeners
-            if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
-            if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
-
-            // Indicator clicks
-            this.indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => this.goToSlide(index));
-            });
-
-            this.startAutoPlay();
-
-            // Pause on hover/touch
-            this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
-            this.container.addEventListener('mouseleave', () => this.startAutoPlay());
-            this.container.addEventListener('touchstart', () => this.stopAutoPlay(), { passive: true });
-            this.container.addEventListener('touchend', () => this.startAutoPlay(), { passive: true });
-        }
-
-        showSlide(index) {
-            if (this.isTransitioning || !this.slides.length) return;
-
-            this.isTransitioning = true;
-
-            // Hide current slide
-            this.slides[this.currentIndex].classList.remove('active');
-            if (this.indicators[this.currentIndex]) {
-                this.indicators[this.currentIndex].classList.remove('active');
-            }
-
-            // Update index with looping
-            this.currentIndex = index;
-            if (this.currentIndex < 0) this.currentIndex = this.slides.length - 1;
-            if (this.currentIndex >= this.slides.length) this.currentIndex = 0;
-
-            // Show new slide
-            this.slides[this.currentIndex].classList.add('active');
-            if (this.indicators[this.currentIndex]) {
-                this.indicators[this.currentIndex].classList.add('active');
-            }
-
-            // Reset transition state
-            setTimeout(() => {
-                this.isTransitioning = false;
-            }, 500);
-        }
-
-        next() { this.showSlide(this.currentIndex + 1); }
-        prev() { this.showSlide(this.currentIndex - 1); }
-
-        goToSlide(index) {
-            if (index === this.currentIndex) return;
-            this.showSlide(index);
-        }
-
-        startAutoPlay() {
-            this.stopAutoPlay();
-            this.autoPlayInterval = setInterval(() => {
-                this.next();
-            }, this.autoPlayDelay);
-        }
-
-        stopAutoPlay() {
-            if (this.autoPlayInterval) {
-                clearInterval(this.autoPlayInterval);
-                this.autoPlayInterval = null;
-            }
         }
     }
+}
 
-    function initCarousels() {
-        const carousels = document.querySelectorAll('.fade-carousel');
-        carousels.forEach(container => {
-            new FadeCarousel(container);
+class MalumeButton extends HTMLElement {
+    connectedCallback() {
+        this.addEventListener('click', this.createRipple.bind(this));
+    }
+
+    createRipple(event) {
+        // Remove and re-add glow effect
+        this.classList.remove('glow-press');
+        void this.offsetWidth;
+        this.classList.add('glow-press');
+
+        // Create ripple
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height) * 1.15;
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        const ripple = document.createElement('span');
+        ripple.className = 'gold-ripple';
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+
+        this.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
+    }
+}
+
+class MalumeRail extends HTMLElement {
+    connectedCallback() {
+        this.wrap = this.querySelector('.rail-wrap');
+        this.rail = this.querySelector('.rail');
+        this.leftArrow = this.querySelector('.arrow.left');
+        this.rightArrow = this.querySelector('.arrow.right');
+
+        if (!this.rail || !this.leftArrow || !this.rightArrow) return;
+
+        this.initRail();
+    }
+
+    initRail() {
+        const scrollAmount = () => Math.max(this.rail.clientWidth, 260) * 0.6;
+
+        this.leftArrow.addEventListener('click', () => {
+            this.classList.add('swipe-glow');
+            this.rail.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
         });
-    }
-    initCarousels();
 
-    // ========================
-    // LIQUID LIGHT EFFECTS
-    // ========================
-    function initLiquidLight() {
+        this.rightArrow.addEventListener('click', () => {
+            this.classList.add('swipe-glow');
+            this.rail.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+        });
+
+        this.rail.addEventListener('scroll', () => {
+            clearTimeout(this.rail._glowT);
+            this.rail._glowT = setTimeout(() => {
+                this.classList.remove('swipe-glow');
+            }, 400);
+        });
+
+        // Drag functionality
+        this.initDrag();
+    }
+
+    initDrag() {
+        let isDown = false, startX = 0, startLeft = 0;
+
+        this.rail.addEventListener('pointerdown', (e) => {
+            isDown = true;
+            this.rail.setPointerCapture(e.pointerId);
+            startX = e.clientX;
+            startLeft = this.rail.scrollLeft;
+            this.classList.add('swipe-glow');
+        });
+
+        this.rail.addEventListener('pointermove', (e) => {
+            if (!isDown) return;
+            const dx = e.clientX - startX;
+            this.rail.scrollLeft = startLeft - dx;
+            
+            const tilt = Math.max(-1, Math.min(1, dx / 80));
+            if (this.wrap) this.wrap.style.transform = `perspective(1200px) rotateY(${tilt * 4}deg)`;
+        });
+
+        const release = () => {
+            if (!isDown) return;
+            isDown = false;
+            if (this.wrap) this.wrap.style.transform = "";
+            setTimeout(() => this.classList.remove('swipe-glow'), 420);
+        };
+
+        this.rail.addEventListener('pointerup', release);
+        this.rail.addEventListener('pointercancel', release);
+    }
+}
+
+class MalumeBackgroundVideo extends HTMLElement {
+    connectedCallback() {
+        const video = document.querySelector('.bg-video');
+        if (video && video.paused) {
+            video.play().catch(() => {
+                console.log("Video autoplay prevented");
+            });
+        }
+    }
+}
+
+class MalumeLightBeams extends HTMLElement {
+    connectedCallback() {
         // Add enhanced classes
         document.querySelectorAll('.glass.water').forEach(glass => {
             glass.classList.add('enhanced-water');
@@ -285,65 +205,77 @@ document.addEventListener("DOMContentLoaded", function() {
             btn.classList.add('enhanced');
         });
 
-        // Randomize light beam animations
+        // Randomize light beams
         document.querySelectorAll('.light-beam').forEach((beam, index) => {
             beam.style.animationDelay = `${Math.random() * 5}s`;
         });
 
-        // Adjust for reduced motion preference
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reducedMotion) {
+        // Reduced motion support
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.light-beam').forEach(beam => {
                 beam.style.animationDuration = '20s';
                 beam.style.opacity = '0.1';
             });
         }
     }
-    initLiquidLight();
+}
 
-    // ========================
-    // BACKGROUND VIDEO
-    // ========================
-    function initBackgroundVideo() {
-        const video = document.querySelector('.bg-video');
-        if (video && video.paused) {
-            video.play().catch(() => {
-                console.log("Video autoplay prevented");
-            });
-        }
-    }
-    window.addEventListener('load', initBackgroundVideo);
+// Register all custom elements
+customElements.define('malume-loader', MalumeLoader);
+customElements.define('malume-hero', MalumeHero);
+customElements.define('malume-carousel', MalumeCarousel);
+customElements.define('malume-button', MalumeButton);
+customElements.define('malume-rail', MalumeRail);
+customElements.define('malume-bg-video', MalumeBackgroundVideo);
+customElements.define('malume-light-beams', MalumeLightBeams);
 
-    // ========================
-    // ERROR HANDLING FOR IMAGES
-    // ========================
-    function handleImageErrors() {
-        document.querySelectorAll('.card img').forEach(img => {
-            img.addEventListener('error', () => {
-                img.style.background = '#222';
-                img.alt = 'Photo coming soon';
-            });
-        });
-    }
-    handleImageErrors();
-
-    console.log("All JavaScript features initialized");
+// Initialize everything when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Malume Nico Web Components initialized");
+    
+    // Convert existing elements to web components
+    convertToWebComponents();
 });
 
-// Fallback for slow loading elements
-setTimeout(() => {
-    // Re-initialize carousels if they didn't load properly
-    const carousels = document.querySelectorAll('.fade-carousel');
-    const anyActive = document.querySelector('.carousel-slide.active');
+function convertToWebComponents() {
+    // Convert loader
+    const loader = document.getElementById('loader-overlay');
+    if (loader) loader.setAttribute('is', 'malume-loader');
 
-    if (carousels.length > 0 && !anyActive) {
-        carousels.forEach(container => {
-            const track = container.querySelector('.carousel-track');
-            const slides = container.querySelectorAll('.carousel-slide');
-            if (track && slides.length > 0) {
-                slides[0].classList.add('active');
-                const indicator = container.querySelector('.carousel-indicator');
-                if (indicator) indicator.classList.add('active');
-            }
-        });
-    }
+    // Convert hero section
+    const heroSection = document.querySelector('#welcome .moment-head');
+    if (heroSection) heroSection.setAttribute('is', 'malume-hero');
+
+    // Convert carousels
+    document.querySelectorAll('.fade-carousel').forEach(carousel => {
+        carousel.setAttribute('is', 'malume-carousel');
+    });
+
+    // Convert buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.setAttribute('is', 'malume-button');
+    });
+
+    // Convert rail sections
+    document.querySelectorAll('.moment').forEach(moment => {
+        if (moment.querySelector('.rail')) {
+            moment.setAttribute('is', 'malume-rail');
+        }
+    });
+
+    // Initialize background video
+    document.body.setAttribute('is', 'malume-bg-video');
+    
+    // Initialize light beams
+    document.body.setAttribute('is', 'malume-light-beams');
+}
+
+// Error handling for images
+document.querySelectorAll('.card img, .carousel-slide img').forEach(img => {
+    img.addEventListener('error', () => {
+        img.style.background = 'linear-gradient(135deg, #333, #555)';
+        img.alt = 'Photo coming soon';
+    });
+});
+
+console.log("Malume Nico Web Components loaded");
