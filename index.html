@@ -202,6 +202,11 @@
             font-size: 24px;
             cursor: pointer;
             z-index: 101;
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu-btn.active {
+            transform: rotate(90deg);
         }
         
         /* === MOBILE MENU OVERLAY === */
@@ -211,8 +216,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(15px);
             z-index: 99;
             display: flex;
             flex-direction: column;
@@ -220,35 +225,48 @@
             align-items: center;
             opacity: 0;
             visibility: hidden;
+            transform: translateY(-20px);
             transition: all 0.4s ease;
         }
         
         .mobile-menu-overlay.active {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
         
         .mobile-nav-links {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
             text-align: center;
+            width: 100%;
+            max-width: 300px;
         }
         
         .mobile-nav-links a {
             color: white;
             text-decoration: none;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 600;
             transition: all 0.3s ease;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
         
         .mobile-nav-links a:hover {
             color: var(--gold);
-            background: rgba(200, 155, 45, 0.1);
-            transform: translateY(-5px);
+            background: rgba(200, 155, 45, 0.15);
+            transform: translateX(10px);
+        }
+        
+        .mobile-nav-links a i {
+            width: 24px;
+            text-align: center;
         }
         
         .close-mobile-menu {
@@ -260,6 +278,12 @@
             color: white;
             font-size: 28px;
             cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .close-mobile-menu:hover {
+            transform: scale(1.1);
+            color: var(--gold);
         }
         
         /* === HERO SECTION === */
@@ -531,10 +555,14 @@
             cursor: pointer;
         }
         
-        .cart-items {
+        .cart-content {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+        }
+        
+        .cart-items {
+            margin-bottom: 20px;
         }
         
         .cart-item {
@@ -573,6 +601,78 @@
             justify-content: center;
         }
         
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* === CHECKOUT FORM === */
+        .checkout-form {
+            display: none;
+        }
+        
+        .checkout-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .order-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .order-type-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .order-type-btn.active {
+            background: var(--gold);
+            color: var(--ink);
+        }
+        
         .cart-footer {
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -586,8 +686,13 @@
             font-weight: 700;
         }
         
-        .checkout-btn {
-            width: 100%;
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .checkout-btn, .place-order-btn {
+            flex: 1;
             padding: 15px;
             background: var(--gold);
             color: var(--ink);
@@ -598,14 +703,18 @@
             transition: all 0.3s;
         }
         
-        .checkout-btn:hover {
+        .checkout-btn:hover, .place-order-btn:hover {
             background: var(--gold-light);
         }
         
-        .empty-cart {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 255, 255, 0.5);
+        .back-to-cart {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-to-cart:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
         
         /* === CONTACT & LOCATION === */
@@ -764,6 +873,11 @@
             .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
         
         @media (max-width: 576px) {
@@ -773,6 +887,10 @@
             
             .gallery-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -817,11 +935,21 @@
             <i class="fas fa-times"></i>
         </button>
         <nav class="mobile-nav-links">
-            <a href="#home" class="mobile-nav-link">Home</a>
-            <a href="#about" class="mobile-nav-link">About</a>
-            <a href="#gallery" class="mobile-nav-link">Gallery</a>
-            <a href="#menu" class="mobile-nav-link">Menu</a>
-            <a href="#contact" class="mobile-nav-link">Find Us</a>
+            <a href="#home" class="mobile-nav-link">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#about" class="mobile-nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+            <a href="#gallery" class="mobile-nav-link">
+                <i class="fas fa-images"></i> Gallery
+            </a>
+            <a href="#menu" class="mobile-nav-link">
+                <i class="fas fa-utensils"></i> Menu
+            </a>
+            <a href="#contact" class="mobile-nav-link">
+                <i class="fas fa-map-marker-alt"></i> Find Us
+            </a>
         </nav>
     </div>
 
@@ -945,25 +1073,73 @@
     <!-- Cart System -->
     <div class="cart-container" id="cartContainer">
         <div class="cart-header">
-            <h3>Your Order</h3>
+            <h3 id="cartTitle">Your Order</h3>
             <button class="close-cart" id="closeCart">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Cart items will be added here dynamically -->
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                <p>Your cart is empty</p>
-                <p>Add some delicious items from our menu!</p>
+        
+        <div class="cart-content">
+            <!-- Cart Items View -->
+            <div class="cart-items" id="cartItemsView">
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will be added here dynamically -->
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <p>Your cart is empty</p>
+                        <p>Add some delicious items from our menu!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Checkout Form View -->
+            <div class="checkout-form" id="checkoutForm">
+                <div class="order-type">
+                    <button class="order-type-btn active" data-type="dinein">Dine In</button>
+                    <button class="order-type-btn" data-type="delivery">Delivery</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="tel" id="customerPhone" placeholder="Enter your phone number" required>
+                </div>
+                
+                <div class="form-group" id="tableNumberGroup">
+                    <label for="tableNumber">Table Number</label>
+                    <input type="text" id="tableNumber" placeholder="Enter your table number">
+                </div>
+                
+                <div class="form-group" id="deliveryAddressGroup" style="display: none;">
+                    <label for="deliveryAddress">Delivery Address</label>
+                    <textarea id="deliveryAddress" placeholder="Enter your delivery address" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specialInstructions">Special Instructions</label>
+                    <textarea id="specialInstructions" placeholder="Any special instructions for your order?" rows="3"></textarea>
+                </div>
             </div>
         </div>
+        
         <div class="cart-footer">
             <div class="cart-total">
                 <span>Total:</span>
                 <span id="cartTotal">R0.00</span>
             </div>
-            <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+            
+            <div class="cart-actions" id="cartActions">
+                <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+            </div>
+            
+            <div class="cart-actions" id="checkoutActions" style="display: none;">
+                <button class="back-to-cart btn" id="backToCart">Back to Cart</button>
+                <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
+            </div>
         </div>
     </div>
 
@@ -1089,7 +1265,7 @@
             { id: 10, name: "Haval Kota", price: 30, category: "classic", description: "Our most affordable kota option" }
         ];
 
-        // Mobile Menu Toggle
+        // Enhanced Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const closeMobileMenu = document.getElementById('closeMobileMenu');
@@ -1097,19 +1273,31 @@
         
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
         
         closeMobileMenu.addEventListener('click', () => {
             mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
             document.body.style.overflow = 'auto';
         });
         
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
+        });
+        
+        // Close mobile menu when clicking outside
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
         });
         
         // Header scroll effect
@@ -1128,19 +1316,136 @@
         const cartContainer = document.getElementById('cartContainer');
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
-        const checkoutBtn = document.getElementById('checkoutBtn');
         const cartCount = document.getElementById('cartCount');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const backToCart = document.getElementById('backToCart');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const cartTitle = document.getElementById('cartTitle');
+        const cartActions = document.getElementById('cartActions');
+        const checkoutActions = document.getElementById('checkoutActions');
+        const checkoutForm = document.getElementById('checkoutForm');
+        const cartItemsView = document.getElementById('cartItemsView');
+        const orderTypeBtns = document.querySelectorAll('.order-type-btn');
+        const tableNumberGroup = document.getElementById('tableNumberGroup');
+        const deliveryAddressGroup = document.getElementById('deliveryAddressGroup');
         
         let cart = [];
+        let orderType = 'dinein';
         
         // Open cart
         openCartBtn.addEventListener('click', () => {
             cartContainer.classList.add('open');
+            showCartView();
         });
         
         // Close cart
         closeCartBtn.addEventListener('click', () => {
             cartContainer.classList.remove('open');
+        });
+        
+        // Order type selection
+        orderTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                orderTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                orderType = btn.getAttribute('data-type');
+                
+                if (orderType === 'dinein') {
+                    tableNumberGroup.style.display = 'block';
+                    deliveryAddressGroup.style.display = 'none';
+                } else {
+                    tableNumberGroup.style.display = 'none';
+                    deliveryAddressGroup.style.display = 'block';
+                }
+            });
+        });
+        
+        // Show cart view
+        function showCartView() {
+            cartTitle.textContent = 'Your Order';
+            cartItemsView.style.display = 'block';
+            checkoutForm.classList.remove('active');
+            cartActions.style.display = 'flex';
+            checkoutActions.style.display = 'none';
+        }
+        
+        // Show checkout view
+        function showCheckoutView() {
+            cartTitle.textContent = 'Checkout';
+            cartItemsView.style.display = 'none';
+            checkoutForm.classList.add('active');
+            cartActions.style.display = 'none';
+            checkoutActions.style.display = 'flex';
+        }
+        
+        // Checkout button
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add some items before checking out.');
+                return;
+            }
+            showCheckoutView();
+        });
+        
+        // Back to cart button
+        backToCart.addEventListener('click', () => {
+            showCartView();
+        });
+        
+        // Place order button
+        placeOrderBtn.addEventListener('click', () => {
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const tableNumber = document.getElementById('tableNumber').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            const specialInstructions = document.getElementById('specialInstructions').value;
+            
+            if (!customerName || !customerPhone) {
+                alert('Please fill in your name and phone number.');
+                return;
+            }
+            
+            if (orderType === 'dinein' && !tableNumber) {
+                alert('Please enter your table number.');
+                return;
+            }
+            
+            if (orderType === 'delivery' && !deliveryAddress) {
+                alert('Please enter your delivery address.');
+                return;
+            }
+            
+            // In a real implementation, this would send the order to a backend
+            // For now, we'll just show a success message
+            const orderDetails = {
+                items: cart,
+                customer: {
+                    name: customerName,
+                    phone: customerPhone,
+                    table: tableNumber,
+                    address: deliveryAddress,
+                    instructions: specialInstructions
+                },
+                type: orderType,
+                total: cart.reduce((total, item) => total + (item.price * item.quantity), 0)
+            };
+            
+            console.log('Order placed:', orderDetails);
+            
+            alert(`Thank you for your order, ${customerName}! Your ${orderType === 'dinein' ? 'food will be prepared and served at your table' : 'order will be delivered to you shortly'}.`);
+            
+            // Clear cart and close
+            cart = [];
+            updateCart();
+            cartContainer.classList.remove('open');
+            showCartView();
+            
+            // Reset form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('tableNumber').value = '';
+            document.getElementById('deliveryAddress').value = '';
+            document.getElementById('specialInstructions').value = '';
         });
         
         // Render menu items
@@ -1298,23 +1603,6 @@
                 updateCart();
             }
         }
-        
-        // Checkout functionality
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert('Your cart is empty. Add some items before checking out.');
-                return;
-            }
-            
-            // In a real implementation, this would redirect to a checkout page
-            // or open a modal with order details
-            alert('Thank you for your order! We will prepare your food and contact you shortly.');
-            
-            // Clear cart
-            cart = [];
-            updateCart();
-            cartContainer.classList.remove('open');
-        });
         
         // Menu category filtering
         const categoryBtns = document.querySelectorAll('.category-btn');
