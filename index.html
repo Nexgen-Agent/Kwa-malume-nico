@@ -96,6 +96,22 @@
             box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
         }
         
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
         @keyframes pulse {
             0% { box-shadow: 0 8px 25px rgba(200, 155, 45, 0.5); }
             50% { box-shadow: 0 8px 30px rgba(200, 155, 45, 0.8); }
@@ -656,6 +672,7 @@
     <!-- Floating Order Button -->
     <div class="floating-order-btn" id="openCart">
         <i class="fas fa-shopping-cart"></i>
+        <div class="cart-count" id="cartCount">0</div>
     </div>
 
     <!-- Header -->
@@ -725,120 +742,14 @@
         </div>
         
         <div class="menu-categories">
-            <button class="category-btn active">All Kotas</button>
-            <button class="category-btn">Specialty</button>
-            <button class="category-btn">Classic</button>
-            <button class="category-btn">Veggie</button>
+            <button class="category-btn active" data-category="all">All Kotas</button>
+            <button class="category-btn" data-category="specialty">Specialty</button>
+            <button class="category-btn" data-category="classic">Classic</button>
+            <button class="category-btn" data-category="snacks">Snacks</button>
         </div>
         
-        <div class="menu-items">
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Titanic Family Kota</h3>
-                    <div class="menu-item-price">R100</div>
-                </div>
-                <p>Our largest kota with Russian sausage, polony, egg, cheese, chips and all the works</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="1" data-name="Titanic Family Kota" data-price="100">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Dunked Wings</h3>
-                    <div class="menu-item-price">R75</div>
-                </div>
-                <p>Crispy chicken wings with our special sauce</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="2" data-name="Dunked Wings" data-price="75">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Bugatti Kota</h3>
-                    <div class="menu-item-price">R60</div>
-                </div>
-                <p>Premium kota with steak, egg, cheese and special sauce</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="3" data-name="Bugatti Kota" data-price="60">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Burger</h3>
-                    <div class="menu-item-price">R60</div>
-                </div>
-                <p>Classic beef burger with lettuce, tomato and special sauce</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="4" data-name="Burger" data-price="60">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Range Rover Kota</h3>
-                    <div class="menu-item-price">R50</div>
-                </div>
-                <p>Deluxe kota with Russian, polony, egg and cheese</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="far fa-star"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="5" data-name="Range Rover Kota" data-price="50">Add to Cart</button>
-                </div>
-            </div>
-            
-            <div class="menu-item glass">
-                <div class="menu-item-header">
-                    <h3>Dagwood</h3>
-                    <div class="menu-item-price">R45</div>
-                </div>
-                <p>Classic sandwich with multiple layers of goodness</p>
-                <div class="menu-item-footer">
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <button class="add-to-cart" data-id="6" data-name="Dagwood" data-price="45">Add to Cart</button>
-                </div>
-            </div>
+        <div class="menu-items" id="menuItems">
+            <!-- Menu items will be dynamically loaded here -->
         </div>
     </section>
 
@@ -974,6 +885,20 @@
     </footer>
 
     <script>
+        // Menu data from your menu.html
+        const menuItems = [
+            { id: 1, name: "Titanic Family Kota", price: 100, category: "specialty", description: "Our largest kota with Russian sausage, polony, egg, cheese, chips and all the works" },
+            { id: 2, name: "Dunked Wings", price: 75, category: "snacks", description: "Crispy chicken wings with our special sauce" },
+            { id: 3, name: "Bugatti Kota", price: 60, category: "specialty", description: "Premium kota with steak, egg, cheese and special sauce" },
+            { id: 4, name: "Burger", price: 60, category: "classic", description: "Classic beef burger with lettuce, tomato and special sauce" },
+            { id: 5, name: "Range Rover Kota", price: 50, category: "specialty", description: "Deluxe kota with Russian, polony, egg and cheese" },
+            { id: 6, name: "Dagwood", price: 45, category: "classic", description: "Classic sandwich with multiple layers of goodness" },
+            { id: 7, name: "BMW M4 Kota", price: 40, category: "classic", description: "Classic kota with Russian and cheese" },
+            { id: 8, name: "Dessert", price: 40, category: "snacks", description: "Sweet treats to finish your meal" },
+            { id: 9, name: "Omoda Kota", price: 35, category: "classic", description: "Simple and delicious kota" },
+            { id: 10, name: "Haval Kota", price: 30, category: "classic", description: "Our most affordable kota option" }
+        ];
+
         // Mobile Menu Toggle
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const navLinks = document.querySelector('.nav-links');
@@ -999,7 +924,7 @@
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
         const checkoutBtn = document.getElementById('checkoutBtn');
-        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        const cartCount = document.getElementById('cartCount');
         
         let cart = [];
         
@@ -1013,24 +938,57 @@
             cartContainer.classList.remove('open');
         });
         
-        // Add to cart functionality
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.getAttribute('data-id');
-                const name = btn.getAttribute('data-name');
-                const price = parseFloat(btn.getAttribute('data-price'));
-                
-                addToCart(id, name, price);
-                
-                // Button animation
-                btn.textContent = 'Added!';
-                setTimeout(() => {
-                    btn.textContent = 'Add to Cart';
-                }, 1500);
+        // Render menu items
+        function renderMenuItems(category = 'all') {
+            const menuContainer = document.getElementById('menuItems');
+            menuContainer.innerHTML = '';
+            
+            const filteredItems = category === 'all' 
+                ? menuItems 
+                : menuItems.filter(item => item.category === category);
+            
+            filteredItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item glass';
+                menuItem.innerHTML = `
+                    <div class="menu-item-header">
+                        <h3>${item.name}</h3>
+                        <div class="menu-item-price">R${item.price}</div>
+                    </div>
+                    <p>${item.description}</p>
+                    <div class="menu-item-footer">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <button class="add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">Add to Cart</button>
+                    </div>
+                `;
+                menuContainer.appendChild(menuItem);
             });
-        });
+            
+            // Add event listeners to new add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    const name = btn.getAttribute('data-name');
+                    const price = parseFloat(btn.getAttribute('data-price'));
+                    
+                    addToCart(id, name, price);
+                    
+                    // Button animation
+                    btn.textContent = 'Added!';
+                    setTimeout(() => {
+                        btn.textContent = 'Add to Cart';
+                    }, 1500);
+                });
+            });
+        }
         
-        // Add item to cart
+        // Add to cart functionality
         function addToCart(id, name, price) {
             const existingItem = cart.find(item => item.id === id);
             
@@ -1051,6 +1009,10 @@
         
         // Update cart display
         function updateCart() {
+            // Update cart count
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
             // Clear cart items
             cartItems.innerHTML = '';
             
@@ -1083,7 +1045,7 @@
                     </div>
                     <div class="cart-item-controls">
                         <button class="quantity-btn decrease" data-id="${item.id}">-</button>
-                        <span>${item.quantity}</span>
+                        <span class="item-quantity">${item.quantity}</span>
                         <button class="quantity-btn increase" data-id="${item.id}">+</button>
                     </div>
                 `;
@@ -1159,10 +1121,16 @@
                 // Add active class to clicked button
                 btn.classList.add('active');
                 
-                // In a real implementation, this would filter the menu items
-                // For this example, we'll just show a message
-                console.log(`Filtering by: ${btn.textContent}`);
+                // Filter menu items
+                const category = btn.getAttribute('data-category');
+                renderMenuItems(category);
             });
+        });
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenuItems();
+            updateCart();
         });
     </script>
 </body>
