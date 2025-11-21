@@ -201,6 +201,65 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
+            z-index: 101;
+        }
+        
+        /* === MOBILE MENU OVERLAY === */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .mobile-nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+        
+        .mobile-nav-links a:hover {
+            color: var(--gold);
+            background: rgba(200, 155, 45, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .close-mobile-menu {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
         }
         
         /* === HERO SECTION === */
@@ -293,6 +352,55 @@
             max-width: 600px;
             margin: 0 auto;
             opacity: 0.8;
+        }
+        
+        /* === GALLERY SECTION === */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            height: 250px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.9), transparent);
+            color: white;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+            opacity: 1;
         }
         
         /* === MENU SECTION === */
@@ -652,10 +760,18 @@
                 bottom: 20px;
                 right: 20px;
             }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
         }
         
         @media (max-width: 576px) {
             .menu-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -685,14 +801,29 @@
         <nav class="nav-links">
             <a href="#home">Home</a>
             <a href="#about">About</a>
+            <a href="#gallery">Gallery</a>
             <a href="#menu">Menu</a>
             <a href="#contact">Find Us</a>
         </nav>
         
-        <button class="mobile-menu-btn">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
         </button>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <button class="close-mobile-menu" id="closeMobileMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="mobile-nav-links">
+            <a href="#home" class="mobile-nav-link">Home</a>
+            <a href="#about" class="mobile-nav-link">About</a>
+            <a href="#gallery" class="mobile-nav-link">Gallery</a>
+            <a href="#menu" class="mobile-nav-link">Menu</a>
+            <a href="#contact" class="mobile-nav-link">Find Us</a>
+        </nav>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -729,6 +860,64 @@
                     <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--ink); font-weight: bold; font-size: 1.2rem;">
                         Malume Nico Kitchen
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-title">
+            <h2>Our Gallery</h2>
+            <p>Take a look at our delicious food and vibrant atmosphere</p>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #8B4513, #A0522D); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Titanic Family Kota</h3>
+                    <p>Our signature family-sized kota</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #CD853F, #D2691E); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Bugatti Kota</h3>
+                    <p>Premium kota with steak and cheese</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #B22222, #DC143C); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Dunked Wings</h3>
+                    <p>Crispy chicken wings with special sauce</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #FFD700, #DAA520); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Range Rover Kota</h3>
+                    <p>Deluxe kota with all the works</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #2F4F4F, #708090); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Restaurant Atmosphere</h3>
+                    <p>Come chill with us</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item glass">
+                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #483D8B, #6A5ACD); border-radius: 16px;"></div>
+                <div class="gallery-overlay">
+                    <h3>Fresh Ingredients</h3>
+                    <p>Quality food made with love</p>
                 </div>
             </div>
         </div>
@@ -864,6 +1053,7 @@
                 <ul class="footer-links">
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About Us</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#menu">Menu</a></li>
                     <li><a href="#contact">Find Us</a></li>
                 </ul>
@@ -900,11 +1090,26 @@
         ];
 
         // Mobile Menu Toggle
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
         
         mobileMenuBtn.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
         });
         
         // Header scroll effect
