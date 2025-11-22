@@ -71,6 +71,52 @@
             border-radius: 20px;
         }
 
+        /* === FADE-IN SCROLLING ANIMATION === */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-delay-1 {
+            transition-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            transition-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            transition-delay: 0.6s;
+        }
+
         /* === IMAGE ZOOM MODAL === */
         .image-zoom-modal {
             display: none;
@@ -335,18 +381,16 @@
             text-align: center;
         }
 
-        /* === UPDATED CLOSE BUTTON POSITION === */
         .close-mobile-menu {
             position: absolute;
             top: 30px;
-            left: 30px; /* Changed from right to left */
+            right: 30px;
             background: none;
             border: none;
             color: white;
             font-size: 28px;
             cursor: pointer;
             transition: transform 0.3s ease;
-            z-index: 102; /* Ensure it's above the overlay */
         }
 
         .close-mobile-menu:hover {
@@ -1248,7 +1292,7 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-content glass">
+        <div class="hero-content glass fade-in">
             <h1>The Best Kota in Tzaneen</h1>
             <p>Experience the authentic taste of South Africa's favorite street food. Made with love, served with passion. Come and chill with us at Mavele Village!</p>
             <div class="hero-btns">
@@ -1264,20 +1308,20 @@
 
     <!-- About Section -->
     <section id="about">
-        <div class="section-title">
+        <div class="section-title fade-in">
             <h2>About Malume Nico</h2>
             <p>Discover the story behind the best kota in Tzaneen</p>
         </div>
 
-        <div class="glass" style="padding: 40px; max-width: 1000px; margin: 0 auto;">
+        <div class="glass fade-in" style="padding: 40px; max-width: 1000px; margin: 0 auto;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; align-items: center;">
-                <div>
+                <div class="fade-in-left">
                     <h3 style="color: var(--gold); margin-bottom: 20px; font-size: 1.8rem;">Our Story</h3>
                     <p style="margin-bottom: 20px;">Malume Nico started as a small street food stall with a big dream - to serve the most delicious, authentic kota in Mavele Village. What began as a passion project has now become a local institution.</p>
                     <p style="margin-bottom: 20px;">Our secret? We use only the freshest ingredients, traditional recipes, and a whole lot of love in every kota we make. From our classic Russian kota to our specialty creations, each bite tells a story.</p>
                     <p>Whether you're grabbing a quick bite on your lunch break or hanging out with friends on the weekend, Malume Nico is the place to be for great food and good vibes.</p>
                 </div>
-                <div style="height: 350px; border-radius: 16px; overflow: hidden;">
+                <div style="height: 350px; border-radius: 16px; overflow: hidden;" class="fade-in-right">
                     <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--ink); font-weight: bold; font-size: 1.2rem;">
                         Malume Nico Kitchen
                     </div>
@@ -1288,13 +1332,13 @@
 
    <!-- Gallery Section -->
 <section id="gallery">
-    <div class="section-title">
+    <div class="section-title fade-in">
         <h2>Our Gallery</h2>
         <p>Take a look at our delicious food and vibrant atmosphere</p>
     </div>
 
     <div class="gallery-grid">
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in">
             <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Titanic Family Kota">
             <div class="gallery-overlay">
                 <h3>Titanic Family Kota</h3>
@@ -1302,7 +1346,7 @@
             </div>
         </div>
 
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in fade-in-delay-1">
             <img src="https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dunked Wings">
             <div class="gallery-overlay">
                 <h3>Dunked Wings</h3>
@@ -1310,7 +1354,7 @@
             </div>
         </div>
 
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in fade-in-delay-2">
             <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Bugatti Kota">
             <div class="gallery-overlay">
                 <h3>Bugatti Kota</h3>
@@ -1318,7 +1362,7 @@
             </div>
         </div>
 
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in fade-in-delay-3">
             <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Range Rover Kota">
             <div class="gallery-overlay">
                 <h3>Range Rover Kota</h3>
@@ -1326,7 +1370,7 @@
             </div>
         </div>
 
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in fade-in-delay-1">
             <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Restaurant Atmosphere">
             <div class="gallery-overlay">
                 <h3>Restaurant Atmosphere</h3>
@@ -1334,7 +1378,7 @@
             </div>
         </div>
 
-        <div class="gallery-item glass">
+        <div class="gallery-item glass fade-in fade-in-delay-2">
             <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Fresh Ingredients">
             <div class="gallery-overlay">
                 <h3>Fresh Ingredients</h3>
@@ -1346,16 +1390,16 @@
 
     <!-- Menu Section -->
     <section id="menu">
-        <div class="section-title">
+        <div class="section-title fade-in">
             <h2>Our Menu</h2>
             <p>Delicious kotas made just for you</p>
         </div>
 
         <div class="menu-categories">
-            <button class="category-btn active" data-category="all">All Kotas</button>
-            <button class="category-btn" data-category="specialty">Specialty</button>
-            <button class="category-btn" data-category="classic">Classic</button>
-            <button class="category-btn" data-category="snacks">Snacks</button>
+            <button class="category-btn active fade-in" data-category="all">All Kotas</button>
+            <button class="category-btn fade-in fade-in-delay-1" data-category="specialty">Specialty</button>
+            <button class="category-btn fade-in fade-in-delay-2" data-category="classic">Classic</button>
+            <button class="category-btn fade-in fade-in-delay-3" data-category="snacks">Snacks</button>
         </div>
 
         <div class="menu-items" id="menuItems">
@@ -1609,14 +1653,14 @@
 
     <!-- Contact & Location -->
     <section id="contact">
-        <div class="section-title">
+        <div class="section-title fade-in">
             <h2>Find Us</h2>
             <p>Come through and experience the best kota in Tzaneen</p>
         </div>
 
         <div class="contact-container">
             <div class="contact-info">
-                <div class="contact-item">
+                <div class="contact-item fade-in-left">
                     <div class="contact-icon">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
@@ -1626,7 +1670,7 @@
                     </div>
                 </div>
 
-                <div class="contact-item">
+                <div class="contact-item fade-in-left fade-in-delay-1">
                     <div class="contact-icon">
                         <i class="fas fa-clock"></i>
                     </div>
@@ -1636,7 +1680,7 @@
                     </div>
                 </div>
 
-                <div class="contact-item">
+                <div class="contact-item fade-in-left fade-in-delay-2">
                     <div class="contact-icon">
                         <i class="fas fa-phone"></i>
                     </div>
@@ -1646,7 +1690,7 @@
                     </div>
                 </div>
 
-                <div class="contact-item">
+                <div class="contact-item fade-in-left fade-in-delay-3">
                     <div class="contact-icon">
                         <i class="fas fa-info-circle"></i>
                     </div>
@@ -1657,7 +1701,7 @@
                 </div>
             </div>
 
-            <div class="map-container">
+            <div class="map-container fade-in-right">
                 <div class="map-placeholder">
                     <i class="fas fa-map" style="margin-right: 10px;"></i>
                     Malume Nico - Mavele Village, Tzaneen
@@ -1669,7 +1713,7 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <div class="footer-column">
+            <div class="footer-column fade-in">
                 <h3>Malume Nico</h3>
                 <p>The best kota in Tzaneen. Serving delicious street food with love since 2010.</p>
                 <div class="social-links">
@@ -1688,7 +1732,7 @@
                 </div>
             </div>
 
-            <div class="footer-column">
+            <div class="footer-column fade-in fade-in-delay-1">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
                     <li><a href="#home">Home</a></li>
@@ -1699,7 +1743,7 @@
                 </ul>
             </div>
 
-            <div class="footer-column">
+            <div class="footer-column fade-in fade-in-delay-2">
                 <h3>Contact Info</h3>
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Main Road, Mavele Village, Tzaneen</li>
@@ -2067,7 +2111,7 @@
             };
 
             localStorage.setItem('currentOrder', JSON.stringify(orderDetails));
-            
+
             // Proceed to payment
             showPaymentView();
         });
@@ -2159,9 +2203,9 @@
                 ? menuItems 
                 : menuItems.filter(item => item.category === category);
 
-            filteredItems.forEach(item => {
+            filteredItems.forEach((item, index) => {
                 const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item glass';
+                menuItem.className = `menu-item glass fade-in ${index % 2 === 0 ? 'fade-in-left' : 'fade-in-right'} ${index > 1 ? 'fade-in-delay-' + (index % 4) : ''}`;
                 menuItem.innerHTML = `
                     <div class="menu-item-header">
                         <h3>${item.name}</h3>
@@ -2337,7 +2381,30 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
             updateCart();
+            
+            // Initialize fade-in animations
+            initFadeInAnimations();
         });
+
+        // Fade-in animation on scroll
+        function initFadeInAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+        }
     </script>
 </body>
 </html>
