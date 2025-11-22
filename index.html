@@ -71,6 +71,62 @@
             border-radius: 20px;
         }
 
+        /* === IMAGE ZOOM MODAL === */
+        .image-zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-zoom-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .zoom-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .image-zoom-modal.active .zoom-modal-content {
+            transform: scale(1);
+        }
+
+        .zoom-modal-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-zoom-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+
+        .close-zoom-modal:hover {
+            color: var(--gold);
+        }
+
         /* === FLOATING ORDER BUTTON === */
         .floating-order-btn {
             position: fixed;
@@ -592,6 +648,24 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-item-image:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-item-info {
+            flex: 1;
+            padding: 0 15px;
+        }
+
         .cart-item-info h4 {
             margin-bottom: 5px;
         }
@@ -968,6 +1042,16 @@
     </video>
     <div class="video-overlay"></div>
 
+    <!-- Image Zoom Modal -->
+    <div class="image-zoom-modal" id="imageZoomModal">
+        <div class="zoom-modal-content">
+            <img src="" alt="Zoomed product image" class="zoom-modal-image" id="zoomedImage">
+            <button class="close-zoom-modal" id="closeZoomModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Floating Order Button -->
     <div class="floating-order-btn" id="openCart">
         <i class="fas fa-shopping-cart"></i>
@@ -1067,7 +1151,7 @@
 
     <div class="gallery-grid">
         <div class="gallery-item glass">
-            <img src="assets/images/titanic-family-kota.jpg" alt="Titanic Family Kota">
+            <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Titanic Family Kota">
             <div class="gallery-overlay">
                 <h3>Titanic Family Kota</h3>
                 <p>Our signature family-sized kota</p>
@@ -1075,15 +1159,7 @@
         </div>
 
         <div class="gallery-item glass">
-            <img src="assets/images/bugatti-kota.jpg" alt="Bugatti Kota">
-            <div class="gallery-overlay">
-                <h3>Bugatti Kota</h3>
-                <p>Premium kota with steak and cheese</p>
-            </div>
-        </div>
-
-        <div class="gallery-item glass">
-            <img src="assets/images/dunked-wings.jpg" alt="Dunked Wings">
+            <img src="https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dunked Wings">
             <div class="gallery-overlay">
                 <h3>Dunked Wings</h3>
                 <p>Crispy chicken wings with special sauce</p>
@@ -1091,7 +1167,15 @@
         </div>
 
         <div class="gallery-item glass">
-            <img src="assets/images/range-rover-kota.jpg" alt="Range Rover Kota">
+            <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Bugatti Kota">
+            <div class="gallery-overlay">
+                <h3>Bugatti Kota</h3>
+                <p>Premium kota with steak and cheese</p>
+            </div>
+        </div>
+
+        <div class="gallery-item glass">
+            <img src="https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Range Rover Kota">
             <div class="gallery-overlay">
                 <h3>Range Rover Kota</h3>
                 <p>Deluxe kota with all the works</p>
@@ -1099,7 +1183,7 @@
         </div>
 
         <div class="gallery-item glass">
-            <img src="assets/images/restaurant-atmosphere.jpg" alt="Restaurant Atmosphere">
+            <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Restaurant Atmosphere">
             <div class="gallery-overlay">
                 <h3>Restaurant Atmosphere</h3>
                 <p>Come chill with us</p>
@@ -1107,7 +1191,7 @@
         </div>
 
         <div class="gallery-item glass">
-            <img src="assets/images/fresh-ingredients.jpg" alt="Fresh Ingredients">
+            <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Fresh Ingredients">
             <div class="gallery-overlay">
                 <h3>Fresh Ingredients</h3>
                 <p>Quality food made with love</p>
@@ -1353,18 +1437,88 @@
     </footer>
 
     <script>
-        // Menu data from your menu.html
+        // Menu data with image URLs
         const menuItems = [
-            { id: 1, name: "Titanic Family Kota", price: 100, category: "specialty", description: "Our largest kota with Russian sausage, polony, egg, cheese, chips and all the works" },
-            { id: 2, name: "Dunked Wings", price: 75, category: "snacks", description: "Crispy chicken wings with our special sauce" },
-            { id: 3, name: "Bugatti Kota", price: 60, category: "specialty", description: "Premium kota with steak, egg, cheese and special sauce" },
-            { id: 4, name: "Burger", price: 60, category: "classic", description: "Classic beef burger with lettuce, tomato and special sauce" },
-            { id: 5, name: "Range Rover Kota", price: 50, category: "specialty", description: "Deluxe kota with Russian, polony, egg and cheese" },
-            { id: 6, name: "Dagwood", price: 45, category: "classic", description: "Classic sandwich with multiple layers of goodness" },
-            { id: 7, name: "BMW M4 Kota", price: 40, category: "classic", description: "Classic kota with Russian and cheese" },
-            { id: 8, name: "Dessert", price: 40, category: "snacks", description: "Sweet treats to finish your meal" },
-            { id: 9, name: "Omoda Kota", price: 35, category: "classic", description: "Simple and delicious kota" },
-            { id: 10, name: "Haval Kota", price: 30, category: "classic", description: "Our most affordable kota option" }
+            { 
+                id: 1, 
+                name: "Titanic Family Kota", 
+                price: 100, 
+                category: "specialty", 
+                description: "Our largest kota with Russian sausage, polony, egg, cheese, chips and all the works",
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 2, 
+                name: "Dunked Wings", 
+                price: 75, 
+                category: "snacks", 
+                description: "Crispy chicken wings with our special sauce",
+                image: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 3, 
+                name: "Bugatti Kota", 
+                price: 60, 
+                category: "specialty", 
+                description: "Premium kota with steak, egg, cheese and special sauce",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 4, 
+                name: "Burger", 
+                price: 60, 
+                category: "classic", 
+                description: "Classic beef burger with lettuce, tomato and special sauce",
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 5, 
+                name: "Range Rover Kota", 
+                price: 50, 
+                category: "specialty", 
+                description: "Deluxe kota with Russian, polony, egg and cheese",
+                image: "https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 6, 
+                name: "Dagwood", 
+                price: 45, 
+                category: "classic", 
+                description: "Classic sandwich with multiple layers of goodness",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 7, 
+                name: "BMW M4 Kota", 
+                price: 40, 
+                category: "classic", 
+                description: "Classic kota with Russian and cheese",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 8, 
+                name: "Dessert", 
+                price: 40, 
+                category: "snacks", 
+                description: "Sweet treats to finish your meal",
+                image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 9, 
+                name: "Omoda Kota", 
+                price: 35, 
+                category: "classic", 
+                description: "Simple and delicious kota",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 10, 
+                name: "Haval Kota", 
+                price: 30, 
+                category: "classic", 
+                description: "Our most affordable kota option",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            }
         ];
 
         // Enhanced Mobile Menu Toggle
@@ -1409,6 +1563,31 @@
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
+            }
+        });
+
+        // Image Zoom Modal
+        const imageZoomModal = document.getElementById('imageZoomModal');
+        const zoomedImage = document.getElementById('zoomedImage');
+        const closeZoomModal = document.getElementById('closeZoomModal');
+
+        function openImageZoom(imageUrl) {
+            zoomedImage.src = imageUrl;
+            imageZoomModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageZoom() {
+            imageZoomModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeZoomModal.addEventListener('click', closeImageZoom);
+
+        // Close modal when clicking outside the image
+        imageZoomModal.addEventListener('click', (e) => {
+            if (e.target === imageZoomModal) {
+                closeImageZoom();
             }
         });
 
@@ -1599,7 +1778,7 @@
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star-half-alt"></i>
                         </div>
-                        <button class="add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">Add to Cart</button>
+                        <button class="add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}" data-image="${item.image}">Add to Cart</button>
                     </div>
                 `;
                 menuContainer.appendChild(menuItem);
@@ -1611,8 +1790,9 @@
                     const id = btn.getAttribute('data-id');
                     const name = btn.getAttribute('data-name');
                     const price = parseFloat(btn.getAttribute('data-price'));
+                    const image = btn.getAttribute('data-image');
 
-                    addToCart(id, name, price);
+                    addToCart(id, name, price, image);
 
                     // Button animation
                     btn.textContent = 'Added!';
@@ -1624,7 +1804,7 @@
         }
 
         // Add to cart functionality
-        function addToCart(id, name, price) {
+        function addToCart(id, name, price, image) {
             const existingItem = cart.find(item => item.id === id);
 
             if (existingItem) {
@@ -1634,6 +1814,7 @@
                     id,
                     name,
                     price,
+                    image,
                     quantity: 1
                 });
             }
@@ -1674,6 +1855,7 @@
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
                 cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image" data-image="${item.image}">
                     <div class="cart-item-info">
                         <h4>${item.name}</h4>
                         <div class="cart-item-price">R${item.price.toFixed(2)}</div>
@@ -1700,6 +1882,14 @@
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-id');
                     increaseQuantity(id);
+                });
+            });
+
+            // Add event listeners to cart item images for zoom
+            document.querySelectorAll('.cart-item-image').forEach(img => {
+                img.addEventListener('click', () => {
+                    const imageUrl = img.getAttribute('data-image');
+                    openImageZoom(imageUrl);
                 });
             });
 
