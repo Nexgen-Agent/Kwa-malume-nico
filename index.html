@@ -852,6 +852,140 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* === PAYMENT SYSTEM === */
+        .payment-method-view {
+            display: none;
+        }
+
+        .payment-method-view.active {
+            display: block;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-option {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-option.selected {
+            background: rgba(200, 155, 45, 0.3);
+            border-color: var(--gold);
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .payment-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-details.active {
+            display: block;
+        }
+
+        .bank-transfer-info {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .bank-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .bank-detail-item {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .bank-detail-item strong {
+            color: var(--gold);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .payment-processing {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .payment-processing.active {
+            display: block;
+        }
+
+        .processing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .payment-success {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .payment-success.active {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: var(--ink);
+        }
+
         /* === CONTACT & LOCATION === */
         .contact-container {
             display: grid;
@@ -1016,6 +1150,14 @@
 
             .order-type-options {
                 flex-direction: column;
+            }
+
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+
+            .bank-details {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1310,6 +1452,135 @@
                     <textarea id="specialInstructions" placeholder="Any special instructions for your order? (e.g., allergies, extra sauce)" rows="3"></textarea>
                 </div>
             </div>
+
+            <!-- Payment Method View -->
+            <div class="payment-method-view" id="paymentMethodView">
+                <h4 class="order-type-title">Select Payment Method</h4>
+                <div class="payment-options">
+                    <div class="payment-option" data-method="card">
+                        <div class="payment-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <span>Credit/Debit Card</span>
+                    </div>
+                    <div class="payment-option" data-method="bank">
+                        <div class="payment-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <span>Bank Transfer</span>
+                    </div>
+                    <div class="payment-option" data-method="ewallet">
+                        <div class="payment-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <span>E-Wallet</span>
+                    </div>
+                    <div class="payment-option" data-method="cash">
+                        <div class="payment-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <span>Cash on Delivery</span>
+                    </div>
+                </div>
+
+                <!-- Card Payment Details -->
+                <div class="payment-details" id="cardPaymentDetails">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardName">Name on Card</label>
+                        <input type="text" id="cardName" placeholder="Your Name">
+                    </div>
+                </div>
+
+                <!-- Bank Transfer Details -->
+                <div class="payment-details" id="bankPaymentDetails">
+                    <div class="bank-transfer-info">
+                        <p><i class="fas fa-info-circle"></i> Please use your order number as reference when making payment</p>
+                    </div>
+                    <div class="bank-details">
+                        <div class="bank-detail-item">
+                            <strong>Bank</strong>
+                            <span>Standard Bank</span>
+                        </div>
+                        <div class="bank-detail-item">
+                            <strong>Account Number</strong>
+                            <span>0123456789</span>
+                        </div>
+                        <div class="bank-detail-item">
+                            <strong>Branch Code</strong>
+                            <span>051001</span>
+                        </div>
+                        <div class="bank-detail-item">
+                            <strong>Account Type</strong>
+                            <span>Current Account</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="proofOfPayment">Upload Proof of Payment</label>
+                        <input type="file" id="proofOfPayment" accept="image/*,.pdf">
+                    </div>
+                </div>
+
+                <!-- E-Wallet Details -->
+                <div class="payment-details" id="ewalletPaymentDetails">
+                    <div class="form-group">
+                        <label for="ewalletProvider">Select E-Wallet Provider</label>
+                        <select id="ewalletProvider">
+                            <option value="">Select Provider</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="skrill">Skrill</option>
+                            <option value="neteller">Neteller</option>
+                            <option value="payoneer">Payoneer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ewalletEmail">E-Wallet Email</label>
+                        <input type="email" id="ewalletEmail" placeholder="your@email.com">
+                    </div>
+                </div>
+
+                <!-- Cash on Delivery Details -->
+                <div class="payment-details" id="cashPaymentDetails">
+                    <div class="bank-transfer-info">
+                        <p><i class="fas fa-info-circle"></i> Please have exact change ready for the delivery person</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cashAmount">Amount to Pay</label>
+                        <input type="text" id="cashAmount" readonly>
+                    </div>
+                </div>
+
+                <!-- Payment Processing -->
+                <div class="payment-processing" id="paymentProcessing">
+                    <div class="processing-spinner"></div>
+                    <h4>Processing Payment</h4>
+                    <p>Please wait while we process your payment...</p>
+                </div>
+
+                <!-- Payment Success -->
+                <div class="payment-success" id="paymentSuccess">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h4>Payment Successful!</h4>
+                    <p>Your order has been confirmed and payment received.</p>
+                    <p>Order Number: <strong id="orderNumber">MN-2023-001</strong></p>
+                    <button class="btn btn-primary" id="continueShopping">Continue Shopping</button>
+                </div>
+            </div>
         </div>
 
         <div class="cart-footer">
@@ -1325,6 +1596,11 @@
             <div class="cart-actions" id="checkoutActions" style="display: none;">
                 <button class="back-to-cart btn" id="backToCart">Back to Cart</button>
                 <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
+            </div>
+
+            <div class="cart-actions" id="paymentActions" style="display: none;">
+                <button class="back-to-cart btn" id="backToCheckout">Back to Order Details</button>
+                <button class="place-order-btn" id="processPaymentBtn">Process Payment</button>
             </div>
         </div>
     </div>
@@ -1611,8 +1887,22 @@
         const collectionFields = document.getElementById('collectionFields');
         const deliveryFields = document.getElementById('deliveryFields');
 
+        // Payment elements
+        const paymentMethodView = document.getElementById('paymentMethodView');
+        const paymentActions = document.getElementById('paymentActions');
+        const backToCheckout = document.getElementById('backToCheckout');
+        const processPaymentBtn = document.getElementById('processPaymentBtn');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const paymentDetails = document.querySelectorAll('.payment-details');
+        const paymentProcessing = document.getElementById('paymentProcessing');
+        const paymentSuccess = document.getElementById('paymentSuccess');
+        const continueShopping = document.getElementById('continueShopping');
+        const cashAmount = document.getElementById('cashAmount');
+        const orderNumber = document.getElementById('orderNumber');
+
         let cart = [];
         let orderType = 'dinein';
+        let selectedPaymentMethod = null;
 
         // Open cart
         openCartBtn.addEventListener('click', () => {
@@ -1643,13 +1933,45 @@
             });
         });
 
+        // Payment method selection
+        paymentOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                paymentOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedPaymentMethod = option.getAttribute('data-method');
+
+                // Hide all payment details
+                paymentDetails.forEach(detail => detail.classList.remove('active'));
+
+                // Show selected payment details
+                if (selectedPaymentMethod) {
+                    const paymentDetail = document.getElementById(`${selectedPaymentMethod}PaymentDetails`);
+                    if (paymentDetail) {
+                        paymentDetail.classList.add('active');
+                    }
+
+                    // Update cash amount if cash on delivery
+                    if (selectedPaymentMethod === 'cash') {
+                        const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                        const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+                        const total = subtotal + deliveryFee;
+                        cashAmount.value = `R${total.toFixed(2)}`;
+                    }
+                }
+            });
+        });
+
         // Show cart view
         function showCartView() {
             cartTitle.textContent = 'Your Order';
             cartItemsView.style.display = 'block';
             checkoutForm.classList.remove('active');
+            paymentMethodView.classList.remove('active');
+            paymentProcessing.classList.remove('active');
+            paymentSuccess.classList.remove('active');
             cartActions.style.display = 'flex';
             checkoutActions.style.display = 'none';
+            paymentActions.style.display = 'none';
         }
 
         // Show checkout view
@@ -1657,8 +1979,25 @@
             cartTitle.textContent = 'Checkout';
             cartItemsView.style.display = 'none';
             checkoutForm.classList.add('active');
+            paymentMethodView.classList.remove('active');
+            paymentProcessing.classList.remove('active');
+            paymentSuccess.classList.remove('active');
             cartActions.style.display = 'none';
             checkoutActions.style.display = 'flex';
+            paymentActions.style.display = 'none';
+        }
+
+        // Show payment view
+        function showPaymentView() {
+            cartTitle.textContent = 'Payment';
+            cartItemsView.style.display = 'none';
+            checkoutForm.classList.remove('active');
+            paymentMethodView.classList.add('active');
+            paymentProcessing.classList.remove('active');
+            paymentSuccess.classList.remove('active');
+            cartActions.style.display = 'none';
+            checkoutActions.style.display = 'none';
+            paymentActions.style.display = 'flex';
         }
 
         // Checkout button
@@ -1673,6 +2012,11 @@
         // Back to cart button
         backToCart.addEventListener('click', () => {
             showCartView();
+        });
+
+        // Back to checkout button
+        backToCheckout.addEventListener('click', () => {
+            showCheckoutView();
         });
 
         // Place order button
@@ -1699,13 +2043,11 @@
                 return;
             }
 
-            // Calculate delivery fee if applicable
+            // Store order details
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
             const total = subtotal + deliveryFee;
 
-            // In a real implementation, this would send the order to a backend
-            // For now, we'll just show a success message
             const orderDetails = {
                 items: cart,
                 customer: {
@@ -1722,22 +2064,71 @@
                 total: total
             };
 
-            console.log('Order placed:', orderDetails);
+            localStorage.setItem('currentOrder', JSON.stringify(orderDetails));
+            
+            // Proceed to payment
+            showPaymentView();
+        });
 
-            let confirmationMessage = `Thank you for your order, ${customerName}! `;
-
-            if (orderType === 'dinein') {
-                confirmationMessage += `Your food will be prepared and served at table ${tableNumber}.`;
-            } else if (orderType === 'collection') {
-                confirmationMessage += `Your order will be ready for collection ${collectionTime === 'asap' ? 'as soon as possible' : collectionTime.replace('min', ' minutes').replace('hour', 'hour')}. We'll notify you when it's ready.`;
-            } else {
-                confirmationMessage += `Your order will be delivered to ${deliveryAddress}. ${deliveryFee > 0 ? 'A R30 delivery fee has been added to your order.' : 'Delivery is free for orders over R280.'}`;
+        // Process payment button
+        processPaymentBtn.addEventListener('click', () => {
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method.');
+                return;
             }
 
-            confirmationMessage += ` Your total is R${total.toFixed(2)}.`;
+            // Validate payment details based on selected method
+            if (selectedPaymentMethod === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                const cardName = document.getElementById('cardName').value;
 
-            alert(confirmationMessage);
+                if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                    alert('Please fill in all card details.');
+                    return;
+                }
+            } else if (selectedPaymentMethod === 'ewallet') {
+                const ewalletProvider = document.getElementById('ewalletProvider').value;
+                const ewalletEmail = document.getElementById('ewalletEmail').value;
 
+                if (!ewalletProvider || !ewalletEmail) {
+                    alert('Please select an e-wallet provider and enter your email.');
+                    return;
+                }
+            }
+
+            // Show processing
+            paymentMethodView.classList.remove('active');
+            paymentProcessing.classList.add('active');
+
+            // Simulate payment processing
+            setTimeout(() => {
+                paymentProcessing.classList.remove('active');
+                paymentSuccess.classList.add('active');
+
+                // Generate random order number
+                const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+                orderNumber.textContent = randomOrderNum;
+
+                // Store order in localStorage
+                const currentOrder = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+                currentOrder.orderNumber = randomOrderNum;
+                currentOrder.paymentMethod = selectedPaymentMethod;
+                currentOrder.status = 'confirmed';
+                currentOrder.timestamp = new Date().toISOString();
+
+                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push(currentOrder);
+                localStorage.setItem('orders', JSON.stringify(orders));
+
+                // Clear current order
+                localStorage.removeItem('currentOrder');
+            }, 3000);
+        });
+
+        // Continue shopping button
+        continueShopping.addEventListener('click', () => {
             // Clear cart and close
             cart = [];
             updateCart();
@@ -1750,6 +2141,11 @@
             document.getElementById('tableNumber').value = '';
             document.getElementById('deliveryAddress').value = '';
             document.getElementById('specialInstructions').value = '';
+
+            // Reset payment method
+            paymentOptions.forEach(opt => opt.classList.remove('selected'));
+            paymentDetails.forEach(detail => detail.classList.remove('active'));
+            selectedPaymentMethod = null;
         });
 
         // Render menu items
