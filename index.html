@@ -201,7 +201,7 @@
             color: var(--gold);
         }
 
-        /* === UPDATED: HEADER CART TOTAL - POSITIONED BETWEEN EXISTING ELEMENTS AND NAV LINKS === */
+        /* === UPDATED: HEADER CART TOTAL === */
         .header-cart-total {
             display: none;
             align-items: center;
@@ -246,49 +246,29 @@
             }
         }
 
-        /* === FLOATING ACTION BUTTONS - NEW STYLES === */
-        .floating-action-btn {
+        /* === FLOATING ACTION BUTTONS - PERFECTLY ALIGNED === */
+        .floating-action-container {
             position: fixed;
             bottom: calc(90px + env(safe-area-inset-bottom));
-            right: 25px;
-            min-width: 160px;
-            height: 60px;
-            border-radius: 50px;
-            background: var(--gold);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            display: none; /* Hidden by default */
-            align-items: center;
-            justify-content: center;
-            color: var(--ink);
-            font-size: 16px;
-            font-weight: 700;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            z-index: 1001; /* Above navigation */
-            transition: all 0.3s ease;
-            padding: 0 25px;
-            white-space: nowrap;
-        }
-
-        .floating-action-btn.active {
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1001;
+            pointer-events: none;
+            padding: 0 20px;
+            width: 100%;
+            max-width: 400px;
+            justify-content: center;
         }
 
-        .floating-action-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
-            background: var(--gold-light);
+        .floating-action-container > * {
+            pointer-events: auto;
         }
 
-        /* Floating cart button - MOVED TO LEFT SIDE */
+        /* Floating cart button */
         .floating-order-btn {
-            position: fixed;
-            bottom: calc(90px + env(safe-area-inset-bottom));
-            left: 25px; /* Changed from right to left */
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -305,10 +285,11 @@
                 0 8px 32px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            z-index: 1000;
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
             text-decoration: none;
+            flex-shrink: 0;
+            position: relative;
         }
 
         .floating-order-btn:hover {
@@ -316,11 +297,8 @@
             box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
         }
 
-        /* NEW: Floating total button */
+        /* Floating total button */
         .floating-total-btn {
-            position: fixed;
-            bottom: calc(170px + env(safe-area-inset-bottom));
-            left: 25px; /* Aligned with cart button */
             min-width: 160px;
             height: 60px;
             border-radius: 50px;
@@ -338,17 +316,52 @@
                 0 8px 32px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            z-index: 1000;
             transition: all 0.3s ease;
             padding: 0 25px;
             white-space: nowrap;
             flex-direction: column;
+            flex-shrink: 0;
         }
 
         .floating-total-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 30px rgba(200, 155, 45, 0.4);
             background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Floating action buttons */
+        .floating-action-btn {
+            min-width: 160px;
+            height: 60px;
+            border-radius: 50px;
+            background: var(--gold);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0 25px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .floating-action-btn.active {
+            display: flex;
+        }
+
+        .floating-action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
+            background: var(--gold-light);
         }
 
         .total-amount {
@@ -365,7 +378,7 @@
         .cart-count {
             position: absolute;
             top: -5px;
-            left: -5px; /* Changed from right to left */
+            left: -5px;
             background: #ff4444;
             color: white;
             border-radius: 50%;
@@ -384,13 +397,13 @@
             100% { box-shadow: 0 8px 25px rgba(200, 155, 45, 0.5); }
         }
 
-        /* === TIKTOK-STYLE BOTTOM NAVIGATION - UPDATED TO TRANSLUCENT === */
+        /* === TIKTOK-STYLE BOTTOM NAVIGATION === */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(10, 10, 10, 0.7); /* More translucent */
+            background: rgba(10, 10, 10, 0.7);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -398,10 +411,9 @@
             justify-content: space-around;
             align-items: center;
             padding: 12px 0;
-            z-index: 1000; /* Below FAB */
+            z-index: 1000;
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
             
-            /* Critical for iPhone home indicator area */
             padding-bottom: calc(12px + env(safe-area-inset-bottom));
             height: calc(70px + env(safe-area-inset-bottom));
         }
@@ -413,7 +425,7 @@
             left: 0;
             right: 0;
             height: env(safe-area-inset-bottom);
-            background: rgba(10, 10, 10, 0.7); /* Match translucent background */
+            background: rgba(10, 10, 10, 0.7);
             z-index: -1;
         }
 
@@ -470,7 +482,7 @@
             transform: translateY(-2px);
         }
 
-        /* === UPDATED: HEADER & NAVIGATION === */
+        /* === HEADER & NAVIGATION === */
         header {
             position: fixed;
             top: 0;
@@ -883,7 +895,7 @@
             transform: scale(1.05);
         }
 
-        /* === CART SYSTEM - COMPLETELY REDESIGNED === */
+        /* === CART SYSTEM === */
         .cart-container {
             position: fixed;
             top: 0;
@@ -928,14 +940,12 @@
             cursor: pointer;
         }
 
-        /* FIXED SCROLLING ISSUE */
         .cart-content {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            /* Ensure content doesn't get cut off */
-            padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* Space for FAB */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-bottom: calc(100px + env(safe-area-inset-bottom));
+            -webkit-overflow-scrolling: touch;
         }
 
         .cart-items {
@@ -1244,7 +1254,7 @@
             color: var(--ink);
         }
 
-        /* === ABOUT SECTION FIXES === */
+        /* === ABOUT SECTION === */
         .about-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1320,11 +1330,11 @@
             font-size: 1.2rem;
         }
 
-        /* === FOOTER - TRANSLUCENT STYLING === */
+        /* === FOOTER === */
         footer {
             padding: 60px 5% 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.1); /* Translucent background */
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -1409,7 +1419,6 @@
                 justify-content: center;
             }
 
-            /* Adjust header layout for mobile */
             .header-cart-total {
                 margin-right: 15px;
                 padding: 6px 15px;
@@ -1434,27 +1443,29 @@
                 padding: 20px;
             }
 
+            .floating-action-container {
+                bottom: calc(85px + env(safe-area-inset-bottom));
+                gap: 10px;
+                padding: 0 15px;
+            }
+
             .floating-order-btn {
                 width: 60px;
                 height: 60px;
-                bottom: calc(85px + env(safe-area-inset-bottom));
-                left: 20px; /* Changed from right to left */
             }
 
             .floating-total-btn {
-                bottom: calc(155px + env(safe-area-inset-bottom));
-                left: 20px; /* Changed from right to left */
                 min-width: 140px;
                 height: 55px;
                 font-size: 14px;
+                padding: 0 20px;
             }
 
             .floating-action-btn {
-                bottom: calc(85px + env(safe-area-inset-bottom));
-                right: 20px;
                 min-width: 140px;
                 height: 55px;
                 font-size: 14px;
+                padding: 0 20px;
             }
 
             .gallery-grid {
@@ -1497,7 +1508,29 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Hide header cart total on very small screens */
+            .floating-action-container {
+                gap: 8px;
+                padding: 0 10px;
+            }
+
+            .floating-total-btn {
+                min-width: 120px;
+                height: 50px;
+                font-size: 13px;
+                padding: 0 15px;
+            }
+
+            .floating-action-btn {
+                min-width: 120px;
+                height: 50px;
+                font-size: 13px;
+                padding: 0 15px;
+            }
+
+            .total-amount {
+                font-size: 16px;
+            }
+
             .header-cart-total {
                 display: none !important;
             }
@@ -1511,15 +1544,7 @@
             body {
                 padding-bottom: 0;
             }
-            .floating-order-btn {
-                bottom: 25px;
-                left: 25px; /* Added left positioning for desktop */
-            }
-            .floating-total-btn {
-                bottom: 105px;
-                left: 25px; /* Added left positioning for desktop */
-            }
-            .floating-action-btn {
+            .floating-action-container {
                 bottom: 25px;
             }
         }
@@ -1543,21 +1568,21 @@
         </div>
     </div>
 
-    <!-- Floating Action Buttons -->
-    <button class="floating-action-btn" id="floatingCheckoutBtn">Checkout</button>
-    <button class="floating-action-btn" id="floatingPlaceOrderBtn">Place Order</button>
-    <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
+    <!-- Floating Action Buttons Container -->
+    <div class="floating-action-container">
+        <button class="floating-order-btn" id="openCart">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="cart-count" id="cartCount">0</div>
+        </button>
 
-    <!-- NEW: Floating Total Button -->
-    <div class="floating-total-btn" id="floatingTotalBtn">
-        <div class="total-label">Cart Total</div>
-        <div class="total-amount" id="totalAmount">R0.00</div>
-    </div>
+        <div class="floating-total-btn" id="floatingTotalBtn">
+            <div class="total-label">Cart Total</div>
+            <div class="total-amount" id="totalAmount">R0.00</div>
+        </div>
 
-    <!-- Floating Cart Button -->
-    <div class="floating-order-btn" id="openCart">
-        <i class="fas fa-shopping-cart"></i>
-        <div class="cart-count" id="cartCount">0</div>
+        <button class="floating-action-btn" id="floatingCheckoutBtn">Checkout</button>
+        <button class="floating-action-btn" id="floatingPlaceOrderBtn">Place Order</button>
+        <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
     </div>
 
     <!-- Header with Cart Total -->
@@ -1567,7 +1592,6 @@
             <div class="logo-text">Malume Nico</div>
         </div>
 
-        <!-- UPDATED: Header Cart Total positioned between logo and navigation -->
         <div class="header-cart-total" id="headerCartTotal">
             <div class="header-total-label">Order Total:</div>
             <div class="header-total-amount" id="headerTotalAmount">R0.00</div>
@@ -2253,7 +2277,6 @@
         const closeCartBtn = document.getElementById('closeCart');
         const cartContainer = document.getElementById('cartContainer');
         const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
         const cartCount = document.getElementById('cartCount');
         const cartTitle = document.getElementById('cartTitle');
         const checkoutForm = document.getElementById('checkoutForm');
@@ -2263,15 +2286,11 @@
         const collectionFields = document.getElementById('collectionFields');
         const deliveryFields = document.getElementById('deliveryFields');
 
-        // NEW: Floating total button
+        // Floating elements
         const floatingTotalBtn = document.getElementById('floatingTotalBtn');
         const totalAmount = document.getElementById('totalAmount');
-
-        // NEW: Header cart total elements
         const headerCartTotal = document.getElementById('headerCartTotal');
         const headerTotalAmount = document.getElementById('headerTotalAmount');
-
-        // Floating Action Buttons
         const floatingCheckoutBtn = document.getElementById('floatingCheckoutBtn');
         const floatingPlaceOrderBtn = document.getElementById('floatingPlaceOrderBtn');
         const floatingProcessPaymentBtn = document.getElementById('floatingProcessPaymentBtn');
@@ -2307,7 +2326,7 @@
         let orderType = 'dinein';
         let selectedPaymentMethod = null;
 
-        // NEW: Function to update header total amount
+        // Function to update header total amount
         function updateHeaderTotalAmount() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
