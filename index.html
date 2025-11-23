@@ -201,22 +201,22 @@
             color: var(--gold);
         }
 
-        /* === HEADER CART TOTAL - NEW STYLES === */
+        /* === UPDATED: HEADER CART TOTAL - POSITIONED BETWEEN EXISTING ELEMENTS AND NAV LINKS === */
         .header-cart-total {
             display: none;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.25);
             border-radius: 50px;
-            padding: 8px 20px;
-            margin-left: auto;
-            margin-right: 20px;
+            padding: 6px 15px;
             color: white;
             font-weight: 600;
             transition: all 0.3s ease;
+            margin-left: 20px;
+            margin-right: auto;
         }
 
         .header-cart-total.visible {
@@ -225,12 +225,12 @@
         }
 
         .header-total-label {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.9;
         }
 
         .header-total-amount {
-            font-size: 16px;
+            font-size: 14px;
             color: var(--gold);
             font-weight: 700;
         }
@@ -470,7 +470,7 @@
             transform: translateY(-2px);
         }
 
-        /* === HEADER & NAVIGATION === */
+        /* === UPDATED: HEADER & NAVIGATION === */
         header {
             position: fixed;
             top: 0;
@@ -478,7 +478,7 @@
             width: 100%;
             padding: 15px 5%;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             z-index: 100;
             transition: background 0.3s;
@@ -520,6 +520,7 @@
         .nav-links {
             display: flex;
             gap: 25px;
+            margin-left: auto;
         }
 
         .nav-links a {
@@ -558,6 +559,7 @@
             cursor: pointer;
             z-index: 101;
             transition: transform 0.3s ease;
+            margin-left: auto;
         }
 
         .mobile-menu-btn.active {
@@ -1565,7 +1567,7 @@
             <div class="logo-text">Malume Nico</div>
         </div>
 
-        <!-- NEW: Header Cart Total -->
+        <!-- UPDATED: Header Cart Total positioned between logo and navigation -->
         <div class="header-cart-total" id="headerCartTotal">
             <div class="header-total-label">Order Total:</div>
             <div class="header-total-amount" id="headerTotalAmount">R0.00</div>
@@ -2305,16 +2307,6 @@
         let orderType = 'dinein';
         let selectedPaymentMethod = null;
 
-        // NEW: Function to show header cart total
-        function showHeaderCartTotal() {
-            headerCartTotal.classList.add('visible');
-        }
-
-        // NEW: Function to hide header cart total
-        function hideHeaderCartTotal() {
-            headerCartTotal.classList.remove('visible');
-        }
-
         // NEW: Function to update header total amount
         function updateHeaderTotalAmount() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -2322,6 +2314,13 @@
             const total = subtotal + deliveryFee;
             
             headerTotalAmount.textContent = `R${total.toFixed(2)}`;
+            
+            // Show/hide header cart total based on cart content
+            if (cart.length > 0) {
+                headerCartTotal.classList.add('visible');
+            } else {
+                headerCartTotal.classList.remove('visible');
+            }
         }
 
         // Open cart
@@ -2334,8 +2333,6 @@
         closeCartBtn.addEventListener('click', () => {
             cartContainer.classList.remove('open');
             hideAllFloatingButtons();
-            // Also hide header cart total if it's visible
-            hideHeaderCartTotal();
         });
 
         // Order type selection
@@ -2397,9 +2394,6 @@
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
             
-            // Hide header cart total
-            hideHeaderCartTotal();
-            
             // Show floating checkout button
             hideAllFloatingButtons();
             if (cart.length > 0) {
@@ -2416,9 +2410,6 @@
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
             
-            // Hide header cart total
-            hideHeaderCartTotal();
-            
             // Show floating place order button
             hideAllFloatingButtons();
             floatingPlaceOrderBtn.classList.add('active');
@@ -2432,9 +2423,6 @@
             paymentMethodView.classList.add('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            
-            // Show header cart total
-            showHeaderCartTotal();
             
             // Show floating process payment button
             hideAllFloatingButtons();
@@ -2559,9 +2547,6 @@
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.add('active');
 
-            // Ensure header cart total stays visible during processing
-            showHeaderCartTotal();
-
             // Simulate payment processing
             setTimeout(() => {
                 paymentProcessing.classList.remove('active');
@@ -2584,8 +2569,6 @@
 
                 // Clear current order
                 localStorage.removeItem('currentOrder');
-                
-                // Keep header cart total visible until user continues shopping
             }, 3000);
         });
 
@@ -2596,9 +2579,6 @@
             updateCart();
             cartContainer.classList.remove('open');
             showCartView();
-
-            // Hide header cart total
-            hideHeaderCartTotal();
 
             // Reset form
             document.getElementById('customerName').value = '';
@@ -2808,11 +2788,11 @@
             // Initialize fade-in animations
             initFadeInAnimations();
 
-            // NEW: Handle keyboard events to keep header in place
+            // Handle keyboard events to keep header in place
             handleKeyboardEvents();
         });
 
-        // NEW: Handle keyboard events to ensure header stays fixed
+        // Handle keyboard events to ensure header stays fixed
         function handleKeyboardEvents() {
             let originalHeight = window.innerHeight;
             
