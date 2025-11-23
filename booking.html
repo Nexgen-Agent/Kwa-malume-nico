@@ -587,6 +587,206 @@
             opacity: 1;
         }
 
+        /* === PAYMENT SYSTEM (FROM INDEX.HTML) === */
+        .payment-section {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .payment-section.active {
+            display: block;
+        }
+
+        .order-type-selection {
+            margin-bottom: 25px;
+        }
+
+        .order-type-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--gold);
+            text-align: center;
+        }
+
+        .order-type-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .order-type-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-type-btn.active {
+            background: var(--gold);
+            color: var(--ink);
+        }
+
+        .order-type-btn i {
+            font-size: 1.2rem;
+        }
+
+        .order-type-btn span {
+            font-size: 0.9rem;
+        }
+
+        .delivery-info {
+            background: rgba(200, 155, 45, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .delivery-info p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .payment-method-view {
+            margin-top: 30px;
+        }
+
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .payment-option {
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-option.selected {
+            background: rgba(200, 155, 45, 0.3);
+            border-color: var(--gold);
+        }
+
+        .payment-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .payment-details {
+            display: block;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-processing {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .payment-processing.active {
+            display: block;
+        }
+
+        .processing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .payment-success {
+            display: none;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .payment-success.active {
+            display: block;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: var(--ink);
+        }
+
+        .booking-summary {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .booking-summary h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--gold);
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
         /* === FOOTER === */
         footer {
             padding: 60px 5% 30px;
@@ -778,6 +978,14 @@
             }
 
             .celebration-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .order-type-options {
+                flex-direction: column;
+            }
+
+            .payment-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -1100,8 +1308,164 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">Complete Booking</button>
+                <button type="submit" class="submit-btn">Proceed to Payment</button>
             </form>
+        </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section class="payment-section glass" id="paymentSection">
+        <div class="section-title fade-in">
+            <h2>Complete Your Booking</h2>
+            <p>Review your booking details and complete payment</p>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary fade-in">
+            <h3>Booking Summary</h3>
+            <div class="summary-item">
+                <span>Package:</span>
+                <span id="summaryPackage">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Date & Time:</span>
+                <span id="summaryDateTime">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Guests:</span>
+                <span id="summaryGuests">-</span>
+            </div>
+            <div class="summary-item">
+                <span>Subtotal:</span>
+                <span id="summarySubtotal">R0.00</span>
+            </div>
+            <div class="summary-item summary-total">
+                <span>Total Amount:</span>
+                <span id="summaryTotal">R0.00</span>
+            </div>
+        </div>
+
+        <div class="order-type-selection">
+            <h4 class="order-type-title">How would you like to receive your booking?</h4>
+            <div class="order-type-options">
+                <button class="order-type-btn active" data-type="dinein">
+                    <i class="fas fa-utensils"></i>
+                    <span>Dine In</span>
+                </button>
+                <button class="order-type-btn" data-type="collection">
+                    <i class="fas fa-car"></i>
+                    <span>Collection</span>
+                </button>
+                <button class="order-type-btn" data-type="delivery">
+                    <i class="fas fa-truck"></i>
+                    <span>Delivery</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="delivery-info">
+            <p><i class="fas fa-info-circle"></i> Free delivery for orders over R280. R30 delivery fee for orders under R280.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="customerName">Full Name *</label>
+            <input type="text" id="customerName" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="customerPhone">Phone Number *</label>
+            <input type="tel" id="customerPhone" placeholder="Enter your phone number" required>
+        </div>
+
+        <!-- Dine In Fields -->
+        <div class="form-group" id="dineinFields">
+            <label for="tableNumber">Table Number *</label>
+            <input type="text" id="tableNumber" placeholder="Enter your table number" required>
+            <small style="color: rgba(255,255,255,0.7); margin-top: 5px; display: block;">
+                Please check the number on your table
+            </small>
+        </div>
+
+        <!-- Collection Fields -->
+        <div class="form-group" id="collectionFields" style="display: none;">
+            <label for="collectionTime">Preferred Collection Time</label>
+            <select id="collectionTime">
+                <option value="asap">As soon as possible</option>
+                <option value="15min">In 15 minutes</option>
+                <option value="30min">In 30 minutes</option>
+                <option value="45min">In 45 minutes</option>
+                <option value="1hour">In 1 hour</option>
+            </select>
+            <small style="color: rgba(255,255,255,0.7); margin-top: 5px; display: block;">
+                We'll notify you when your booking is ready for collection
+            </small>
+        </div>
+
+        <!-- Delivery Fields -->
+        <div class="form-group" id="deliveryFields" style="display: none;">
+            <label for="deliveryAddress">Delivery Address *</label>
+            <textarea id="deliveryAddress" placeholder="Enter your full delivery address" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="specialInstructions">Special Instructions</label>
+            <textarea id="specialInstructions" placeholder="Any special instructions for your booking?" rows="3"></textarea>
+        </div>
+
+        <!-- Payment Method View -->
+        <div class="payment-method-view" id="paymentMethodView">
+            <h4 class="order-type-title">Payment Method</h4>
+            <div class="payment-options">
+                <div class="payment-option selected" data-method="card">
+                    <div class="payment-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <span>Credit/Debit Card</span>
+                </div>
+            </div>
+
+            <!-- Card Payment Details -->
+            <div class="payment-details" id="cardPaymentDetails">
+                <div class="form-group">
+                    <label for="cardNumber">Card Number *</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date *</label>
+                        <input type="text" id="expiryDate" placeholder="MM/YY" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV *</label>
+                        <input type="text" id="cvv" placeholder="123" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cardName">Name on Card *</label>
+                    <input type="text" id="cardName" placeholder="Your Name" required>
+                </div>
+            </div>
+
+            <!-- Payment Processing -->
+            <div class="payment-processing" id="paymentProcessing">
+                <div class="processing-spinner"></div>
+                <h4>Processing Payment</h4>
+                <p>Please wait while we process your payment...</p>
+            </div>
+
+            <!-- Payment Success -->
+            <div class="payment-success" id="paymentSuccess">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h4>Booking Confirmed!</h4>
+                <p>Your booking has been confirmed and payment received.</p>
+                <p>Booking Number: <strong id="bookingNumber">MN-BK-2023-001</strong></p>
+                <button class="submit-btn" id="continueShopping">Return to Home</button>
+            </div>
+
+            <button type="button" class="submit-btn" id="processPaymentBtn" style="margin-top: 20px;">Complete Payment</button>
+            <button type="button" class="book-package-btn" id="backToBookingForm" style="width: 100%; margin-top: 10px; background: rgba(255,255,255,0.1); color: white;">Back to Booking Details</button>
         </div>
     </section>
 
@@ -1198,21 +1562,21 @@
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuOverlay.classList.add('active');
             mobileMenuBtn.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         });
 
         closeMobileMenu.addEventListener('click', () => {
-            mobileMenuOverlay.classList.remove('active');
             mobileMenuBtn.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
             document.body.style.overflow = 'auto';
         });
 
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenuOverlay.classList.remove('active');
                 mobileMenuBtn.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
         });
@@ -1220,8 +1584,8 @@
         // Close mobile menu when clicking outside
         mobileMenuOverlay.addEventListener('click', (e) => {
             if (e.target === mobileMenuOverlay) {
-                mobileMenuOverlay.classList.remove('active');
                 mobileMenuBtn.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
         });
@@ -1255,8 +1619,75 @@
             });
         });
 
-        // Form submission
+        // Package prices mapping
+        const packagePrices = {
+            'Whisper': 750,
+            'Enchanted': 1450,
+            'Eternal': 3200,
+            'Cheers': 1200,
+            'Spark': 2800,
+            'Grand': 6500
+        };
+
+        // Order type functionality
+        const orderTypeBtns = document.querySelectorAll('.order-type-btn');
+        const dineinFields = document.getElementById('dineinFields');
+        const collectionFields = document.getElementById('collectionFields');
+        const deliveryFields = document.getElementById('deliveryFields');
+        let orderType = 'dinein';
+
+        orderTypeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                orderTypeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                orderType = btn.getAttribute('data-type');
+
+                // Show/hide appropriate fields
+                dineinFields.style.display = orderType === 'dinein' ? 'block' : 'none';
+                collectionFields.style.display = orderType === 'collection' ? 'block' : 'none';
+                deliveryFields.style.display = orderType === 'delivery' ? 'block' : 'none';
+
+                // Update required fields
+                document.getElementById('tableNumber').required = orderType === 'dinein';
+                document.getElementById('deliveryAddress').required = orderType === 'delivery';
+
+                // Update summary with new total
+                updateBookingSummary();
+            });
+        });
+
+        // Update booking summary
+        function updateBookingSummary() {
+            const packageType = document.getElementById('packageType').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const guests = document.getElementById('guests').value;
+            
+            if (packageType && packagePrices[packageType]) {
+                const subtotal = packagePrices[packageType];
+                const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+                const total = subtotal + deliveryFee;
+
+                // Format date
+                const formattedDate = date ? new Date(date).toLocaleDateString('en-ZA', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) : '-';
+
+                document.getElementById('summaryPackage').textContent = packageType + ' - R' + subtotal;
+                document.getElementById('summaryDateTime').textContent = formattedDate + ' at ' + (time || '-');
+                document.getElementById('summaryGuests').textContent = guests ? guests + ' people' : '-';
+                document.getElementById('summarySubtotal').textContent = 'R' + subtotal.toFixed(2);
+                document.getElementById('summaryTotal').textContent = 'R' + total.toFixed(2);
+            }
+        }
+
+        // Form submission - show payment section
         const bookingForm = document.getElementById('bookingForm');
+        const paymentSection = document.getElementById('paymentSection');
+        const backToBookingForm = document.getElementById('backToBookingForm');
 
         bookingForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1276,31 +1707,164 @@
                 alert('Please fill in all required fields.');
                 return;
             }
+
+            // Copy data to payment section
+            document.getElementById('customerName').value = name;
+            document.getElementById('customerPhone').value = phone;
+
+            // Update booking summary
+            updateBookingSummary();
+
+            // Show payment section and hide booking form
+            bookingForm.style.display = 'none';
+            paymentSection.classList.add('active');
             
-            // Create booking object
-            const booking = {
-                packageType,
-                name,
-                phone,
-                email,
-                date,
-                time,
-                guests,
-                message,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Store booking in localStorage
-            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-            bookings.push(booking);
-            localStorage.setItem('bookings', JSON.stringify(bookings));
-            
-            // Show success message
-            alert('Thank you for your booking! We will contact you shortly to confirm your reservation.');
-            
-            // Reset form
-            bookingForm.reset();
+            // Scroll to payment section
+            paymentSection.scrollIntoView({ 
+                behavior: 'smooth' 
+            });
         });
+
+        // Back to booking form
+        backToBookingForm.addEventListener('click', () => {
+            paymentSection.classList.remove('active');
+            bookingForm.style.display = 'block';
+            document.getElementById('booking-form').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Payment processing
+        const processPaymentBtn = document.getElementById('processPaymentBtn');
+        const paymentProcessing = document.getElementById('paymentProcessing');
+        const paymentSuccess = document.getElementById('paymentSuccess');
+        const continueShopping = document.getElementById('continueShopping');
+        const bookingNumber = document.getElementById('bookingNumber');
+
+        processPaymentBtn.addEventListener('click', () => {
+            // Validate customer details
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const tableNumber = document.getElementById('tableNumber').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+
+            if (!customerName || !customerPhone) {
+                alert('Please fill in your name and phone number.');
+                return;
+            }
+
+            if (orderType === 'dinein' && !tableNumber) {
+                alert('Please enter your table number.');
+                return;
+            }
+
+            if (orderType === 'delivery' && !deliveryAddress) {
+                alert('Please enter your delivery address.');
+                return;
+            }
+
+            // Validate card details
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardName = document.getElementById('cardName').value;
+
+            if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                alert('Please fill in all card details.');
+                return;
+            }
+
+            // Validate card number format (basic validation)
+            const cardNumberClean = cardNumber.replace(/\s/g, '');
+            if (!/^\d{16}$/.test(cardNumberClean)) {
+                alert('Please enter a valid 16-digit card number.');
+                return;
+            }
+
+            // Validate expiry date format
+            if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                alert('Please enter expiry date in MM/YY format.');
+                return;
+            }
+
+            // Validate CVV
+            if (!/^\d{3,4}$/.test(cvv)) {
+                alert('Please enter a valid CVV (3 or 4 digits).');
+                return;
+            }
+
+            // Show processing
+            document.getElementById('paymentMethodView').style.display = 'none';
+            processPaymentBtn.style.display = 'none';
+            backToBookingForm.style.display = 'none';
+            paymentProcessing.classList.add('active');
+
+            // Simulate payment processing
+            setTimeout(() => {
+                paymentProcessing.classList.remove('active');
+                paymentSuccess.classList.add('active');
+
+                // Generate random booking number
+                const randomBookingNum = 'MN-BK-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+                bookingNumber.textContent = randomBookingNum;
+
+                // Get all booking data
+                const packageType = document.getElementById('packageType').value;
+                const name = document.getElementById('name').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                const date = document.getElementById('date').value;
+                const time = document.getElementById('time').value;
+                const guests = document.getElementById('guests').value;
+                const message = document.getElementById('message').value;
+                const specialInstructions = document.getElementById('specialInstructions').value;
+                const collectionTime = document.getElementById('collectionTime').value;
+
+                const subtotal = packagePrices[packageType];
+                const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+                const total = subtotal + deliveryFee;
+
+                // Create booking object
+                const booking = {
+                    bookingNumber: randomBookingNum,
+                    packageType,
+                    name,
+                    phone,
+                    email,
+                    date,
+                    time,
+                    guests,
+                    message,
+                    orderType,
+                    tableNumber,
+                    collectionTime,
+                    deliveryAddress,
+                    specialInstructions,
+                    subtotal,
+                    deliveryFee,
+                    total,
+                    paymentMethod: 'card',
+                    status: 'confirmed',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Store booking in localStorage
+                let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+                bookings.push(booking);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }, 3000);
+        });
+
+        // Continue shopping button
+        continueShopping.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Update summary when form fields change
+        document.getElementById('packageType').addEventListener('change', updateBookingSummary);
+        document.getElementById('date').addEventListener('change', updateBookingSummary);
+        document.getElementById('time').addEventListener('change', updateBookingSummary);
+        document.getElementById('guests').addEventListener('change', updateBookingSummary);
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
