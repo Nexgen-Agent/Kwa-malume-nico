@@ -201,6 +201,51 @@
             color: var(--gold);
         }
 
+        /* === HEADER CART TOTAL - NEW STYLES === */
+        .header-cart-total {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 8px 20px;
+            margin-left: auto;
+            margin-right: 20px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .header-cart-total.visible {
+            display: flex;
+            animation: slideInTop 0.5s ease;
+        }
+
+        .header-total-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header-total-amount {
+            font-size: 16px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* === FLOATING ACTION BUTTONS - NEW STYLES === */
         .floating-action-btn {
             position: fixed;
@@ -339,13 +384,13 @@
             100% { box-shadow: 0 8px 25px rgba(200, 155, 45, 0.5); }
         }
 
-        /* === TIKTOK-STYLE BOTTOM NAVIGATION === */
+        /* === TIKTOK-STYLE BOTTOM NAVIGATION - UPDATED TO TRANSLUCENT === */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(10, 10, 10, 0.7); /* More translucent */
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -354,7 +399,7 @@
             align-items: center;
             padding: 12px 0;
             z-index: 1000; /* Below FAB */
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
             
             /* Critical for iPhone home indicator area */
             padding-bottom: calc(12px + env(safe-area-inset-bottom));
@@ -368,7 +413,7 @@
             left: 0;
             right: 0;
             height: env(safe-area-inset-bottom);
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(10, 10, 10, 0.7); /* Match translucent background */
             z-index: -1;
         }
 
@@ -1361,6 +1406,20 @@
             .hero-btns {
                 justify-content: center;
             }
+
+            /* Adjust header layout for mobile */
+            .header-cart-total {
+                margin-right: 15px;
+                padding: 6px 15px;
+            }
+            
+            .header-total-label {
+                font-size: 12px;
+            }
+            
+            .header-total-amount {
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1435,6 +1494,11 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+
+            /* Hide header cart total on very small screens */
+            .header-cart-total {
+                display: none !important;
+            }
         }
 
         /* Hide bottom nav on desktop */
@@ -1494,11 +1558,17 @@
         <div class="cart-count" id="cartCount">0</div>
     </div>
 
-    <!-- Header -->
+    <!-- Header with Cart Total -->
     <header>
         <div class="logo">
             <div class="logo-img">MN</div>
             <div class="logo-text">Malume Nico</div>
+        </div>
+
+        <!-- NEW: Header Cart Total -->
+        <div class="header-cart-total" id="headerCartTotal">
+            <div class="header-total-label">Order Total:</div>
+            <div class="header-total-amount" id="headerTotalAmount">R0.00</div>
         </div>
 
         <nav class="nav-links">
@@ -2195,6 +2265,10 @@
         const floatingTotalBtn = document.getElementById('floatingTotalBtn');
         const totalAmount = document.getElementById('totalAmount');
 
+        // NEW: Header cart total elements
+        const headerCartTotal = document.getElementById('headerCartTotal');
+        const headerTotalAmount = document.getElementById('headerTotalAmount');
+
         // Floating Action Buttons
         const floatingCheckoutBtn = document.getElementById('floatingCheckoutBtn');
         const floatingPlaceOrderBtn = document.getElementById('floatingPlaceOrderBtn');
@@ -2231,6 +2305,25 @@
         let orderType = 'dinein';
         let selectedPaymentMethod = null;
 
+        // NEW: Function to show header cart total
+        function showHeaderCartTotal() {
+            headerCartTotal.classList.add('visible');
+        }
+
+        // NEW: Function to hide header cart total
+        function hideHeaderCartTotal() {
+            headerCartTotal.classList.remove('visible');
+        }
+
+        // NEW: Function to update header total amount
+        function updateHeaderTotalAmount() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+            const total = subtotal + deliveryFee;
+            
+            headerTotalAmount.textContent = `R${total.toFixed(2)}`;
+        }
+
         // Open cart
         openCartBtn.addEventListener('click', () => {
             cartContainer.classList.add('open');
@@ -2241,6 +2334,8 @@
         closeCartBtn.addEventListener('click', () => {
             cartContainer.classList.remove('open');
             hideAllFloatingButtons();
+            // Also hide header cart total if it's visible
+            hideHeaderCartTotal();
         });
 
         // Order type selection
@@ -2258,6 +2353,10 @@
                 // Update required fields
                 document.getElementById('tableNumber').required = orderType === 'dinein';
                 document.getElementById('deliveryAddress').required = orderType === 'delivery';
+
+                // Update header total with new delivery fee
+                updateHeaderTotalAmount();
+                updateTotalAmount();
             });
         });
 
@@ -2298,6 +2397,9 @@
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
             
+            // Hide header cart total
+            hideHeaderCartTotal();
+            
             // Show floating checkout button
             hideAllFloatingButtons();
             if (cart.length > 0) {
@@ -2314,6 +2416,9 @@
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
             
+            // Hide header cart total
+            hideHeaderCartTotal();
+            
             // Show floating place order button
             hideAllFloatingButtons();
             floatingPlaceOrderBtn.classList.add('active');
@@ -2327,6 +2432,9 @@
             paymentMethodView.classList.add('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
+            
+            // Show header cart total
+            showHeaderCartTotal();
             
             // Show floating process payment button
             hideAllFloatingButtons();
@@ -2347,6 +2455,9 @@
             const total = subtotal + deliveryFee;
             
             totalAmount.textContent = `R${total.toFixed(2)}`;
+            
+            // Update header total as well
+            updateHeaderTotalAmount();
             
             // Show/hide total button based on cart content
             if (cart.length > 0) {
@@ -2448,6 +2559,9 @@
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.add('active');
 
+            // Ensure header cart total stays visible during processing
+            showHeaderCartTotal();
+
             // Simulate payment processing
             setTimeout(() => {
                 paymentProcessing.classList.remove('active');
@@ -2470,6 +2584,8 @@
 
                 // Clear current order
                 localStorage.removeItem('currentOrder');
+                
+                // Keep header cart total visible until user continues shopping
             }, 3000);
         });
 
@@ -2480,6 +2596,9 @@
             updateCart();
             cartContainer.classList.remove('open');
             showCartView();
+
+            // Hide header cart total
+            hideHeaderCartTotal();
 
             // Reset form
             document.getElementById('customerName').value = '';
@@ -2688,7 +2807,43 @@
             
             // Initialize fade-in animations
             initFadeInAnimations();
+
+            // NEW: Handle keyboard events to keep header in place
+            handleKeyboardEvents();
         });
+
+        // NEW: Handle keyboard events to ensure header stays fixed
+        function handleKeyboardEvents() {
+            let originalHeight = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                const newHeight = window.innerHeight;
+                
+                // Check if keyboard is likely open (viewport height decreased significantly)
+                if (newHeight < originalHeight * 0.7) {
+                    // Force header to stay at top
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                } else {
+                    // Reset to normal
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                }
+                
+                originalHeight = newHeight;
+            });
+
+            // Also handle focus events on form inputs
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    // Ensure header stays visible
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                    document.querySelector('header').style.zIndex = '1000';
+                });
+            });
+        }
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
