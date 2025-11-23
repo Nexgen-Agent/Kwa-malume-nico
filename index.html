@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Malume Nico | Best Kota in Tzaneen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -26,6 +26,9 @@
 
         html {
             scroll-behavior: smooth;
+            height: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         body {
@@ -34,6 +37,65 @@
             background: var(--dark-bg);
             overflow-x: hidden;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* === FIX FOR BLACK SPACE AT BOTTOM === */
+        section {
+            flex: 1 0 auto;
+            width: 100%;
+            padding: 80px 5%;
+        }
+
+        /* Fix for iOS Safari 100vh issue */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+            
+            .hero {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* Ensure background covers entire screen */
+        .bg-video, .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            min-height: 100%;
+        }
+
+        /* Make sure footer stays at bottom */
+        footer {
+            flex-shrink: 0;
+        }
+
+        /* Fix for Chrome mobile address bar */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: calc(100vh - 60px);
+            }
+            
+            body {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+
+        /* Ensure cart system doesn't get cut off */
+        .cart-container {
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Payment form adjustments */
+        .payment-details {
+            max-height: 50vh;
+            overflow-y: auto;
         }
 
         /* === BACKGROUND VIDEO === */
@@ -472,10 +534,6 @@
         }
 
         /* === SECTIONS === */
-        section {
-            padding: 80px 5%;
-        }
-
         .section-title {
             text-align: center;
             margin-bottom: 50px;
@@ -1759,6 +1817,31 @@
     </footer>
 
     <script>
+        // Fix for viewport height issues on mobile
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            // Set minimum height for sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.style.minHeight = `calc(var(--vh, 1vh) * 100 - 100px)`;
+            });
+        }
+
+        // Initialize on load and resize
+        window.addEventListener('load', setViewportHeight);
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', setViewportHeight);
+
+        // Ensure payment form is always visible
+        function ensurePaymentFormVisible() {
+            const paymentForm = document.querySelector('.payment-method-view.active');
+            if (paymentForm) {
+                paymentForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         // Menu data with image URLs
         const menuItems = [
             { 
@@ -2377,11 +2460,16 @@
             });
         });
 
+        // Call this when opening payment view
+        document.getElementById('processPaymentBtn')?.addEventListener('click', function() {
+            setTimeout(ensurePaymentFormVisible, 100);
+        });
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
             updateCart();
-            
+
             // Initialize fade-in animations
             initFadeInAnimations();
         });
@@ -2389,7 +2477,7 @@
         // Fade-in animation on scroll
         function initFadeInAnimations() {
             const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
-            
+
             const fadeInObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
