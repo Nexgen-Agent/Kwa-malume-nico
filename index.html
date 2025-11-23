@@ -752,7 +752,7 @@
             transform: scale(1.05);
         }
 
-        /* === CART SYSTEM === */
+        /* === CART SYSTEM - CRITICAL FIXES === */
         .cart-container {
             position: fixed;
             top: 0;
@@ -801,7 +801,10 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+            /* Ensure content doesn't get cut off */
             padding-bottom: 0;
+            /* Prevent any overflow issues */
+            max-height: calc(100dvh - 200px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
         }
 
         .cart-items {
@@ -976,13 +979,19 @@
             margin: 0;
         }
 
+        /* === CRITICAL: CART FOOTER FIXES === */
         .cart-footer {
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10, 10, 10, 0.95);
             flex-shrink: 0;
+            /* Critical: Ensure footer is above bottom nav and accounts for safe area */
             padding-bottom: calc(20px + env(safe-area-inset-bottom));
             margin-bottom: 0;
+            /* Ensure it stays at the bottom */
+            position: sticky;
+            bottom: 0;
+            width: 100%;
         }
 
         .cart-total {
@@ -999,7 +1008,7 @@
             width: 100%;
         }
 
-        .checkout-btn, .place-order-btn, .back-to-cart {
+        .checkout-btn, .place-order-btn, .back-to-cart, .process-payment-btn {
             flex: 1;
             padding: 15px;
             border: none;
@@ -1011,14 +1020,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
+            /* Ensure text is readable */
+            text-align: center;
         }
 
-        .checkout-btn, .place-order-btn {
+        .checkout-btn, .place-order-btn, .process-payment-btn {
             background: var(--gold);
             color: var(--ink);
         }
 
-        .checkout-btn:hover, .place-order-btn:hover {
+        .checkout-btn:hover, .place-order-btn:hover, .process-payment-btn:hover {
             background: var(--gold-light);
         }
 
@@ -1164,6 +1176,34 @@
             margin: 0 auto 20px;
             font-size: 2.5rem;
             color: var(--ink);
+        }
+
+        /* === ABOUT SECTION FIXES === */
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            align-items: center;
+        }
+
+        .about-text {
+            padding: 20px;
+        }
+
+        .about-image-container {
+            height: 350px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
         }
 
         /* === CONTACT & LOCATION === */
@@ -1339,6 +1379,19 @@
             .bank-details {
                 grid-template-columns: 1fr;
             }
+
+            .cart-actions {
+                flex-direction: column;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image-container {
+                order: -1;
+                height: 250px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1348,10 +1401,6 @@
 
             .gallery-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .cart-actions {
-                flex-direction: column;
             }
         }
 
@@ -1461,17 +1510,15 @@
         </div>
 
         <div class="glass fade-in" style="padding: 40px; max-width: 1000px; margin: 0 auto;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; align-items: center;">
-                <div class="fade-in-left">
+            <div class="about-content">
+                <div class="about-text fade-in-left">
                     <h3 style="color: var(--gold); margin-bottom: 20px; font-size: 1.8rem;">Our Story</h3>
                     <p style="margin-bottom: 20px;">Malume Nico started as a small street food stall with a big dream - to serve the most delicious, authentic kota in Mavele Village. What began as a passion project has now become a local institution.</p>
                     <p style="margin-bottom: 20px;">Our secret? We use only the freshest ingredients, traditional recipes, and a whole lot of love in every kota we make. From our classic Russian kota to our specialty creations, each bite tells a story.</p>
                     <p>Whether you're grabbing a quick bite on your lunch break or hanging out with friends on the weekend, Malume Nico is the place to be for great food and good vibes.</p>
                 </div>
-                <div style="height: 350px; border-radius: 16px; overflow: hidden;" class="fade-in-right">
-                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--ink); font-weight: bold; font-size: 1.2rem;">
-                        Malume Nico Kitchen
-                    </div>
+                <div class="about-image-container fade-in-right">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Malume Nico Kitchen" class="about-image">
                 </div>
             </div>
         </div>
@@ -1793,7 +1840,7 @@
 
             <div class="cart-actions" id="paymentActions" style="display: none;">
                 <button class="back-to-cart" id="backToCheckout">Back to Order Details</button>
-                <button class="place-order-btn" id="processPaymentBtn">Process Payment</button>
+                <button class="process-payment-btn" id="processPaymentBtn">Process Payment</button>
             </div>
         </div>
     </div>
