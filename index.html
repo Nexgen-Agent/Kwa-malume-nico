@@ -201,7 +201,45 @@
             color: var(--gold);
         }
 
-        /* === FLOATING ORDER BUTTON === */
+        /* === FLOATING ACTION BUTTONS - NEW STYLES === */
+        .floating-action-btn {
+            position: fixed;
+            bottom: calc(90px + env(safe-area-inset-bottom));
+            right: 25px;
+            min-width: 160px;
+            height: 60px;
+            border-radius: 50px;
+            background: var(--gold);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            z-index: 1001; /* Above navigation */
+            transition: all 0.3s ease;
+            padding: 0 25px;
+            white-space: nowrap;
+        }
+
+        .floating-action-btn.active {
+            display: flex;
+        }
+
+        .floating-action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
+            background: var(--gold-light);
+        }
+
+        /* Floating cart button */
         .floating-order-btn {
             position: fixed;
             bottom: calc(90px + env(safe-area-inset-bottom));
@@ -269,7 +307,7 @@
             justify-content: space-around;
             align-items: center;
             padding: 12px 0;
-            z-index: 9999;
+            z-index: 1000; /* Below FAB */
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
             
             /* Critical for iPhone home indicator area */
@@ -752,12 +790,12 @@
             transform: scale(1.05);
         }
 
-        /* === CART SYSTEM - CRITICAL FIXES === */
+        /* === CART SYSTEM - COMPLETELY REDESIGNED === */
         .cart-container {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 380px;
+            right: -100%;
+            width: 100%;
             height: 100vh;
             height: 100dvh;
             background: rgba(255, 255, 255, 0.1);
@@ -765,7 +803,7 @@
             -webkit-backdrop-filter: blur(30px);
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            z-index: 999;
             transition: right 0.4s ease;
             display: flex;
             flex-direction: column;
@@ -797,14 +835,14 @@
             cursor: pointer;
         }
 
+        /* FIXED SCROLLING ISSUE */
         .cart-content {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
             /* Ensure content doesn't get cut off */
-            padding-bottom: 0;
-            /* Prevent any overflow issues */
-            max-height: calc(100dvh - 200px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+            padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* Space for FAB */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
         .cart-items {
@@ -977,71 +1015,6 @@
         .delivery-info p {
             font-size: 0.9rem;
             margin: 0;
-        }
-
-        /* === CRITICAL: CART FOOTER FIXES === */
-        .cart-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(10, 10, 10, 0.95);
-            flex-shrink: 0;
-            /* Critical: Ensure footer is above bottom nav and accounts for safe area */
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-            margin-bottom: 0;
-            /* Ensure it stays at the bottom */
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .cart-actions {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .checkout-btn, .place-order-btn, .back-to-cart, .process-payment-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            /* Ensure text is readable */
-            text-align: center;
-        }
-
-        .checkout-btn, .place-order-btn, .process-payment-btn {
-            background: var(--gold);
-            color: var(--ink);
-        }
-
-        .checkout-btn:hover, .place-order-btn:hover, .process-payment-btn:hover {
-            background: var(--gold-light);
-        }
-
-        .back-to-cart {
-            background: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .back-to-cart:hover {
-            background: rgba(255, 255, 255, 0.1);
         }
 
         /* === PAYMENT SYSTEM === */
@@ -1335,11 +1308,6 @@
             .hero-btns {
                 justify-content: center;
             }
-
-            .cart-container {
-                width: 100%;
-                right: -100%;
-            }
         }
 
         @media (max-width: 768px) {
@@ -1357,6 +1325,14 @@
                 height: 60px;
                 bottom: calc(85px + env(safe-area-inset-bottom));
                 right: 20px;
+            }
+
+            .floating-action-btn {
+                bottom: calc(85px + env(safe-area-inset-bottom));
+                right: 20px;
+                min-width: 140px;
+                height: 55px;
+                font-size: 14px;
             }
 
             .gallery-grid {
@@ -1378,10 +1354,6 @@
 
             .bank-details {
                 grid-template-columns: 1fr;
-            }
-
-            .cart-actions {
-                flex-direction: column;
             }
 
             .about-content {
@@ -1415,6 +1387,9 @@
             .floating-order-btn {
                 bottom: 25px;
             }
+            .floating-action-btn {
+                bottom: 25px;
+            }
         }
     </style>
 </head>
@@ -1436,7 +1411,12 @@
         </div>
     </div>
 
-    <!-- Floating Order Button -->
+    <!-- Floating Action Buttons -->
+    <button class="floating-action-btn" id="floatingCheckoutBtn">Checkout</button>
+    <button class="floating-action-btn" id="floatingPlaceOrderBtn">Place Order</button>
+    <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
+
+    <!-- Floating Cart Button -->
     <div class="floating-order-btn" id="openCart">
         <i class="fas fa-shopping-cart"></i>
         <div class="cart-count" id="cartCount">0</div>
@@ -1822,27 +1802,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">R0.00</span>
-            </div>
-
-            <div class="cart-actions" id="cartActions">
-                <button class="checkout-btn" id="checkoutBtn">Checkout</button>
-            </div>
-
-            <div class="cart-actions" id="checkoutActions" style="display: none;">
-                <button class="back-to-cart" id="backToCart">Back to Cart</button>
-                <button class="place-order-btn" id="placeOrderBtn">Place Order</button>
-            </div>
-
-            <div class="cart-actions" id="paymentActions" style="display: none;">
-                <button class="back-to-cart" id="backToCheckout">Back to Order Details</button>
-                <button class="process-payment-btn" id="processPaymentBtn">Process Payment</button>
-            </div>
-        </div>
     </div>
 
     <!-- Contact & Location -->
@@ -2152,12 +2111,7 @@
         const cartItems = document.getElementById('cartItems');
         const cartTotal = document.getElementById('cartTotal');
         const cartCount = document.getElementById('cartCount');
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        const backToCart = document.getElementById('backToCart');
-        const placeOrderBtn = document.getElementById('placeOrderBtn');
         const cartTitle = document.getElementById('cartTitle');
-        const cartActions = document.getElementById('cartActions');
-        const checkoutActions = document.getElementById('checkoutActions');
         const checkoutForm = document.getElementById('checkoutForm');
         const cartItemsView = document.getElementById('cartItemsView');
         const orderTypeBtns = document.querySelectorAll('.order-type-btn');
@@ -2165,11 +2119,13 @@
         const collectionFields = document.getElementById('collectionFields');
         const deliveryFields = document.getElementById('deliveryFields');
 
+        // New Floating Action Buttons
+        const floatingCheckoutBtn = document.getElementById('floatingCheckoutBtn');
+        const floatingPlaceOrderBtn = document.getElementById('floatingPlaceOrderBtn');
+        const floatingProcessPaymentBtn = document.getElementById('floatingProcessPaymentBtn');
+
         // Payment elements
         const paymentMethodView = document.getElementById('paymentMethodView');
-        const paymentActions = document.getElementById('paymentActions');
-        const backToCheckout = document.getElementById('backToCheckout');
-        const processPaymentBtn = document.getElementById('processPaymentBtn');
         const paymentOptions = document.querySelectorAll('.payment-option');
         const paymentDetails = document.querySelectorAll('.payment-details');
         const paymentProcessing = document.getElementById('paymentProcessing');
@@ -2208,6 +2164,7 @@
         // Close cart
         closeCartBtn.addEventListener('click', () => {
             cartContainer.classList.remove('open');
+            hideAllFloatingButtons();
         });
 
         // Order type selection
@@ -2264,9 +2221,12 @@
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            cartActions.style.display = 'flex';
-            checkoutActions.style.display = 'none';
-            paymentActions.style.display = 'none';
+            
+            // Show floating checkout button
+            hideAllFloatingButtons();
+            if (cart.length > 0) {
+                floatingCheckoutBtn.classList.add('active');
+            }
         }
 
         // Show checkout view
@@ -2277,9 +2237,10 @@
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            cartActions.style.display = 'none';
-            checkoutActions.style.display = 'flex';
-            paymentActions.style.display = 'none';
+            
+            // Show floating place order button
+            hideAllFloatingButtons();
+            floatingPlaceOrderBtn.classList.add('active');
         }
 
         // Show payment view
@@ -2290,13 +2251,21 @@
             paymentMethodView.classList.add('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            cartActions.style.display = 'none';
-            checkoutActions.style.display = 'none';
-            paymentActions.style.display = 'flex';
+            
+            // Show floating process payment button
+            hideAllFloatingButtons();
+            floatingProcessPaymentBtn.classList.add('active');
         }
 
-        // Checkout button
-        checkoutBtn.addEventListener('click', () => {
+        // Hide all floating buttons
+        function hideAllFloatingButtons() {
+            floatingCheckoutBtn.classList.remove('active');
+            floatingPlaceOrderBtn.classList.remove('active');
+            floatingProcessPaymentBtn.classList.remove('active');
+        }
+
+        // Floating checkout button
+        floatingCheckoutBtn.addEventListener('click', () => {
             if (cart.length === 0) {
                 alert('Your cart is empty. Add some items before checking out.');
                 return;
@@ -2304,18 +2273,8 @@
             showCheckoutView();
         });
 
-        // Back to cart button
-        backToCart.addEventListener('click', () => {
-            showCartView();
-        });
-
-        // Back to checkout button
-        backToCheckout.addEventListener('click', () => {
-            showCheckoutView();
-        });
-
-        // Place order button
-        placeOrderBtn.addEventListener('click', () => {
+        // Floating place order button
+        floatingPlaceOrderBtn.addEventListener('click', () => {
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const tableNumber = document.getElementById('tableNumber').value;
@@ -2365,8 +2324,8 @@
             showPaymentView();
         });
 
-        // Process payment button
-        processPaymentBtn.addEventListener('click', () => {
+        // Floating process payment button
+        floatingProcessPaymentBtn.addEventListener('click', () => {
             if (!selectedPaymentMethod) {
                 alert('Please select a payment method.');
                 return;
@@ -2441,6 +2400,9 @@
             paymentOptions.forEach(opt => opt.classList.remove('selected'));
             paymentDetails.forEach(detail => detail.classList.remove('active'));
             selectedPaymentMethod = null;
+            
+            // Hide floating buttons
+            hideAllFloatingButtons();
         });
 
         // Render menu items
@@ -2512,6 +2474,7 @@
 
             updateCart();
             cartContainer.classList.add('open');
+            showCartView();
         }
 
         // Update cart display
@@ -2531,7 +2494,6 @@
                         <p>Add some delicious items from our menu!</p>
                     </div>
                 `;
-                cartTotal.textContent = 'R0.00';
                 return;
             }
 
@@ -2583,9 +2545,6 @@
                     openImageZoom(imageUrl);
                 });
             });
-
-            // Update total
-            cartTotal.textContent = `R${total.toFixed(2)}`;
         }
 
         // Increase item quantity
