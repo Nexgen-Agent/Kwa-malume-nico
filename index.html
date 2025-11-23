@@ -2,24 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malume Nico | Best Kota in Tzaneen</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Malume Nico">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a0a0a">
-    <meta name="msapplication-TileColor" content="#c89b2d">
-    
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-startup-image" href="/splash/launch-1242x2688.png">
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* === RESET & BASE STYLES === */
@@ -50,16 +34,7 @@
             background: var(--dark-bg);
             overflow-x: hidden;
             line-height: 1.6;
-            padding-bottom: calc(70px + env(safe-area-inset-bottom));
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-        }
-
-        /* Ensure full viewport coverage */
-        @supports (-webkit-touch-callout: none) {
-            body {
-                min-height: -webkit-fill-available;
-            }
+            padding-bottom: 70px; /* Space for bottom navigation */
         }
 
         /* === BACKGROUND VIDEO === */
@@ -202,7 +177,7 @@
         /* === FLOATING ORDER BUTTON === */
         .floating-order-btn {
             position: fixed;
-            bottom: calc(80px + env(safe-area-inset-bottom));
+            bottom: 80px; /* Adjusted for bottom nav */
             right: 25px;
             width: 70px;
             height: 70px;
@@ -259,31 +234,16 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(10, 10, 10, 0.98);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
             display: flex;
             justify-content: space-around;
             align-items: center;
             padding: 12px 0;
-            z-index: 9999;
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
-            
-            /* Critical for iPhone home indicator area */
-            padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            height: calc(70px + env(safe-area-inset-bottom));
-        }
-
-        .bottom-nav::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: env(safe-area-inset-bottom);
-            background: rgba(10, 10, 10, 0.98);
-            z-index: -1;
+            z-index: 999;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .bottom-nav-item {
@@ -300,7 +260,6 @@
             border: none;
             background: none;
             cursor: pointer;
-            min-height: 50px;
         }
 
         .bottom-nav-icon {
@@ -1293,7 +1252,7 @@
             .floating-order-btn {
                 width: 60px;
                 height: 60px;
-                bottom: calc(80px + env(safe-area-inset-bottom));
+                bottom: 80px;
                 right: 20px;
             }
 
