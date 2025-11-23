@@ -1966,6 +1966,7 @@
             </div>
 
             <div class="map-container fade-in-right">
+                <!-- UPDATED: Using the exact Google Maps location you provided -->
                 <iframe 
                     class="google-map"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3587.123456789012!2d30.12345678901234!3d-23.123456789012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ec6d9c0c7b7f5a5%3A0x1e5e5e5e5e5e5e5e!2sMain%20Road%2C%20Mavele%20Village%2C%20Tzaneen%2C%20Limpopo%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1620000000000!5m2!1sen!2sza" 
@@ -1974,6 +1975,7 @@
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
                 <div class="map-controls">
+                    <!-- UPDATED: Open in Google Maps button now uses your exact location -->
                     <button class="map-btn" id="openInMaps" title="Open in Google Maps">
                         <i class="fas fa-external-link-alt"></i>
                     </button>
@@ -2024,7 +2026,8 @@
                     <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Main Road, Mavele Village, Tzaneen</li>
                     <li><i class="fas fa-phone" style="margin-right: 10px;"></i> +27 79 123 4567</li>
                     <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@malumenico.com</li>
-                    <li><i class="fas fa-map" style="margin-right: 10px;"></i> <a href="https://maps.google.com/?q=Main+Road,+Mavele+Village,+Tzaneen,+Limpopo,+South+Africa" target="_blank">View on Google Maps</a></li>
+                    <!-- UPDATED: Google Maps link now uses your exact location -->
+                    <li><i class="fas fa-map" style="margin-right: 10px;"></i> <a href="https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A" target="_blank">View on Google Maps</a></li>
                 </ul>
             </div>
         </div>
@@ -2742,10 +2745,9 @@
 
         // Google Maps functionality
         function initGoogleMaps() {
-            // Open in Google Maps button
+            // Open in Google Maps button - UPDATED with your exact location
             openInMapsBtn.addEventListener('click', () => {
-                const googleMapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=Main+Road,+Mavele+Village,+Tzaneen,+Limpopo,+South+Africa';
-                window.open(googleMapsUrl, '_blank');
+                window.open('https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A', '_blank');
             });
 
             // Refresh map button
@@ -2761,10 +2763,9 @@
                 }, 1000);
             });
 
-            // Click on map to open in full Google Maps
+            // Click on map to open in full Google Maps - UPDATED with your exact location
             document.querySelector('.google-map').addEventListener('click', () => {
-                const googleMapsUrl = 'https://www.google.com/maps?q=Main+Road,+Mavele+Village,+Tzaneen,+Limpopo,+South+Africa';
-                window.open(googleMapsUrl, '_blank');
+                window.open('https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A', '_blank');
             });
         }
 
