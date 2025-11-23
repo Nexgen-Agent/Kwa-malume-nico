@@ -239,11 +239,11 @@
             background: var(--gold-light);
         }
 
-        /* Floating cart button */
+        /* Floating cart button - MOVED TO LEFT SIDE */
         .floating-order-btn {
             position: fixed;
             bottom: calc(90px + env(safe-area-inset-bottom));
-            right: 25px;
+            left: 25px; /* Changed from right to left */
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -271,10 +271,56 @@
             box-shadow: 0 10px 30px rgba(200, 155, 45, 0.7);
         }
 
+        /* NEW: Floating total button */
+        .floating-total-btn {
+            position: fixed;
+            bottom: calc(170px + env(safe-area-inset-bottom));
+            left: 25px; /* Aligned with cart button */
+            min-width: 160px;
+            height: 60px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 0 25px;
+            white-space: nowrap;
+            flex-direction: column;
+        }
+
+        .floating-total-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(200, 155, 45, 0.4);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .total-amount {
+            font-size: 18px;
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .total-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
         .cart-count {
             position: absolute;
             top: -5px;
-            right: -5px;
+            left: -5px; /* Changed from right to left */
             background: #ff4444;
             color: white;
             border-radius: 50%;
@@ -1227,10 +1273,17 @@
             font-size: 1.2rem;
         }
 
-        /* === FOOTER === */
+        /* === FOOTER - TRANSLUCENT STYLING === */
         footer {
             padding: 60px 5% 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1); /* Translucent background */
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .footer-content {
@@ -1324,7 +1377,15 @@
                 width: 60px;
                 height: 60px;
                 bottom: calc(85px + env(safe-area-inset-bottom));
-                right: 20px;
+                left: 20px; /* Changed from right to left */
+            }
+
+            .floating-total-btn {
+                bottom: calc(155px + env(safe-area-inset-bottom));
+                left: 20px; /* Changed from right to left */
+                min-width: 140px;
+                height: 55px;
+                font-size: 14px;
             }
 
             .floating-action-btn {
@@ -1386,6 +1447,11 @@
             }
             .floating-order-btn {
                 bottom: 25px;
+                left: 25px; /* Added left positioning for desktop */
+            }
+            .floating-total-btn {
+                bottom: 105px;
+                left: 25px; /* Added left positioning for desktop */
             }
             .floating-action-btn {
                 bottom: 25px;
@@ -1415,6 +1481,12 @@
     <button class="floating-action-btn" id="floatingCheckoutBtn">Checkout</button>
     <button class="floating-action-btn" id="floatingPlaceOrderBtn">Place Order</button>
     <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
+
+    <!-- NEW: Floating Total Button -->
+    <div class="floating-total-btn" id="floatingTotalBtn">
+        <div class="total-label">Cart Total</div>
+        <div class="total-amount" id="totalAmount">R0.00</div>
+    </div>
 
     <!-- Floating Cart Button -->
     <div class="floating-order-btn" id="openCart">
@@ -2119,7 +2191,11 @@
         const collectionFields = document.getElementById('collectionFields');
         const deliveryFields = document.getElementById('deliveryFields');
 
-        // New Floating Action Buttons
+        // NEW: Floating total button
+        const floatingTotalBtn = document.getElementById('floatingTotalBtn');
+        const totalAmount = document.getElementById('totalAmount');
+
+        // Floating Action Buttons
         const floatingCheckoutBtn = document.getElementById('floatingCheckoutBtn');
         const floatingPlaceOrderBtn = document.getElementById('floatingPlaceOrderBtn');
         const floatingProcessPaymentBtn = document.getElementById('floatingProcessPaymentBtn');
@@ -2262,6 +2338,22 @@
             floatingCheckoutBtn.classList.remove('active');
             floatingPlaceOrderBtn.classList.remove('active');
             floatingProcessPaymentBtn.classList.remove('active');
+        }
+
+        // Update total amount display
+        function updateTotalAmount() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+            const total = subtotal + deliveryFee;
+            
+            totalAmount.textContent = `R${total.toFixed(2)}`;
+            
+            // Show/hide total button based on cart content
+            if (cart.length > 0) {
+                floatingTotalBtn.style.display = 'flex';
+            } else {
+                floatingTotalBtn.style.display = 'none';
+            }
         }
 
         // Floating checkout button
@@ -2482,6 +2574,9 @@
             // Update cart count
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
             cartCount.textContent = totalItems;
+
+            // Update total amount
+            updateTotalAmount();
 
             // Clear cart items
             cartItems.innerHTML = '';
