@@ -38,8 +38,6 @@
             --dark-bg: #0a0a0a;
             --glass-bg: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.25);
-            --facebook-blue: #1877f2;
-            --facebook-hover: rgba(24, 119, 242, 0.1);
         }
 
         html {
@@ -615,7 +613,7 @@
             font-size: 12px;
         }
 
-        /* Reviews Feed - Facebook Style */
+        /* Reviews Feed */
         .reviews-feed {
             margin-bottom: 50px;
             position: relative;
@@ -627,12 +625,6 @@
             margin-bottom: 25px;
             position: relative;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .review-item.updating {
@@ -647,8 +639,8 @@
         }
 
         .reviewer-avatar {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             object-fit: cover;
             margin-right: 15px;
@@ -660,7 +652,6 @@
             font-weight: bold;
             font-size: 1.2rem;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .reviewer-avatar img {
@@ -676,7 +667,6 @@
         .reviewer-name {
             font-weight: 600;
             margin-bottom: 5px;
-            font-size: 1.1rem;
         }
 
         .review-time {
@@ -687,25 +677,22 @@
         .review-rating {
             color: var(--gold);
             margin-bottom: 10px;
-            font-size: 1.1rem;
         }
 
         .review-content {
             margin-bottom: 15px;
-            font-size: 1rem;
-            line-height: 1.5;
         }
 
         .review-photos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            display: flex;
             gap: 10px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         .review-photo {
-            width: 100%;
-            height: 200px;
+            width: 100px;
+            height: 100px;
             border-radius: 8px;
             object-fit: cover;
             cursor: pointer;
@@ -713,40 +700,32 @@
         }
 
         .review-photo:hover {
-            transform: scale(1.03);
+            transform: scale(1.05);
         }
 
         .review-actions {
             display: flex;
-            justify-content: space-around;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
-            margin-top: 15px;
+            gap: 20px;
         }
 
         .action-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: color 0.3s;
             font-size: 0.9rem;
-            padding: 8px 15px;
-            border-radius: 4px;
-            flex: 1;
-            justify-content: center;
         }
 
         .action-btn:hover {
-            background: var(--facebook-hover);
-            color: var(--facebook-blue);
+            color: var(--gold);
         }
 
         .action-btn.active {
-            color: var(--facebook-blue);
+            color: var(--gold);
         }
 
         .action-btn.liked {
@@ -758,26 +737,26 @@
             opacity: 0.6;
         }
 
-        .momments-section {
+        .replies-section {
             margin-top: 20px;
             padding-left: 20px;
             border-left: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        .momment-item {
+        .reply-item {
             padding: 15px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .momment-header {
+        .reply-header {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
 
-        .mommenter-avatar {
-            width: 40px;
-            height: 40px;
+        .replyer-avatar {
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             object-fit: cover;
             margin-right: 10px;
@@ -788,32 +767,30 @@
             color: var(--ink);
             font-weight: bold;
             font-size: 0.9rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .mommenter-name {
+        .replyer-name {
             font-weight: 600;
             font-size: 0.9rem;
         }
 
-        .momment-time {
+        .reply-time {
             font-size: 0.8rem;
             opacity: 0.7;
             margin-left: auto;
         }
 
-        .momment-content {
+        .reply-content {
             font-size: 0.9rem;
-            line-height: 1.4;
         }
 
-        .momment-form {
+        .reply-form {
             display: flex;
             gap: 10px;
             margin-top: 15px;
         }
 
-        .momment-form input {
+        .reply-form input {
             flex: 1;
             padding: 10px 15px;
             border-radius: 20px;
@@ -822,9 +799,9 @@
             color: white;
         }
 
-        .momment-form button {
-            background: var(--facebook-blue);
-            color: white;
+        .reply-form button {
+            background: var(--gold);
+            color: var(--ink);
             border: none;
             border-radius: 20px;
             padding: 0 20px;
@@ -833,65 +810,13 @@
             transition: background 0.3s;
         }
 
-        .momment-form button:hover {
-            background: #166fe5;
+        .reply-form button:hover {
+            background: var(--gold-light);
         }
 
         /* API Integration Section - HIDDEN */
         .api-integration {
             display: none; /* Hide the API integration section */
-        }
-
-        /* Image Modal for Enlarged Photos */
-        .image-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .image-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-        }
-
-        .modal-content img {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .close-modal:hover {
-            transform: scale(1.1);
-            color: var(--gold);
         }
 
         /* === FOOTER === */
@@ -1094,25 +1019,26 @@
                 gap: 10px;
             }
 
-            .momment-form {
+            .reply-form {
                 flex-direction: column;
             }
 
-            .momment-form button {
+            .reply-form button {
                 align-self: flex-end;
                 padding: 10px 20px;
-            }
-
-            .review-photos {
-                grid-template-columns: 1fr;
-            }
-
-            .review-photo {
-                height: 250px;
             }
         }
 
         @media (max-width: 576px) {
+            .review-photos {
+                justify-content: center;
+            }
+
+            .review-photo {
+                width: 80px;
+                height: 80px;
+            }
+
             .uploaded-photos {
                 justify-content: center;
             }
@@ -1141,16 +1067,6 @@
         <source src="assets/video/venue.webm" type="video/webm">
     </video>
     <div class="video-overlay"></div>
-
-    <!-- Image Modal -->
-    <div class="image-modal" id="imageModal">
-        <div class="modal-content">
-            <img id="modalImage" src="" alt="Enlarged review image">
-            <button class="close-modal" id="closeModal">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
 
     <!-- Header -->
     <header>
@@ -1371,12 +1287,10 @@
                 timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
                 likes: 12,
                 liked: false,
-                shares: 3,
-                shared: false,
-                momments: [
+                replies: [
                     {
                         id: 1,
-                        mommenterName: "Malume Nico",
+                        replyerName: "Malume Nico",
                         content: "Thank you Thabo! We're so glad you enjoyed the Titanic Kota. Can't wait to serve you again!",
                         timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
                     }
@@ -1392,9 +1306,7 @@
                 timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
                 likes: 8,
                 liked: false,
-                shares: 1,
-                shared: false,
-                momments: [],
+                replies: [],
                 photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
                 avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
@@ -1406,9 +1318,7 @@
                 timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
                 likes: 15,
                 liked: true,
-                shares: 5,
-                shared: true,
-                momments: [],
+                replies: [],
                 photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
                 avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
@@ -1420,18 +1330,16 @@
                 timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
                 likes: 22,
                 liked: false,
-                shares: 7,
-                shared: false,
-                momments: [
+                replies: [
                     {
                         id: 1,
-                        mommenterName: "Malume Nico",
+                        replyerName: "Malume Nico",
                         content: "Thanks Lerato! We're happy you enjoyed both the food and the vibe. See you soon!",
                         timestamp: new Date(Date.now() - 20 * 60 * 60 * 1000) // 20 hours ago
                     },
                     {
                         id: 2,
-                        mommenterName: "Lerato P.",
+                        replyerName: "Lerato P.",
                         content: "Already planning my next visit!",
                         timestamp: new Date(Date.now() - 19 * 60 * 60 * 1000) // 19 hours ago
                     }
@@ -1447,9 +1355,7 @@
                 timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
                 likes: 18,
                 liked: false,
-                shares: 4,
-                shared: false,
-                momments: [],
+                replies: [],
                 photos: [
                     "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
                     "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
@@ -1515,40 +1421,10 @@
             initReviewForm();
             setActiveNavItem();
             initFadeInAnimations();
-            initImageModal();
             
             // Set up live refresh
             setInterval(refreshReviews, 30000); // Refresh every 30 seconds
         });
-
-        // Initialize image modal
-        function initImageModal() {
-            const imageModal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            const closeModal = document.getElementById('closeModal');
-            
-            // Close modal when clicking close button
-            closeModal.addEventListener('click', () => {
-                imageModal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-            
-            // Close modal when clicking outside the image
-            imageModal.addEventListener('click', (e) => {
-                if (e.target === imageModal) {
-                    imageModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && imageModal.classList.contains('active')) {
-                    imageModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        }
 
         // Load reviews from localStorage or use sample reviews
         function loadReviews() {
@@ -1556,15 +1432,11 @@
             if (storedReviews) {
                 try {
                     reviews = JSON.parse(storedReviews);
-                // Ensure all reviews have the shares property
-                reviews.forEach(review => {
-                    if (review.shares === undefined) {
-                        review.shares = Math.floor(Math.random() * 10);
-                        review.shared = false;
-                    }
-                });
-            } catch (e) {
-                console.error('Error parsing stored reviews:', e);
+                } catch (e) {
+                    console.error('Error parsing stored reviews:', e);
+                    reviews = [...sampleReviews];
+                }
+            } else {
                 reviews = [...sampleReviews];
             }
         }
@@ -1724,9 +1596,7 @@
                 timestamp: new Date(),
                 likes: 0,
                 liked: false,
-                shares: 0,
-                shared: false,
-                momments: [],
+                replies: [],
                 photos: [...uploadedPhotos],
                 avatar: userProfile.avatar
             };
@@ -1827,7 +1697,7 @@
             const timeAgo = getTimeAgo(review.timestamp);
             const starsHTML = createStarsHTML(review.rating);
             const photosHTML = createPhotosHTML(review.photos);
-            const mommentsHTML = createMommentsHTML(review.momments);
+            const repliesHTML = createRepliesHTML(review.replies);
             
             return `
                 <div class="review-header">
@@ -1854,19 +1724,16 @@
                     <button class="action-btn like-btn ${review.liked ? 'liked' : ''}" data-review-id="${review.id}">
                         <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes}</span>
                     </button>
-                    <button class="action-btn momment-btn" data-review-id="${review.id}">
-                        <i class="fas fa-comment"></i> Momment
-                    </button>
-                    <button class="action-btn share-btn ${review.shared ? 'active' : ''}" data-review-id="${review.id}">
-                        <i class="fas fa-share"></i> <span class="share-count">${review.shares}</span>
+                    <button class="action-btn reply-btn" data-review-id="${review.id}">
+                        <i class="fas fa-reply"></i> Reply
                     </button>
                 </div>
                 
-                ${mommentsHTML}
+                ${repliesHTML}
                 
-                <div class="momment-form" id="mommentForm-${review.id}" style="display: none;">
-                    <input type="text" placeholder="Write a momment..." id="mommentInput-${review.id}">
-                    <button class="btn-momment" data-review-id="${review.id}">Post</button>
+                <div class="reply-form" id="replyForm-${review.id}" style="display: none;">
+                    <input type="text" placeholder="Write a reply..." id="replyInput-${review.id}">
+                    <button class="btn-reply" data-review-id="${review.id}">Reply</button>
                 </div>
             `;
         }
@@ -1890,36 +1757,36 @@
             
             let photosHTML = '<div class="review-photos">';
             photos.forEach(photo => {
-                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo" data-review-photo="${photo.url}">`;
+                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo">`;
             });
             photosHTML += '</div>';
             
             return photosHTML;
         }
 
-        // Create momments HTML
-        function createMommentsHTML(momments) {
-            if (momments.length === 0) return '';
+        // Create replies HTML
+        function createRepliesHTML(replies) {
+            if (replies.length === 0) return '';
             
-            let mommentsHTML = '<div class="momments-section">';
-            momments.forEach(momment => {
-                const timeAgo = getTimeAgo(momment.timestamp);
-                mommentsHTML += `
-                    <div class="momment-item">
-                        <div class="momment-header">
-                            <div class="mommenter-avatar">
-                                ${momment.mommenterName.charAt(0).toUpperCase()}
+            let repliesHTML = '<div class="replies-section">';
+            replies.forEach(reply => {
+                const timeAgo = getTimeAgo(reply.timestamp);
+                repliesHTML += `
+                    <div class="reply-item">
+                        <div class="reply-header">
+                            <div class="replyer-avatar">
+                                ${reply.replyerName.charAt(0).toUpperCase()}
                             </div>
-                            <div class="mommenter-name">${momment.mommenterName}</div>
-                            <div class="momment-time">${timeAgo}</div>
+                            <div class="replyer-name">${reply.replyerName}</div>
+                            <div class="reply-time">${timeAgo}</div>
                         </div>
-                        <div class="momment-content">${momment.content}</div>
+                        <div class="reply-content">${reply.content}</div>
                     </div>
                 `;
             });
-            mommentsHTML += '</div>';
+            repliesHTML += '</div>';
             
-            return mommentsHTML;
+            return repliesHTML;
         }
 
         // Add event listeners for a specific review
@@ -1932,38 +1799,21 @@
                 });
             }
             
-            // Momment button
-            const mommentBtn = document.querySelector(`.momment-btn[data-review-id="${reviewId}"]`);
-            if (mommentBtn) {
-                mommentBtn.addEventListener('click', () => {
-                    toggleMommentForm(reviewId);
+            // Reply button
+            const replyBtn = document.querySelector(`.reply-btn[data-review-id="${reviewId}"]`);
+            if (replyBtn) {
+                replyBtn.addEventListener('click', () => {
+                    toggleReplyForm(reviewId);
                 });
             }
             
-            // Share button
-            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
-            if (shareBtn) {
-                shareBtn.addEventListener('click', () => {
-                    shareReview(reviewId);
+            // Submit reply button
+            const submitReplyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
+            if (submitReplyBtn) {
+                submitReplyBtn.addEventListener('click', () => {
+                    submitReply(reviewId);
                 });
             }
-            
-            // Submit momment button
-            const submitMommentBtn = document.querySelector(`.btn-momment[data-review-id="${reviewId}"]`);
-            if (submitMommentBtn) {
-                submitMommentBtn.addEventListener('click', () => {
-                    submitMomment(reviewId);
-                });
-            }
-            
-            // Photo click to enlarge
-            const reviewPhotos = document.querySelectorAll(`.review-photo[data-review-photo]`);
-            reviewPhotos.forEach(photo => {
-                photo.addEventListener('click', (e) => {
-                    const imageUrl = e.target.getAttribute('data-review-photo');
-                    enlargeImage(imageUrl);
-                });
-            });
         }
 
         // Toggle like on a review
@@ -2006,66 +1856,23 @@
             }, 500);
         }
 
-        // Toggle momment form visibility
-        function toggleMommentForm(reviewId) {
-            const mommentForm = document.getElementById(`mommentForm-${reviewId}`);
-            if (mommentForm.style.display === 'none') {
-                mommentForm.style.display = 'flex';
+        // Toggle reply form visibility
+        function toggleReplyForm(reviewId) {
+            const replyForm = document.getElementById(`replyForm-${reviewId}`);
+            if (replyForm.style.display === 'none') {
+                replyForm.style.display = 'flex';
             } else {
-                mommentForm.style.display = 'none';
+                replyForm.style.display = 'none';
             }
         }
 
-        // Share a review
-        function shareReview(reviewId) {
-            const review = reviews.find(r => r.id === reviewId);
-            if (!review) return;
+        // Submit a reply to a review
+        function submitReply(reviewId) {
+            const replyInput = document.getElementById(`replyInput-${reviewId}`);
+            const replyText = replyInput.value.trim();
             
-            // Show updating state
-            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
-            const reviewItem = shareBtn.closest('.review-item');
-            
-            shareBtn.classList.add('updating');
-            reviewItem.classList.add('updating');
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                if (review.shared) {
-                    review.shares--;
-                    review.shared = false;
-                } else {
-                    review.shares++;
-                    review.shared = true;
-                }
-                
-                saveReviews();
-                
-                // Update only the share button and count
-                const shareCount = shareBtn.querySelector('.share-count');
-                shareCount.textContent = review.shares;
-                
-                if (review.shared) {
-                    shareBtn.classList.add('active');
-                } else {
-                    shareBtn.classList.remove('active');
-                }
-                
-                // Remove updating state
-                shareBtn.classList.remove('updating');
-                reviewItem.classList.remove('updating');
-                
-                // Show success message
-                showSuccessMessage('Review shared!');
-            }, 500);
-        }
-
-        // Submit a momment to a review
-        function submitMomment(reviewId) {
-            const mommentInput = document.getElementById(`mommentInput-${reviewId}`);
-            const mommentText = mommentInput.value.trim();
-            
-            if (!mommentText) {
-                alert('Please enter a momment');
+            if (!replyText) {
+                alert('Please enter a reply');
                 return;
             }
             
@@ -2073,11 +1880,11 @@
             if (!review) return;
             
             // Show updating state
-            const mommentBtn = document.querySelector(`.btn-momment[data-review-id="${reviewId}"]`);
-            const reviewItem = mommentBtn.closest('.review-item');
+            const replyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
+            const reviewItem = replyBtn.closest('.review-item');
             
-            mommentBtn.disabled = true;
-            mommentBtn.textContent = 'Posting...';
+            replyBtn.disabled = true;
+            replyBtn.textContent = 'Posting...';
             reviewItem.classList.add('updating');
             
             // Get user details from localStorage
@@ -2087,73 +1894,63 @@
             
             // Simulate API call delay
             setTimeout(() => {
-                const newMomment = {
+                const newReply = {
                     id: Date.now(),
-                    mommenterName: userProfile.name,
-                    content: mommentText,
+                    replyerName: userProfile.name,
+                    content: replyText,
                     timestamp: new Date()
                 };
                 
-                review.momments.push(newMomment);
+                review.replies.push(newReply);
                 saveReviews();
                 
-                // Update the momments section
-                const mommentsSection = reviewItem.querySelector('.momments-section');
-                if (mommentsSection) {
-                    const timeAgo = getTimeAgo(newMomment.timestamp);
-                    const mommentHTML = `
-                        <div class="momment-item">
-                            <div class="momment-header">
-                                <div class="mommenter-avatar">
-                                    ${newMomment.mommenterName.charAt(0).toUpperCase()}
+                // Update the replies section
+                const repliesSection = reviewItem.querySelector('.replies-section');
+                if (repliesSection) {
+                    const timeAgo = getTimeAgo(newReply.timestamp);
+                    const replyHTML = `
+                        <div class="reply-item">
+                            <div class="reply-header">
+                                <div class="replyer-avatar">
+                                    ${newReply.replyerName.charAt(0).toUpperCase()}
                                 </div>
-                                <div class="mommenter-name">${newMomment.mommenterName}</div>
-                                <div class="momment-time">${timeAgo}</div>
+                                <div class="replyer-name">${newReply.replyerName}</div>
+                                <div class="reply-time">${timeAgo}</div>
                             </div>
-                            <div class="momment-content">${newMomment.content}</div>
+                            <div class="reply-content">${newReply.content}</div>
                         </div>
                     `;
-                    mommentsSection.innerHTML += mommentHTML;
+                    repliesSection.innerHTML += replyHTML;
                 } else {
-                    // If no momments section exists, create one
-                    const timeAgo = getTimeAgo(newMomment.timestamp);
-                    const mommentsHTML = `
-                        <div class="momments-section">
-                            <div class="momment-item">
-                                <div class="momment-header">
-                                    <div class="mommenter-avatar">
-                                        ${newMomment.mommenterName.charAt(0).toUpperCase()}
+                    // If no replies section exists, create one
+                    const timeAgo = getTimeAgo(newReply.timestamp);
+                    const repliesHTML = `
+                        <div class="replies-section">
+                            <div class="reply-item">
+                                <div class="reply-header">
+                                    <div class="replyer-avatar">
+                                        ${newReply.replyerName.charAt(0).toUpperCase()}
                                     </div>
-                                    <div class="mommenter-name">${newMomment.mommenterName}</div>
-                                    <div class="momment-time">${timeAgo}</div>
+                                    <div class="replyer-name">${newReply.replyerName}</div>
+                                    <div class="reply-time">${timeAgo}</div>
                                 </div>
-                                <div class="momment-content">${newMomment.content}</div>
+                                <div class="reply-content">${newReply.content}</div>
                             </div>
                         </div>
                     `;
                     const reviewActions = reviewItem.querySelector('.review-actions');
-                    reviewActions.insertAdjacentHTML('afterend', mommentsHTML);
+                    reviewActions.insertAdjacentHTML('afterend', repliesHTML);
                 }
                 
                 // Reset form
-                mommentInput.value = '';
-                toggleMommentForm(reviewId);
+                replyInput.value = '';
+                toggleReplyForm(reviewId);
                 
                 // Remove updating state
-                mommentBtn.disabled = false;
-                mommentBtn.textContent = 'Post';
+                replyBtn.disabled = false;
+                replyBtn.textContent = 'Reply';
                 reviewItem.classList.remove('updating');
             }, 800);
-        }
-
-        // Enlarge image in modal
-        function enlargeImage(imageUrl) {
-            const imageModal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            
-            modalImage.src = imageUrl;
-            imageModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
         }
 
         // Format time ago
