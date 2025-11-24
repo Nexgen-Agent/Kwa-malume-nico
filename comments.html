@@ -1,80 +1,1854 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Malume Nico — Comments (Live Vibes)</title>
-  <link rel="stylesheet" href="assets/css/comments.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Customer Reviews | Malume Nico</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Malume Nico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="msapplication-TileColor" content="#c89b2d">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-startup-image" href="/splash/launch-1242x2688.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === RESET & BASE STYLES === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!-- Loader Overlay -->
-<div id="loader-overlay">
-  <div class="loader">
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <span class="loading-text">Loading...</span>
-  </div>
-</div>
+        :root {
+            --gold: #c89b2d;
+            --gold-dark: #9a6f16;
+            --gold-light: #e6b450;
+            --ink: #1c140b;
+            --ivory: #fffaf1;
+            --dark-bg: #0a0a0a;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+        }
 
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #fff;
+            background: var(--dark-bg);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Ensure full viewport coverage */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* === BACKGROUND VIDEO === */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: saturate(1.1) brightness(0.8);
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(200, 155, 45, 0.1), transparent 50%),
+                        linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.7));
+            z-index: -1;
+        }
+
+        /* === iOS GLASSMORPHISM EFFECT === */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+
+        /* === FADE-IN SCROLLING ANIMATION === */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-delay-1 {
+            transition-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            transition-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            transition-delay: 0.6s;
+        }
+
+        /* === HEADER & NAVIGATION === */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 100;
+            transition: background 0.3s;
+            padding-top: calc(15px + env(safe-area-inset-top));
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 101;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .mobile-menu-btn.active {
+            transform: rotate(90deg);
+        }
+
+        /* === MOBILE MENU OVERLAY === */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .mobile-nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--gold);
+            background: rgba(200, 155, 45, 0.15);
+            transform: translateX(10px);
+        }
+
+        .mobile-nav-links a i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .close-mobile-menu {
+            position: absolute;
+            top: calc(30px + env(safe-area-inset-top));
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-mobile-menu:hover {
+            transform: scale(1.1);
+            color: var(--gold);
+        }
+
+        /* === HERO SECTION === */
+        .hero {
+            min-height: 60vh;
+            min-height: 60dvh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            padding: 40px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* === SECTIONS === */
+        section {
+            padding: 80px 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .section-title p {
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        /* === COMMENTS & REVIEWS STYLES === */
+        .reviews-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .write-review-section {
+            margin-bottom: 50px;
+        }
+
+        .review-form {
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .rating-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .star.active {
+            color: var(--gold);
+            transform: scale(1.1);
+        }
+
+        .star:hover {
+            color: var(--gold-light);
+            transform: scale(1.2);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(200, 155, 45, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(200, 155, 45, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .photo-upload {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .uploaded-photos {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .uploaded-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Reviews Feed */
+        .reviews-feed {
+            margin-bottom: 50px;
+        }
+
+        .review-item {
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .reviewer-info {
+            flex: 1;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .review-time {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .review-rating {
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .review-content {
+            margin-bottom: 15px;
+        }
+
+        .review-photos {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .review-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .review-photo:hover {
+            transform: scale(1.05);
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            color: var(--gold);
+        }
+
+        .action-btn.active {
+            color: var(--gold);
+        }
+
+        .action-btn.liked {
+            color: #ff6b6b;
+        }
+
+        .replies-section {
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reply-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .reply-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .replyer-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .replyer-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .reply-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-left: auto;
+        }
+
+        .reply-content {
+            font-size: 0.9rem;
+        }
+
+        .reply-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .reply-form input {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .reply-form button {
+            background: var(--gold);
+            color: var(--ink);
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .reply-form button:hover {
+            background: var(--gold-light);
+        }
+
+        /* API Integration Section */
+        .api-integration {
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        .api-section {
+            margin-bottom: 30px;
+        }
+
+        .api-section h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-section p {
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .api-endpoint {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: monospace;
+            border-left: 3px solid var(--gold);
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .api-status.connected {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .api-status.disconnected {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* === FOOTER === */
+        footer {
+            padding: 60px 5% 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        /* === TIKTOK-STYLE BOTTOM NAVIGATION === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+            
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            height: calc(70px + env(safe-area-inset-bottom));
+        }
+
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: env(safe-area-inset-bottom);
+            background: rgba(10, 10, 10, 0.7);
+            z-index: -1;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            flex: 1;
+            padding: 8px 0;
+            position: relative;
+            border: none;
+            background: none;
+            cursor: pointer;
+            min-height: 50px;
+        }
+
+        .bottom-nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--gold);
+        }
+
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: scale(1.1);
+            color: var(--gold);
+        }
+
+        .bottom-nav-item.active .bottom-nav-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        /* === RESPONSIVE STYLES === */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 5%;
+            }
+
+            .hero-content {
+                text-align: center;
+                padding: 20px;
+            }
+
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .reviewer-avatar {
+                margin-bottom: 10px;
+            }
+
+            .review-actions {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .reply-form {
+                flex-direction: column;
+            }
+
+            .reply-form button {
+                align-self: flex-end;
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .review-photos {
+                justify-content: center;
+            }
+
+            .review-photo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .uploaded-photos {
+                justify-content: center;
+            }
+
+            .uploaded-photo {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Hide bottom nav on desktop */
+        @media (min-width: 769px) {
+            .bottom-nav {
+                display: none;
+            }
+            body {
+                padding-bottom: 0;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Background Video -->
+    <video class="bg-video" autoplay muted loop playsinline>
+        <source src="assets/video/venue.mp4" type="video/mp4">
+        <source src="assets/video/venue.webm" type="video/webm">
+    </video>
+    <div class="video-overlay"></div>
 
-  <!-- Background video (10s loop) -->
-  <video class="bg-video" autoplay muted loop playsinline poster="assets/img/poster.jpg">
-    <source src="assets/video/venue.webm" type="video/webm" />
-    <source src="assets/video/venue.mp4" type="video/mp4" />
-  </video>
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+        </div>
 
-  <!-- Subtle vignette + gradient wash for readability -->
-  <div class="video-overlay"></div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#gallery">Gallery</a>
+            <a href="index.html#menu">Menu</a>
+            <a href="index.html#contact">Find Us</a>
+        </nav>
 
-  <header class="topbar glass">
-    <div class="brand">
-      <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <button class="close-mobile-menu" id="closeMobileMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="index.html#about" class="mobile-nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+            <a href="index.html#gallery" class="mobile-nav-link">
+                <i class="fas fa-images"></i> Gallery
+            </a>
+            <a href="index.html#menu" class="mobile-nav-link">
+                <i class="fas fa-utensils"></i> Menu
+            </a>
+            <a href="index.html#contact" class="mobile-nav-link">
+                <i class="fas fa-map-marker-alt"></i> Find Us
+            </a>
+        </nav>
     </div>
-    <nav class="links">
-      <a href="index.html">
-        <img src="assets/img/icons/home.svg" alt="Home"/>
-      </a>
-      <a href="menu.html">
-        <img src="assets/img/icons/menu.svg" alt="Menu"/>
-      </a>
-      <a href="booking.html">
-        <img src="assets/img/icons/booking.svg" alt="Bookings"/>
-      </a>
-      <a href="comments.html">
-        <img src="assets/img/icons/comments.svg" alt="Comments"/>
-      </a>
-    </nav>
-  </header>
 
-  <!-- Live comments layer -->
-  <main class="stage" id="stage" aria-live="polite" aria-relevant="additions">
-    <!-- IG-live style ticker rail -->
-    <div class="ticker glass water" id="ticker"></div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content glass fade-in">
+            <h1>What Our Guests Are Saying</h1>
+            <p>Live reviews, reactions, and real customer experiences at Malume Nico. Share your thoughts and see what others love about our kotas!</p>
+        </div>
+    </section>
 
-    <!-- Floating hearts layer -->
-    <div class="hearts" id="hearts" aria-hidden="true"></div>
+    <!-- Comments & Reviews Section -->
+    <section id="reviews">
+        <div class="section-title fade-in">
+            <h2>Customer Reviews</h2>
+            <p>Share your experience and see what others are saying</p>
+        </div>
 
-    <!-- Add comment form -->
-    <form class="composer glass" id="composer" autocomplete="off">
-      <div class="row">
-        <input type="text" name="name" id="name" placeholder="Your name" maxlength="24" required />
-        <input type="text" name="comment" id="comment" placeholder="Share your moment…" maxlength="120" required />
-      </div>
-      <div class="row buttons">
-        <button type="submit" class="btn gold" id="sendBtn">Send</button>
+        <div class="reviews-container">
+            <!-- Write Review Section -->
+            <div class="write-review-section">
+                <div class="review-form glass fade-in">
+                    <h3 style="color: var(--gold); margin-bottom: 20px; text-align: center;">Write a Review</h3>
+                    
+                    <div class="rating-selector">
+                        <span class="star" data-rating="1"><i class="fas fa-star"></i></span>
+                        <span class="star" data-rating="2"><i class="fas fa-star"></i></span>
+                        <span class="star" data-rating="3"><i class="fas fa-star"></i></span>
+                        <span class="star" data-rating="4"><i class="fas fa-star"></i></span>
+                        <span class="star" data-rating="5"><i class="fas fa-star"></i></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewerName">Your Name</label>
+                        <input type="text" id="reviewerName" placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reviewText">Your Review</label>
+                        <textarea id="reviewText" rows="4" placeholder="Tell us about your experience..."></textarea>
+                    </div>
+                    
+                    <div class="photo-upload">
+                        <label>Add Photos (Optional)</label>
+                        <div class="upload-btn" id="uploadPhotoBtn">
+                            <i class="fas fa-camera"></i> Upload Photos
+                        </div>
+                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                    </div>
+                    
+                    <div class="uploaded-photos" id="uploadedPhotos">
+                        <!-- Uploaded photos will appear here -->
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-primary" id="submitReview">
+                            <i class="fas fa-paper-plane"></i> Post Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Feed -->
+            <div class="reviews-feed" id="reviewsFeed">
+                <!-- Reviews will be dynamically loaded here -->
+            </div>
+
+            <!-- API Integration Section -->
+            <div class="api-integration glass fade-in">
+                <h2 style="color: var(--gold); margin-bottom: 30px; text-align: center;">External Review Integration</h2>
+                
+                <div class="api-section">
+                    <h3><i class="fab fa-google"></i> Google Reviews API</h3>
+                    <p>Integration with Google My Business reviews to display and sync customer feedback.</p>
+                    <div class="api-endpoint">
+                        GET /api/google-reviews?place_id=malume_nico_tzaneen
+                    </div>
+                    <div class="api-status disconnected">
+                        <i class="fas fa-circle"></i> Not Connected
+                    </div>
+                </div>
+                
+                <div class="api-section">
+                    <h3><i class="fab fa-yelp"></i> Yelp Fusion API</h3>
+                    <p>Connect with Yelp reviews to showcase ratings and feedback from Yelp users.</p>
+                    <div class="api-endpoint">
+                        GET /api/yelp-reviews?business_id=malume-nico-tzaneen
+                    </div>
+                    <div class="api-status disconnected">
+                        <i class="fas fa-circle"></i> Not Connected
+                    </div>
+                </div>
+                
+                <div class="api-section">
+                    <h3><i class="fas fa-star"></i> Trustpilot API</h3>
+                    <p>Integration with Trustpilot for verified customer reviews and ratings.</p>
+                    <div class="api-endpoint">
+                        GET /api/trustpilot-reviews?business_unit_id=malume_nico
+                    </div>
+                    <div class="api-status disconnected">
+                        <i class="fas fa-circle"></i> Not Connected
+                    </div>
+                </div>
+                
+                <div class="api-section">
+                    <h3><i class="fas fa-server"></i> Custom Review API</h3>
+                    <p>Internal API endpoints for managing and displaying reviews from our database.</p>
+                    <div class="api-endpoint">
+                        GET /api/get-reviews?limit=20&offset=0
+                    </div>
+                    <div class="api-endpoint">
+                        POST /api/post-review
+                    </div>
+                    <div class="api-status connected">
+                        <i class="fas fa-circle"></i> Connected
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column fade-in">
+                <h3>Malume Nico</h3>
+                <p>The best kota in Tzaneen. Serving delicious street food with love since 2010.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/malume.nicolaskota" class="social-link" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/malumenico?igsh=YjNyMjRtaDFlMmI2" class="social-link" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/27796516990" class="social-link" target="_blank" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@malumenico5?_r=1&_t=ZS-91eOFfy1AAS" class="social-link" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-column fade-in fade-in-delay-1">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About Us</a></li>
+                    <li><a href="index.html#gallery">Gallery</a></li>
+                    <li><a href="index.html#menu">Menu</a></li>
+                    <li><a href="index.html#contact">Find Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column fade-in fade-in-delay-2">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Main Road, Mavele Village, Tzaneen</li>
+                    <li><i class="fas fa-phone" style="margin-right: 10px;"></i> <a href="https://wa.me/27796516990" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">+27 79 651 6990</a></li>
+                    <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@malumenico.com</li>
+                    <li><i class="fas fa-map" style="margin-right: 10px;"></i> <a href="https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A" target="_blank">View on Google Maps</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2023 Malume Nico. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- TikTok-style Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="bottom-nav-label">Home</div>
+        </a>
         
-      </div>
-      <div class="hint">Your message pops up instantly — unity & joy on display ❤️</div>
-    </form>
-  </main>
+        <a href="comments.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="bottom-nav-label">Comments</div>
+        </a>
+        
+        <a href="booking.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="bottom-nav-label">Bookings</div>
+        </a>
+        
+        <a href="coupon.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-tag"></i>
+            </div>
+            <div class="bottom-nav-label">Coupons</div>
+        </a>
+        
+        <a href="profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="bottom-nav-label">Profile</div>
+        </a>
+    </nav>
 
-    <!-- Footer (matches comments style) -->
-  <footer class="foot glass">
-    <div>© 2025 Malume Nico — Unity in every bite.</div>
-  </footer>
+    <script>
+        // Sample review data
+        const sampleReviews = [
+            {
+                id: 1,
+                reviewerName: "Thabo M.",
+                rating: 5,
+                content: "Best kota in Tzaneen! The Titanic Family Kota is absolutely amazing. Perfectly balanced flavors and generous portions. Will definitely be back!",
+                timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+                likes: 12,
+                liked: false,
+                replies: [
+                    {
+                        id: 1,
+                        replyerName: "Malume Nico",
+                        content: "Thank you Thabo! We're so glad you enjoyed the Titanic Kota. Can't wait to serve you again!",
+                        timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
+                    }
+                ],
+                photos: []
+            },
+            {
+                id: 2,
+                reviewerName: "Sarah K.",
+                rating: 4,
+                content: "The Range Rover Kota was delicious! Only giving 4 stars because I had to wait a bit longer than expected. But the food was worth it!",
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                likes: 8,
+                liked: false,
+                replies: [],
+                photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+            },
+            {
+                id: 3,
+                reviewerName: "Mike T.",
+                rating: 5,
+                content: "I've tried kotas all over Limpopo, and Malume Nico's are by far the best. The Bugatti Kota with steak is my absolute favorite!",
+                timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+                likes: 15,
+                liked: true,
+                replies: [],
+                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+            },
+            {
+                id: 4,
+                reviewerName: "Lerato P.",
+                rating: 5,
+                content: "The atmosphere here is amazing! Great food, friendly staff, and reasonable prices. The Dunked Wings are a must-try!",
+                timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                likes: 22,
+                liked: false,
+                replies: [
+                    {
+                        id: 1,
+                        replyerName: "Malume Nico",
+                        content: "Thanks Lerato! We're happy you enjoyed both the food and the vibe. See you soon!",
+                        timestamp: new Date(Date.now() - 20 * 60 * 60 * 1000) // 20 hours ago
+                    },
+                    {
+                        id: 2,
+                        replyerName: "Lerato P.",
+                        content: "Already planning my next visit!",
+                        timestamp: new Date(Date.now() - 19 * 60 * 60 * 1000) // 19 hours ago
+                    }
+                ],
+                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+            }
+        ];
 
-  <script src="assets/js/comments.js" defer></script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Review functionality
+        let reviews = JSON.parse(localStorage.getItem('malumeNicoReviews')) || sampleReviews;
+        let currentRating = 0;
+        let uploadedPhotos = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderReviews();
+            initReviewForm();
+            setActiveNavItem();
+            initFadeInAnimations();
+            
+            // Set up live refresh
+            setInterval(refreshReviews, 30000); // Refresh every 30 seconds
+        });
+
+        // Set active page based on current URL
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+            bottomNavItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Initialize review form
+        function initReviewForm() {
+            // Star rating selector
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = parseInt(star.getAttribute('data-rating'));
+                    setRating(rating);
+                });
+            });
+
+            // Photo upload
+            const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+            const photoUpload = document.getElementById('photoUpload');
+            
+            uploadPhotoBtn.addEventListener('click', () => {
+                photoUpload.click();
+            });
+            
+            photoUpload.addEventListener('change', (e) => {
+                handlePhotoUpload(e.target.files);
+            });
+
+            // Submit review
+            const submitReview = document.getElementById('submitReview');
+            submitReview.addEventListener('click', postReview);
+        }
+
+        // Set rating stars
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('.star');
+            
+            stars.forEach(star => {
+                const starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        // Handle photo upload
+        function handlePhotoUpload(files) {
+            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        const photoData = {
+                            id: Date.now() + i,
+                            url: e.target.result
+                        };
+                        
+                        uploadedPhotos.push(photoData);
+                        renderUploadedPhotos();
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        // Render uploaded photos
+        function renderUploadedPhotos() {
+            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
+            uploadedPhotosContainer.innerHTML = '';
+            
+            uploadedPhotos.forEach(photo => {
+                const photoElement = document.createElement('img');
+                photoElement.className = 'uploaded-photo';
+                photoElement.src = photo.url;
+                photoElement.alt = 'Uploaded photo';
+                
+                const removeBtn = document.createElement('span');
+                removeBtn.className = 'remove-photo';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removePhoto(photo.id);
+                });
+                
+                photoElement.appendChild(removeBtn);
+                uploadedPhotosContainer.appendChild(photoElement);
+            });
+        }
+
+        // Remove uploaded photo
+        function removePhoto(photoId) {
+            uploadedPhotos = uploadedPhotos.filter(photo => photo.id !== photoId);
+            renderUploadedPhotos();
+        }
+
+        // Post a new review
+        function postReview() {
+            const reviewerName = document.getElementById('reviewerName').value.trim();
+            const reviewText = document.getElementById('reviewText').value.trim();
+            
+            if (!reviewerName) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            if (!reviewText) {
+                alert('Please enter your review');
+                return;
+            }
+            
+            if (currentRating === 0) {
+                alert('Please select a rating');
+                return;
+            }
+            
+            const newReview = {
+                id: Date.now(),
+                reviewerName: reviewerName,
+                rating: currentRating,
+                content: reviewText,
+                timestamp: new Date(),
+                likes: 0,
+                liked: false,
+                replies: [],
+                photos: [...uploadedPhotos]
+            };
+            
+            reviews.unshift(newReview);
+            saveReviews();
+            renderReviews();
+            
+            // Reset form
+            document.getElementById('reviewerName').value = '';
+            document.getElementById('reviewText').value = '';
+            setRating(0);
+            uploadedPhotos = [];
+            renderUploadedPhotos();
+            
+            // Show success message
+            alert('Thank you for your review!');
+        }
+
+        // Render all reviews
+        function renderReviews() {
+            const reviewsFeed = document.getElementById('reviewsFeed');
+            reviewsFeed.innerHTML = '';
+            
+            if (reviews.length === 0) {
+                reviewsFeed.innerHTML = `
+                    <div class="review-item glass fade-in" style="text-align: center; padding: 40px;">
+                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3 style="color: var(--gold); margin-bottom: 10px;">No Reviews Yet</h3>
+                        <p>Be the first to share your experience at Malume Nico!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            reviews.forEach((review, index) => {
+                const reviewElement = document.createElement('div');
+                reviewElement.className = `review-item glass fade-in ${index % 2 === 0 ? 'fade-in-left' : 'fade-in-right'} ${index > 1 ? 'fade-in-delay-' + (index % 4) : ''}`;
+                reviewElement.innerHTML = createReviewHTML(review);
+                reviewsFeed.appendChild(reviewElement);
+                
+                // Add event listeners for this review
+                addReviewEventListeners(review.id);
+            });
+        }
+
+        // Create HTML for a single review
+        function createReviewHTML(review) {
+            const timeAgo = getTimeAgo(review.timestamp);
+            const starsHTML = createStarsHTML(review.rating);
+            const photosHTML = createPhotosHTML(review.photos);
+            const repliesHTML = createRepliesHTML(review.replies);
+            
+            return `
+                <div class="review-header">
+                    <div class="reviewer-avatar">
+                        ${review.reviewerName.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="reviewer-info">
+                        <div class="reviewer-name">${review.reviewerName}</div>
+                        <div class="review-time">${timeAgo}</div>
+                    </div>
+                </div>
+                
+                <div class="review-rating">
+                    ${starsHTML}
+                </div>
+                
+                <div class="review-content">
+                    ${review.content}
+                </div>
+                
+                ${photosHTML}
+                
+                <div class="review-actions">
+                    <button class="action-btn like-btn ${review.liked ? 'liked' : ''}" data-review-id="${review.id}">
+                        <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes}</span>
+                    </button>
+                    <button class="action-btn reply-btn" data-review-id="${review.id}">
+                        <i class="fas fa-reply"></i> Reply
+                    </button>
+                </div>
+                
+                ${repliesHTML}
+                
+                <div class="reply-form" id="replyForm-${review.id}" style="display: none;">
+                    <input type="text" placeholder="Write a reply..." id="replyInput-${review.id}">
+                    <button class="btn-reply" data-review-id="${review.id}">Reply</button>
+                </div>
+            `;
+        }
+
+        // Create stars HTML based on rating
+        function createStarsHTML(rating) {
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                } else {
+                    starsHTML += '<i class="far fa-star"></i>';
+                }
+            }
+            return starsHTML;
+        }
+
+        // Create photos HTML if there are any
+        function createPhotosHTML(photos) {
+            if (photos.length === 0) return '';
+            
+            let photosHTML = '<div class="review-photos">';
+            photos.forEach(photo => {
+                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo">`;
+            });
+            photosHTML += '</div>';
+            
+            return photosHTML;
+        }
+
+        // Create replies HTML
+        function createRepliesHTML(replies) {
+            if (replies.length === 0) return '';
+            
+            let repliesHTML = '<div class="replies-section">';
+            replies.forEach(reply => {
+                const timeAgo = getTimeAgo(reply.timestamp);
+                repliesHTML += `
+                    <div class="reply-item">
+                        <div class="reply-header">
+                            <div class="replyer-avatar">
+                                ${reply.replyerName.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="replyer-name">${reply.replyerName}</div>
+                            <div class="reply-time">${timeAgo}</div>
+                        </div>
+                        <div class="reply-content">${reply.content}</div>
+                    </div>
+                `;
+            });
+            repliesHTML += '</div>';
+            
+            return repliesHTML;
+        }
+
+        // Add event listeners for a specific review
+        function addReviewEventListeners(reviewId) {
+            // Like button
+            const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
+            likeBtn.addEventListener('click', () => {
+                toggleLike(reviewId);
+            });
+            
+            // Reply button
+            const replyBtn = document.querySelector(`.reply-btn[data-review-id="${reviewId}"]`);
+            replyBtn.addEventListener('click', () => {
+                toggleReplyForm(reviewId);
+            });
+            
+            // Submit reply button
+            const submitReplyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
+            submitReplyBtn.addEventListener('click', () => {
+                submitReply(reviewId);
+            });
+        }
+
+        // Toggle like on a review
+        function toggleLike(reviewId) {
+            const review = reviews.find(r => r.id === reviewId);
+            if (!review) return;
+            
+            if (review.liked) {
+                review.likes--;
+                review.liked = false;
+            } else {
+                review.likes++;
+                review.liked = true;
+            }
+            
+            saveReviews();
+            renderReviews();
+        }
+
+        // Toggle reply form visibility
+        function toggleReplyForm(reviewId) {
+            const replyForm = document.getElementById(`replyForm-${reviewId}`);
+            if (replyForm.style.display === 'none') {
+                replyForm.style.display = 'flex';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+
+        // Submit a reply to a review
+        function submitReply(reviewId) {
+            const replyInput = document.getElementById(`replyInput-${reviewId}`);
+            const replyText = replyInput.value.trim();
+            
+            if (!replyText) {
+                alert('Please enter a reply');
+                return;
+            }
+            
+            const review = reviews.find(r => r.id === reviewId);
+            if (!review) return;
+            
+            const newReply = {
+                id: Date.now(),
+                replyerName: 'You', // In a real app, this would be the logged-in user
+                content: replyText,
+                timestamp: new Date()
+            };
+            
+            review.replies.push(newReply);
+            saveReviews();
+            renderReviews();
+            
+            // Hide the reply form
+            toggleReplyForm(reviewId);
+        }
+
+        // Format time ago
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const diffMs = now - new Date(timestamp);
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSecs < 60) {
+                return 'Just now';
+            } else if (diffMins < 60) {
+                return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            } else if (diffHours < 24) {
+                return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            } else if (diffDays < 7) {
+                return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            } else {
+                return new Date(timestamp).toLocaleDateString();
+            }
+        }
+
+        // Save reviews to localStorage
+        function saveReviews() {
+            localStorage.setItem('malumeNicoReviews', JSON.stringify(reviews));
+        }
+
+        // Refresh reviews (simulate live updates)
+        function refreshReviews() {
+            // In a real app, this would fetch new reviews from the server
+            console.log('Refreshing reviews...');
+            
+            // For demo purposes, we'll just re-render
+            renderReviews();
+        }
+
+        // Fade-in animation on scroll
+        function initFadeInAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+        }
+
+        // API Integration Placeholder Functions
+        // These would be implemented by backend developers
+        
+        /*
+        // Google Reviews API Integration
+        async function fetchGoogleReviews() {
+            try {
+                // Backend developers: Implement this endpoint
+                const response = await fetch('/api/google-reviews?place_id=malume_nico_tzaneen');
+                const data = await response.json();
+                return data.reviews;
+            } catch (error) {
+                console.error('Failed to fetch Google reviews:', error);
+                return [];
+            }
+        }
+        
+        // Yelp Fusion API Integration
+        async function fetchYelpReviews() {
+            try {
+                // Backend developers: Implement this endpoint
+                const response = await fetch('/api/yelp-reviews?business_id=malume-nico-tzaneen');
+                const data = await response.json();
+                return data.reviews;
+            } catch (error) {
+                console.error('Failed to fetch Yelp reviews:', error);
+                return [];
+            }
+        }
+        
+        // Trustpilot API Integration
+        async function fetchTrustpilotReviews() {
+            try {
+                // Backend developers: Implement this endpoint
+                const response = await fetch('/api/trustpilot-reviews?business_unit_id=malume_nico');
+                const data = await response.json();
+                return data.reviews;
+            } catch (error) {
+                console.error('Failed to fetch Trustpilot reviews:', error);
+                return [];
+            }
+        }
+        
+        // Custom API for posting reviews
+        async function postReviewToServer(review) {
+            try {
+                // Backend developers: Implement this endpoint
+                const response = await fetch('/api/post-review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(review)
+                });
+                
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    throw new Error('Failed to post review');
+                }
+            } catch (error) {
+                console.error('Failed to post review:', error);
+                throw error;
+            }
+        }
+        */
+    </script>
 </body>
 </html>
