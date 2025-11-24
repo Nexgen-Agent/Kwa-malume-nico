@@ -937,6 +937,54 @@
             transform: translateY(-2px);
         }
 
+        /* === WHATSAPP FLOATING BUTTON === */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .whatsapp-link {
+            display: flex;
+            align-items: center;
+            background: #25D366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .whatsapp-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+        }
+
+        .whatsapp-link i {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .whatsapp-text {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(37, 211, 102, 0.7);
+            }
+            100% {
+                box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            }
+        }
+
         /* === RESPONSIVE STYLES === */
         @media (max-width: 992px) {
             .nav-links {
@@ -977,6 +1025,29 @@
 
             .payment-options {
                 grid-template-columns: 1fr;
+            }
+            
+            /* WhatsApp floating button adjustments */
+            .whatsapp-float {
+                bottom: 80px;
+                right: 15px;
+            }
+            
+            .whatsapp-text {
+                display: none;
+            }
+            
+            .whatsapp-link {
+                padding: 15px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+            
+            .whatsapp-link i {
+                margin-right: 0;
+                font-size: 24px;
             }
         }
 
@@ -1299,6 +1370,11 @@
                 </div>
 
                 <button type="submit" class="submit-btn">Proceed to Payment</button>
+                
+                <!-- WhatsApp Booking Button -->
+                <button type="button" class="submit-btn whatsapp-book-btn" id="whatsappBookBtn" style="background: #25D366; margin-top: 15px;">
+                    <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                </button>
             </form>
         </div>
     </section>
@@ -1420,10 +1496,10 @@
                     <a href="https://www.tiktok.com/@malumenico5?_r=1&_t=ZS-91eOFfy1AAS" class="social-link" target="_blank" title="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
-                    <a href="#" class="social-link" target="_blank" title="Instagram">
+                    <a href="https://www.instagram.com/malumenico?igsh=YjNyMjRtaDFlMmI2" class="social-link" target="_blank" title="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="social-link" target="_blank" title="WhatsApp">
+                    <a href="https://wa.me/27796516990" class="social-link" target="_blank" title="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
@@ -1456,6 +1532,14 @@
             <p>&copy; 2023 Malume Nico. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-float">
+        <a href="https://wa.me/27796516990" target="_blank" class="whatsapp-link">
+            <i class="fab fa-whatsapp"></i>
+            <span class="whatsapp-text">Chat on WhatsApp</span>
+        </a>
+    </div>
 
     <!-- TikTok-style Bottom Navigation -->
     <nav class="bottom-nav">
@@ -1760,6 +1844,58 @@
         document.getElementById('date').addEventListener('change', updateBookingSummary);
         document.getElementById('time').addEventListener('change', updateBookingSummary);
         document.getElementById('guests').addEventListener('change', updateBookingSummary);
+
+        // WhatsApp Booking Functionality
+        const whatsappBookBtn = document.getElementById('whatsappBookBtn');
+
+        whatsappBookBtn.addEventListener('click', () => {
+            // Get form values
+            const packageType = document.getElementById('packageType').value;
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const guests = document.getElementById('guests').value;
+            const message = document.getElementById('message').value;
+            
+            // Basic validation
+            if (!packageType || !name || !phone || !email || !date || !time || !guests) {
+                alert('Please fill in all required fields before booking via WhatsApp.');
+                return;
+            }
+
+            // Format date
+            const formattedDate = new Date(date).toLocaleDateString('en-ZA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Create WhatsApp message
+            const whatsappMessage = `Hello Malume Nico! I'd like to book a ${packageType} package:
+            
+📅 Date: ${formattedDate}
+⏰ Time: ${time}
+👥 Guests: ${guests}
+📦 Package: ${packageType}
+👤 Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
+${message ? `💬 Message: ${message}` : ''}
+
+Please confirm availability and let me know the next steps!`;
+
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // Create WhatsApp URL
+            const whatsappURL = `https://wa.me/27796516990?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappURL, '_blank');
+        });
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
