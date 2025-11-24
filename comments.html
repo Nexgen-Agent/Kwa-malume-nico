@@ -613,7 +613,7 @@
             font-size: 12px;
         }
 
-        /* Reviews Feed */
+        /* Reviews Feed - Facebook Style */
         .reviews-feed {
             margin-bottom: 50px;
             position: relative;
@@ -625,6 +625,12 @@
             margin-bottom: 25px;
             position: relative;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .review-item.updating {
@@ -681,18 +687,20 @@
 
         .review-content {
             margin-bottom: 15px;
+            font-size: 1.05rem;
+            line-height: 1.5;
         }
 
         .review-photos {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 10px;
             margin-bottom: 15px;
-            flex-wrap: wrap;
         }
 
         .review-photo {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 200px;
             border-radius: 8px;
             object-fit: cover;
             cursor: pointer;
@@ -700,27 +708,32 @@
         }
 
         .review-photo:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         .review-actions {
             display: flex;
             gap: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
         }
 
         .action-btn {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: color 0.3s;
             font-size: 0.9rem;
+            padding: 8px 12px;
+            border-radius: 5px;
         }
 
         .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
             color: var(--gold);
         }
 
@@ -812,6 +825,58 @@
 
         .reply-form button:hover {
             background: var(--gold-light);
+        }
+
+        /* Image Modal for enlarged photos */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1001;
         }
 
         /* API Integration Section - HIDDEN */
@@ -1027,6 +1092,14 @@
                 align-self: flex-end;
                 padding: 10px 20px;
             }
+
+            .review-photos {
+                grid-template-columns: 1fr;
+            }
+
+            .review-photo {
+                height: 250px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1035,8 +1108,7 @@
             }
 
             .review-photo {
-                width: 80px;
-                height: 80px;
+                height: 200px;
             }
 
             .uploaded-photos {
@@ -1189,6 +1261,16 @@
         </div>
     </section>
 
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <button class="close-modal" id="closeModal">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Enlarged review image">
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1287,6 +1369,8 @@
                 timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
                 likes: 12,
                 liked: false,
+                shares: 3,
+                replied: false,
                 replies: [
                     {
                         id: 1,
@@ -1306,6 +1390,8 @@
                 timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
                 likes: 8,
                 liked: false,
+                shares: 1,
+                replied: false,
                 replies: [],
                 photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
                 avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
@@ -1318,6 +1404,8 @@
                 timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
                 likes: 15,
                 liked: true,
+                shares: 5,
+                replied: false,
                 replies: [],
                 photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
                 avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
@@ -1330,6 +1418,8 @@
                 timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
                 likes: 22,
                 liked: false,
+                shares: 7,
+                replied: false,
                 replies: [
                     {
                         id: 1,
@@ -1355,6 +1445,8 @@
                 timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
                 likes: 18,
                 liked: false,
+                shares: 4,
+                replied: false,
                 replies: [],
                 photos: [
                     "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
@@ -1421,6 +1513,7 @@
             initReviewForm();
             setActiveNavItem();
             initFadeInAnimations();
+            initImageModal();
             
             // Set up live refresh
             setInterval(refreshReviews, 30000); // Refresh every 30 seconds
@@ -1482,6 +1575,42 @@
             // Submit review
             const submitReview = document.getElementById('submitReview');
             submitReview.addEventListener('click', postReview);
+        }
+
+        // Initialize image modal
+        function initImageModal() {
+            const imageModal = document.getElementById('imageModal');
+            const closeModal = document.getElementById('closeModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            // Close modal when clicking close button
+            closeModal.addEventListener('click', () => {
+                imageModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Close modal when clicking outside the image
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    imageModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Close modal with escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+                    imageModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Function to open modal with image
+            window.openImageModal = (imageSrc) => {
+                modalImage.src = imageSrc;
+                imageModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
         }
 
         // Set rating stars
@@ -1596,6 +1725,8 @@
                 timestamp: new Date(),
                 likes: 0,
                 liked: false,
+                shares: 0,
+                replied: false,
                 replies: [],
                 photos: [...uploadedPhotos],
                 avatar: userProfile.avatar
@@ -1724,16 +1855,19 @@
                     <button class="action-btn like-btn ${review.liked ? 'liked' : ''}" data-review-id="${review.id}">
                         <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes}</span>
                     </button>
-                    <button class="action-btn reply-btn" data-review-id="${review.id}">
-                        <i class="fas fa-reply"></i> Reply
+                    <button class="action-btn comment-btn" data-review-id="${review.id}">
+                        <i class="fas fa-comment"></i> <span class="comment-count">${review.replies.length}</span>
+                    </button>
+                    <button class="action-btn share-btn" data-review-id="${review.id}">
+                        <i class="fas fa-share"></i> <span class="share-count">${review.shares}</span>
                     </button>
                 </div>
                 
                 ${repliesHTML}
                 
                 <div class="reply-form" id="replyForm-${review.id}" style="display: none;">
-                    <input type="text" placeholder="Write a reply..." id="replyInput-${review.id}">
-                    <button class="btn-reply" data-review-id="${review.id}">Reply</button>
+                    <input type="text" placeholder="Write a comment..." id="replyInput-${review.id}">
+                    <button class="btn-reply" data-review-id="${review.id}">Comment</button>
                 </div>
             `;
         }
@@ -1757,7 +1891,7 @@
             
             let photosHTML = '<div class="review-photos">';
             photos.forEach(photo => {
-                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo">`;
+                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo" onclick="openImageModal('${photo.url}')">`;
             });
             photosHTML += '</div>';
             
@@ -1799,11 +1933,19 @@
                 });
             }
             
-            // Reply button
-            const replyBtn = document.querySelector(`.reply-btn[data-review-id="${reviewId}"]`);
-            if (replyBtn) {
-                replyBtn.addEventListener('click', () => {
+            // Comment button
+            const commentBtn = document.querySelector(`.comment-btn[data-review-id="${reviewId}"]`);
+            if (commentBtn) {
+                commentBtn.addEventListener('click', () => {
                     toggleReplyForm(reviewId);
+                });
+            }
+            
+            // Share button
+            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
+            if (shareBtn) {
+                shareBtn.addEventListener('click', () => {
+                    toggleShare(reviewId);
                 });
             }
             
@@ -1856,6 +1998,37 @@
             }, 500);
         }
 
+        // Toggle share on a review
+        function toggleShare(reviewId) {
+            const review = reviews.find(r => r.id === reviewId);
+            if (!review) return;
+            
+            // Show updating state on the button
+            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
+            const reviewItem = shareBtn.closest('.review-item');
+            
+            shareBtn.classList.add('updating');
+            reviewItem.classList.add('updating');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                review.shares++;
+                
+                saveReviews();
+                
+                // Update only the share button and count
+                const shareCount = shareBtn.querySelector('.share-count');
+                shareCount.textContent = review.shares;
+                
+                // Remove updating state
+                shareBtn.classList.remove('updating');
+                reviewItem.classList.remove('updating');
+                
+                // Show success message
+                showSuccessMessage('Review shared!');
+            }, 500);
+        }
+
         // Toggle reply form visibility
         function toggleReplyForm(reviewId) {
             const replyForm = document.getElementById(`replyForm-${reviewId}`);
@@ -1872,7 +2045,7 @@
             const replyText = replyInput.value.trim();
             
             if (!replyText) {
-                alert('Please enter a reply');
+                alert('Please enter a comment');
                 return;
             }
             
@@ -1902,6 +2075,7 @@
                 };
                 
                 review.replies.push(newReply);
+                review.replied = true;
                 saveReviews();
                 
                 // Update the replies section
@@ -1942,13 +2116,18 @@
                     reviewActions.insertAdjacentHTML('afterend', repliesHTML);
                 }
                 
+                // Update comment count
+                const commentBtn = reviewItem.querySelector('.comment-btn');
+                const commentCount = commentBtn.querySelector('.comment-count');
+                commentCount.textContent = review.replies.length;
+                
                 // Reset form
                 replyInput.value = '';
                 toggleReplyForm(reviewId);
                 
                 // Remove updating state
                 replyBtn.disabled = false;
-                replyBtn.textContent = 'Reply';
+                replyBtn.textContent = 'Comment';
                 reviewItem.classList.remove('updating');
             }, 800);
         }
