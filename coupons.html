@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Malume Nico | Coupons & Rewards</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Malume Nico">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="msapplication-TileColor" content="#c89b2d">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-startup-image" href="/splash/launch-1242x2688.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === RESET & BASE STYLES === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #c89b2d;
+            --gold-dark: #9a6f16;
+            --gold-light: #e6b450;
+            --ink: #1c140b;
+            --ivory: #fffaf1;
+            --dark-bg: #0a0a0a;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #f44336;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #fff;
+            background: var(--dark-bg);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Ensure full viewport coverage */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* === BACKGROUND VIDEO === */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: saturate(1.1) brightness(0.8);
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(200, 155, 45, 0.1), transparent 50%),
+                        linear-gradient(to bottom, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.7));
+            z-index: -1;
+        }
+
+        /* === iOS GLASSMORPHISM EFFECT === */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+
+        /* === FADE-IN SCROLLING ANIMATION === */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-in-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .fade-in-delay-1 {
+            transition-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            transition-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            transition-delay: 0.6s;
+        }
+
+        /* === HEADER & NAVIGATION === */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 100;
+            transition: background 0.3s;
+            padding-top: calc(15px + env(safe-area-inset-top));
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            margin-left: auto;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 101;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .mobile-menu-btn.active {
+            transform: rotate(90deg);
+        }
+
+        /* === MOBILE MENU OVERLAY === */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .mobile-nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--gold);
+            background: rgba(200, 155, 45, 0.15);
+            transform: translateX(10px);
+        }
+
+        .mobile-nav-links a i {
+            width: 24px;
+            text-align: center;
+        }
+
+        .close-mobile-menu {
+            position: absolute;
+            top: calc(30px + env(safe-area-inset-top));
+            right: 30px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-mobile-menu:hover {
+            transform: scale(1.1);
+            color: var(--gold);
+        }
+
+        /* === SECTIONS === */
+        section {
+            padding: 80px 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--gold);
+        }
+
+        .section-title p {
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        /* === COUPON BALANCE SECTION === */
+        .coupon-balance-section {
+            padding-top: 120px;
+            text-align: center;
+        }
+
+        .balance-card {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            padding: 40px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(200, 155, 45, 0.2), rgba(200, 155, 45, 0.05));
+            border: 1px solid rgba(200, 155, 45, 0.3);
+        }
+
+        .balance-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .balance-amount {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(200, 155, 45, 0.3);
+        }
+
+        .balance-subtext {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* === PROMOTIONAL BANNERS === */
+        .promotional-banners {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .promo-banner {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .promo-banner.birthday {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.15), rgba(255, 152, 0, 0.05));
+            border-left-color: var(--warning);
+        }
+
+        .promo-banner.boost {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(76, 175, 80, 0.05));
+            border-left-color: var(--success);
+        }
+
+        .promo-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .promo-content {
+            flex: 1;
+        }
+
+        .promo-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .promo-content p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .countdown-timer {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-top: 5px;
+        }
+
+        /* === WELCOME COUPON === */
+        .welcome-coupon {
+            padding: 25px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, rgba(200, 155, 45, 0.25), rgba(200, 155, 45, 0.1));
+            border: 1px solid rgba(200, 155, 45, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .welcome-icon {
+            font-size: 2rem;
+            color: var(--gold);
+        }
+
+        .welcome-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: white;
+            box-shadow: 0 5px 15px rgba(200, 155, 45, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(200, 155, 45, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* === STREAK REWARDS === */
+        .streak-section {
+            margin-bottom: 40px;
+        }
+
+        .streak-card {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .streak-info {
+            flex: 1;
+        }
+
+        .streak-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        .streak-description {
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        .streak-progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .streak-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border-radius: 10px;
+            width: 60%; /* This will be dynamic */
+            transition: width 0.5s ease;
+        }
+
+        .streak-days {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .streak-reward {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .reward-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .reward-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* === SURPRISE BOX === */
+        .surprise-box-section {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .surprise-box {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(200, 155, 45, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .surprise-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(200, 155, 45, 0.6);
+        }
+
+        .surprise-box.open {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        }
+
+        .surprise-icon {
+            font-size: 3rem;
+            color: var(--ink);
+            transition: all 0.5s ease;
+        }
+
+        .surprise-box.open .surprise-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+
+        .surprise-reward {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .surprise-box.open .surprise-reward {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .surprise-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 5px;
+        }
+
+        .surprise-text {
+            font-size: 0.9rem;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .surprise-timer {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* === REWARDS STORE === */
+        .rewards-section {
+            margin-bottom: 40px;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .reward-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .reward-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .reward-info {
+            flex: 1;
+            margin-bottom: 15px;
+        }
+
+        .reward-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+        }
+
+        .reward-description {
+            opacity: 0.8;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .reward-cost {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .reward-cost i {
+            font-size: 1rem;
+        }
+
+        .reward-card.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .reward-card.disabled .btn-primary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+        }
+
+        /* === COUPON HISTORY === */
+        .history-section {
+            margin-bottom: 40px;
+        }
+
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .history-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .history-icon.earned {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+        }
+
+        .history-icon.redeemed {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--error);
+        }
+
+        .history-text {
+            flex: 1;
+        }
+
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .history-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .history-amount.positive {
+            color: var(--success);
+        }
+
+        .history-amount.negative {
+            color: var(--error);
+        }
+
+        /* === REDEEM MODAL === */
+        .redeem-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .redeem-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .redeem-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+            text-align: center;
+        }
+
+        .modal-description {
+            text-align: center;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .modal-cost {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--gold);
+        }
+
+        /* === FOOTER === */
+        footer {
+            padding: 60px 5% 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
+        /* === TIKTOK-STYLE BOTTOM NAVIGATION === */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
+            
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            height: calc(70px + env(safe-area-inset-bottom));
+        }
+
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: env(safe-area-inset-bottom);
+            background: rgba(10, 10, 10, 0.7);
+            z-index: -1;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s ease;
+            flex: 1;
+            padding: 8px 0;
+            position: relative;
+            border: none;
+            background: none;
+            cursor: pointer;
+            min-height: 50px;
+        }
+
+        .bottom-nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bottom-nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--gold);
+        }
+
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: scale(1.1);
+            color: var(--gold);
+        }
+
+        .bottom-nav-item.active .bottom-nav-label {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        /* === RESPONSIVE STYLES === */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .welcome-coupon {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .streak-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .streak-reward {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 5%;
+            }
+
+            .coupon-balance-section {
+                padding-top: 100px;
+            }
+
+            .balance-amount {
+                font-size: 2.8rem;
+            }
+
+            .rewards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .history-amount {
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .rewards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .promo-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .balance-card {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Hide bottom nav on desktop */
+        @media (min-width: 769px) {
+            .bottom-nav {
+                display: none;
+            }
+            body {
+                padding-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video -->
+    <video class="bg-video" autoplay muted loop playsinline>
+        <source src="assets/video/venue.mp4" type="video/mp4">
+        <source src="assets/video/venue.webm" type="video/webm">
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- Redeem Modal -->
+    <div class="redeem-modal" id="redeemModal">
+        <div class="modal-content glass">
+            <button class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="" alt="Reward item" class="modal-image" id="modalImage">
+            <h3 class="modal-title" id="modalTitle">Free Burger</h3>
+            <p class="modal-description" id="modalDescription">Redeem your free burger with your coupons</p>
+            <div class="modal-cost" id="modalCost">2,400 coupons</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelRedeem">Cancel</button>
+                <button class="btn btn-primary" id="confirmRedeem">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <!-- REPLACE THE LOGO URL BELOW WITH YOUR ACTUAL LOGO URL -->
+            <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
+        </div>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="comments.html">Comments</a>
+            <a href="booking.html">Bookings</a>
+            <a href="coupons.html" class="active">Coupons</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <button class="close-mobile-menu" id="closeMobileMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="comments.html" class="mobile-nav-link">
+                <i class="fas fa-comments"></i> Comments
+            </a>
+            <a href="booking.html" class="mobile-nav-link">
+                <i class="fas fa-calendar-check"></i> Bookings
+            </a>
+            <a href="coupons.html" class="mobile-nav-link">
+                <i class="fas fa-tag"></i> Coupons
+            </a>
+            <a href="profile.html" class="mobile-nav-link">
+                <i class="fas fa-user"></i> Profile
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Coupon Balance Section -->
+        <section class="coupon-balance-section">
+            <div class="balance-card glass fade-in">
+                <div class="balance-label">Your Coupons</div>
+                <div class="balance-amount" id="balanceAmount">2,400</div>
+                <div class="balance-subtext">Earn more when you spend over R100</div>
+            </div>
+
+            <!-- Promotional Banners -->
+            <div class="promotional-banners">
+                <!-- Birthday Bonus Banner -->
+                <div class="promo-banner birthday glass fade-in fade-in-delay-1">
+                    <div class="promo-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <div class="promo-content">
+                        <h3>🎉 Birthday Month Special</h3>
+                        <p>Earn double coupons on all meals throughout your birthday month!</p>
+                    </div>
+                </div>
+
+                <!-- Limited-Time Boost -->
+                <div class="promo-banner boost glass fade-in fade-in-delay-2">
+                    <div class="promo-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="promo-content">
+                        <h3>Limited-Time Boost</h3>
+                        <p>2× Coupons on all purchases</p>
+                        <div class="countdown-timer" id="countdownTimer">01:32:18</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Coupon -->
+            <div class="welcome-coupon glass fade-in fade-in-delay-3">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="welcome-text">
+                        <h3>Welcome Bonus: +1500 coupons</h3>
+                        <p>Your special welcome gift for joining Malume Nico rewards</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary">Learn More</button>
+            </div>
+        </section>
+
+        <!-- Streak Rewards Section -->
+        <section class="streak-section">
+            <div class="section-title fade-in">
+                <h2>Daily Streak Rewards</h2>
+                <p>Visit us daily to earn bonus coupons</p>
+            </div>
+
+            <div class="streak-card glass fade-in">
+                <div class="streak-info">
+                    <h3 class="streak-title">Streak Day 3</h3>
+                    <p class="streak-description">Visit us tomorrow to continue your streak and earn +200 coupons</p>
+                    <div class="streak-progress">
+                        <div class="streak-progress-bar" id="streakProgress" style="width: 60%"></div>
+                    </div>
+                    <div class="streak-days">
+                        <span>Day 1</span>
+                        <span>Day 2</span>
+                        <span>Day 3</span>
+                        <span>Day 4</span>
+                        <span>Day 5</span>
+                    </div>
+                </div>
+                <div class="streak-reward">
+                    <div class="reward-amount">+200</div>
+                    <div class="reward-label">Tomorrow</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Surprise Box Section -->
+        <section class="surprise-box-section">
+            <div class="section-title fade-in">
+                <h2>Daily Surprise Box</h2>
+                <p>Tap to reveal your daily coupon reward</p>
+            </div>
+
+            <div class="surprise-box glass fade-in" id="surpriseBox">
+                <div class="surprise-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <div class="surprise-reward" id="surpriseReward">
+                    <div class="surprise-amount">+250</div>
+                    <div class="surprise-text">Coupons!</div>
+                </div>
+            </div>
+            <div class="surprise-timer fade-in fade-in-delay-1" id="surpriseTimer">
+                Available in 14:32:05
+            </div>
+        </section>
+
+        <!-- Rewards Store Section -->
+        <section class="rewards-section">
+            <div class="section-title fade-in">
+                <h2>Rewards Store</h2>
+                <p>Redeem your coupons for delicious rewards</p>
+            </div>
+
+            <div class="rewards-grid" id="rewardsGrid">
+                <!-- Rewards will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Coupon History Section -->
+        <section class="history-section">
+            <div class="section-title fade-in">
+                <h2>Coupon History</h2>
+                <p>Track your coupon earnings and redemptions</p>
+            </div>
+
+            <div class="glass fade-in" style="padding: 25px;">
+                <div class="history-list" id="historyList">
+                    <!-- History items will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column fade-in">
+                <h3>Malume Nico</h3>
+                <p>The best kota in Tzaneen. Serving delicious street food with love since 2010.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/malume.nicolaskota" class="social-link" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/malumenico?igsh=YjNyMjRtaDFlMmI2" class="social-link" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/27796516990" class="social-link" target="_blank" title="WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@malumenico5?_r=1&_t=ZS-91eOFfy1AAS" class="social-link" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-column fade-in fade-in-delay-1">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="comments.html">Comments</a></li>
+                    <li><a href="booking.html">Bookings</a></li>
+                    <li><a href="coupons.html">Coupons</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column fade-in fade-in-delay-2">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Main Road, Mavele Village, Tzaneen</li>
+                    <li><i class="fas fa-phone" style="margin-right: 10px;"></i> <a href="https://wa.me/27796516990" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">+27 79 651 6990</a></li>
+                    <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> info@malumenico.com</li>
+                    <li><i class="fas fa-clock" style="margin-right: 10px;"></i> Mon-Sat: 8am-8pm, Sun: 9am-6pm</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2023 Malume Nico. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- TikTok-style Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="bottom-nav-label">Home</div>
+        </a>
+        
+        <a href="comments.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="bottom-nav-label">Comments</div>
+        </a>
+        
+        <a href="booking.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="bottom-nav-label">Bookings</div>
+        </a>
+        
+        <a href="coupons.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-tag"></i>
+            </div>
+            <div class="bottom-nav-label">Coupons</div>
+        </a>
+        
+        <a href="profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="bottom-nav-label">Profile</div>
+        </a>
+    </nav>
+
+    <script>
+        // Mock data for rewards
+        const rewards = [
+            { 
+                id: 1, 
+                name: "Free Burger", 
+                cost: 2400, 
+                description: "Redeem for a free classic beef burger with all the toppings",
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 2, 
+                name: "Free Drink", 
+                cost: 800, 
+                description: "Get any soft drink or juice of your choice for free",
+                image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 3, 
+                name: "50% Off Any Kota", 
+                cost: 1500, 
+                description: "Get half price on any kota from our menu",
+                image: "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 4, 
+                name: "Free Dessert", 
+                cost: 1200, 
+                description: "Enjoy a sweet treat on us with any purchase",
+                image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 5, 
+                name: "Free Upgrade", 
+                cost: 1000, 
+                description: "Upgrade your meal to the next size at no extra cost",
+                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            },
+            { 
+                id: 6, 
+                name: "Family Meal Deal", 
+                cost: 5000, 
+                description: "Special discount on our family-sized meals",
+                image: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+            }
+        ];
+
+        // Mock data for coupon history
+        const couponHistory = [
+            { id: 1, type: "earned", amount: 500, title: "Purchase over R100", date: "2 hours ago" },
+            { id: 2, type: "earned", amount: 1200, title: "Loyalty streak day 2", date: "1 day ago" },
+            { id: 3, type: "redeemed", amount: 2000, title: "Redeemed Free Burger", date: "2 days ago" },
+            { id: 4, type: "earned", amount: 300, title: "Birthday reward", date: "3 days ago" },
+            { id: 5, type: "earned", amount: 800, title: "Purchase over R150", date: "5 days ago" },
+            { id: 6, type: "earned", amount: 1500, title: "Welcome bonus", date: "1 week ago" }
+        ];
+
+        // State variables
+        let userBalance = 2400;
+        let surpriseBoxAvailable = true;
+        let selectedReward = null;
+
+        // DOM elements
+        const balanceAmount = document.getElementById('balanceAmount');
+        const countdownTimer = document.getElementById('countdownTimer');
+        const surpriseBox = document.getElementById('surpriseBox');
+        const surpriseReward = document.getElementById('surpriseReward');
+        const surpriseTimer = document.getElementById('surpriseTimer');
+        const rewardsGrid = document.getElementById('rewardsGrid');
+        const historyList = document.getElementById('historyList');
+        const redeemModal = document.getElementById('redeemModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelRedeem = document.getElementById('cancelRedeem');
+        const confirmRedeem = document.getElementById('confirmRedeem');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalCost = document.getElementById('modalCost');
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        mobileMenuOverlay.addEventListener('click', (e) => {
+            if (e.target === mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBalanceDisplay();
+            startCountdownTimer();
+            renderRewards();
+            renderHistory();
+            initFadeInAnimations();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Surprise box click
+            surpriseBox.addEventListener('click', handleSurpriseBoxClick);
+            
+            // Modal controls
+            closeModal.addEventListener('click', closeRedeemModal);
+            cancelRedeem.addEventListener('click', closeRedeemModal);
+            confirmRedeem.addEventListener('click', handleRedeemConfirm);
+            
+            // Close modal when clicking outside
+            redeemModal.addEventListener('click', (e) => {
+                if (e.target === redeemModal) {
+                    closeRedeemModal();
+                }
+            });
+        }
+
+        // Update balance display
+        function updateBalanceDisplay() {
+            balanceAmount.textContent = userBalance.toLocaleString();
+        }
+
+        // Start countdown timer
+        function startCountdownTimer() {
+            // Set initial time (1 hour, 32 minutes, 18 seconds)
+            let timeRemaining = 1 * 60 * 60 + 32 * 60 + 18;
+            
+            const timerInterval = setInterval(() => {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    countdownTimer.textContent = "Offer expired";
+                    return;
+                }
+                
+                const hours = Math.floor(timeRemaining / 3600);
+                const minutes = Math.floor((timeRemaining % 3600) / 60);
+                const seconds = timeRemaining % 60;
+                
+                countdownTimer.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Handle surprise box click
+        function handleSurpriseBoxClick() {
+            if (!surpriseBoxAvailable) return;
+            
+            // Generate random reward between 100 and 500 coupons
+            const rewardAmount = Math.floor(Math.random() * 401) + 100;
+            
+            // Update surprise box content
+            surpriseReward.querySelector('.surprise-amount').textContent = `+${rewardAmount}`;
+            surpriseBox.classList.add('open');
+            
+            // Update user balance after a delay
+            setTimeout(() => {
+                userBalance += rewardAmount;
+                updateBalanceDisplay();
+                
+                // Add to history
+                addToHistory('earned', rewardAmount, 'Daily surprise box', 'Just now');
+                
+                // Disable surprise box for 24 hours
+                surpriseBoxAvailable = false;
+                surpriseBox.style.pointerEvents = 'none';
+                
+                // Start countdown for next availability
+                startSurpriseBoxCountdown();
+            }, 1500);
+        }
+
+        // Start surprise box countdown
+        function startSurpriseBoxCountdown() {
+            let timeRemaining = 24 * 60 * 60; // 24 hours in seconds
+            
+            const timerInterval = setInterval(() => {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    surpriseTimer.textContent = "Available now!";
+                    surpriseBoxAvailable = true;
+                    surpriseBox.style.pointerEvents = 'auto';
+                    surpriseBox.classList.remove('open');
+                    return;
+                }
+                
+                const hours = Math.floor(timeRemaining / 3600);
+                const minutes = Math.floor((timeRemaining % 3600) / 60);
+                const seconds = timeRemaining % 60;
+                
+                surpriseTimer.textContent = 
+                    `Available in ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Render rewards
+        function renderRewards() {
+            rewardsGrid.innerHTML = '';
+            
+            rewards.forEach((reward, index) => {
+                const isDisabled = userBalance < reward.cost;
+                const rewardCard = document.createElement('div');
+                rewardCard.className = `reward-card glass fade-in ${index % 2 === 0 ? 'fade-in-left' : 'fade-in-right'} ${index > 1 ? 'fade-in-delay-' + (index % 4) : ''} ${isDisabled ? 'disabled' : ''}`;
+                rewardCard.innerHTML = `
+                    <img src="${reward.image}" alt="${reward.name}" class="reward-image">
+                    <div class="reward-info">
+                        <h3 class="reward-name">${reward.name}</h3>
+                        <p class="reward-description">${reward.description}</p>
+                        <div class="reward-cost">
+                            <i class="fas fa-tag"></i> ${reward.cost.toLocaleString()} coupons
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" data-id="${reward.id}" ${isDisabled ? 'disabled' : ''}>
+                        ${isDisabled ? 'Not Enough' : 'Redeem'}
+                    </button>
+                `;
+                rewardsGrid.appendChild(rewardCard);
+                
+                // Add event listener to redeem button
+                if (!isDisabled) {
+                    const redeemBtn = rewardCard.querySelector('button');
+                    redeemBtn.addEventListener('click', () => openRedeemModal(reward));
+                }
+            });
+        }
+
+        // Render history
+        function renderHistory() {
+            historyList.innerHTML = '';
+            
+            couponHistory.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = `history-item fade-in ${index > 2 ? 'fade-in-delay-' + (index % 3) : ''}`;
+                historyItem.innerHTML = `
+                    <div class="history-details">
+                        <div class="history-icon ${item.type}">
+                            <i class="fas ${item.type === 'earned' ? 'fa-plus' : 'fa-minus'}"></i>
+                        </div>
+                        <div class="history-text">
+                            <div class="history-title">${item.title}</div>
+                            <div class="history-date">${item.date}</div>
+                        </div>
+                    </div>
+                    <div class="history-amount ${item.type === 'earned' ? 'positive' : 'negative'}">
+                        ${item.type === 'earned' ? '+' : '-'}${item.amount}
+                    </div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Add to history
+        function addToHistory(type, amount, title, date) {
+            const newItem = {
+                id: couponHistory.length + 1,
+                type,
+                amount,
+                title,
+                date
+            };
+            
+            couponHistory.unshift(newItem);
+            renderHistory();
+        }
+
+        // Open redeem modal
+        function openRedeemModal(reward) {
+            selectedReward = reward;
+            modalImage.src = reward.image;
+            modalTitle.textContent = reward.name;
+            modalDescription.textContent = reward.description;
+            modalCost.textContent = `${reward.cost.toLocaleString()} coupons`;
+            redeemModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close redeem modal
+        function closeRedeemModal() {
+            redeemModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            selectedReward = null;
+        }
+
+        // Handle redeem confirmation
+        function handleRedeemConfirm() {
+            if (!selectedReward) return;
+            
+            // Check if user has enough coupons
+            if (userBalance < selectedReward.cost) {
+                alert('You do not have enough coupons to redeem this reward.');
+                closeRedeemModal();
+                return;
+            }
+            
+            // Deduct cost from balance
+            userBalance -= selectedReward.cost;
+            updateBalanceDisplay();
+            
+            // Add to history
+            addToHistory('redeemed', selectedReward.cost, `Redeemed ${selectedReward.name}`, 'Just now');
+            
+            // Show success message
+            alert(`Success! You've redeemed ${selectedReward.name}. Your coupon balance is now ${userBalance.toLocaleString()}.`);
+            
+            // Close modal and refresh rewards
+            closeRedeemModal();
+            renderRewards();
+        }
+
+        // Fade-in animation on scroll
+        function initFadeInAnimations() {
+            const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+        }
+    </script>
+</body>
+</html>
