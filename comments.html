@@ -309,12 +309,13 @@
 
         /* === HERO SECTION === */
         .hero {
-            min-height: 60vh;
-            min-height: 60dvh;
+            min-height: 40vh;
+            min-height: 40dvh;
             display: flex;
             align-items: center;
             padding: 0 5%;
             position: relative;
+            margin-top: 80px;
         }
 
         .hero-content {
@@ -339,7 +340,7 @@
 
         /* === SECTIONS === */
         section {
-            padding: 80px 5%;
+            padding: 60px 5%;
         }
 
         .section-title {
@@ -919,7 +920,12 @@
 
         @media (max-width: 768px) {
             section {
-                padding: 60px 5%;
+                padding: 40px 5%;
+            }
+
+            .hero {
+                margin-top: 70px;
+                min-height: 30vh;
             }
 
             .hero-content {
@@ -1060,11 +1066,6 @@
                         <span class="star" data-rating="3"><i class="fas fa-star"></i></span>
                         <span class="star" data-rating="4"><i class="fas fa-star"></i></span>
                         <span class="star" data-rating="5"><i class="fas fa-star"></i></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="reviewerName">Your Name</label>
-                        <input type="text" id="reviewerName" placeholder="Enter your name">
                     </div>
                     
                     <div class="form-group">
@@ -1239,7 +1240,7 @@
     </nav>
 
     <script>
-        // Sample review data
+        // Sample review data with profile pictures and images
         const sampleReviews = [
             {
                 id: 1,
@@ -1257,7 +1258,8 @@
                         timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
                     }
                 ],
-                photos: []
+                photos: [],
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
                 id: 2,
@@ -1268,7 +1270,8 @@
                 likes: 8,
                 liked: false,
                 replies: [],
-                photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+                photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
                 id: 3,
@@ -1279,7 +1282,8 @@
                 likes: 15,
                 liked: true,
                 replies: [],
-                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
                 id: 4,
@@ -1303,7 +1307,23 @@
                         timestamp: new Date(Date.now() - 19 * 60 * 60 * 1000) // 19 hours ago
                     }
                 ],
-                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"]
+                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+                avatar: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
+            },
+            {
+                id: 5,
+                reviewerName: "David L.",
+                rating: 5,
+                content: "The service here is exceptional! Malume Nico himself came to check on us. The food was fresh and the portions are huge!",
+                timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                likes: 18,
+                liked: false,
+                replies: [],
+                photos: [
+                    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                ],
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             }
         ];
 
@@ -1353,12 +1373,13 @@
         });
 
         // Review functionality
-        let reviews = JSON.parse(localStorage.getItem('malumeNicoReviews')) || sampleReviews;
+        let reviews = [];
         let currentRating = 0;
         let uploadedPhotos = [];
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
+            loadReviews();
             renderReviews();
             initReviewForm();
             setActiveNavItem();
@@ -1367,6 +1388,21 @@
             // Set up live refresh
             setInterval(refreshReviews, 30000); // Refresh every 30 seconds
         });
+
+        // Load reviews from localStorage or use sample reviews
+        function loadReviews() {
+            const storedReviews = localStorage.getItem('malumeNicoReviews');
+            if (storedReviews) {
+                try {
+                    reviews = JSON.parse(storedReviews);
+                } catch (e) {
+                    console.error('Error parsing stored reviews:', e);
+                    reviews = [...sampleReviews];
+                }
+            } else {
+                reviews = [...sampleReviews];
+            }
+        }
 
         // Set active page based on current URL
         function setActiveNavItem() {
@@ -1482,13 +1518,7 @@
 
         // Post a new review
         function postReview() {
-            const reviewerName = document.getElementById('reviewerName').value.trim();
             const reviewText = document.getElementById('reviewText').value.trim();
-            
-            if (!reviewerName) {
-                alert('Please enter your name');
-                return;
-            }
             
             if (!reviewText) {
                 alert('Please enter your review');
@@ -1500,16 +1530,23 @@
                 return;
             }
             
+            // Get user details from localStorage (assuming they've been set in profile)
+            const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
+                name: 'Guest User',
+                avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
+            };
+            
             const newReview = {
                 id: Date.now(),
-                reviewerName: reviewerName,
+                reviewerName: userProfile.name,
                 rating: currentRating,
                 content: reviewText,
                 timestamp: new Date(),
                 likes: 0,
                 liked: false,
                 replies: [],
-                photos: [...uploadedPhotos]
+                photos: [...uploadedPhotos],
+                avatar: userProfile.avatar
             };
             
             reviews.unshift(newReview);
@@ -1517,14 +1554,51 @@
             renderReviews();
             
             // Reset form
-            document.getElementById('reviewerName').value = '';
             document.getElementById('reviewText').value = '';
             setRating(0);
             uploadedPhotos = [];
             renderUploadedPhotos();
             
             // Show success message
-            alert('Thank you for your review!');
+            showSuccessMessage('Thank you for your review!');
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            // Create a toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: var(--gold);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10000;
+                transition: all 0.3s ease;
+                transform: translateX(100%);
+                opacity: 0;
+            `;
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Animate out after 3 seconds
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
         }
 
         // Render all reviews
@@ -1564,7 +1638,7 @@
             return `
                 <div class="review-header">
                     <div class="reviewer-avatar">
-                        ${review.reviewerName.charAt(0).toUpperCase()}
+                        ${review.avatar ? `<img src="${review.avatar}" alt="${review.reviewerName}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : review.reviewerName.charAt(0).toUpperCase()}
                     </div>
                     <div class="reviewer-info">
                         <div class="reviewer-name">${review.reviewerName}</div>
@@ -1655,21 +1729,27 @@
         function addReviewEventListeners(reviewId) {
             // Like button
             const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
-            likeBtn.addEventListener('click', () => {
-                toggleLike(reviewId);
-            });
+            if (likeBtn) {
+                likeBtn.addEventListener('click', () => {
+                    toggleLike(reviewId);
+                });
+            }
             
             // Reply button
             const replyBtn = document.querySelector(`.reply-btn[data-review-id="${reviewId}"]`);
-            replyBtn.addEventListener('click', () => {
-                toggleReplyForm(reviewId);
-            });
+            if (replyBtn) {
+                replyBtn.addEventListener('click', () => {
+                    toggleReplyForm(reviewId);
+                });
+            }
             
             // Submit reply button
             const submitReplyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
-            submitReplyBtn.addEventListener('click', () => {
-                submitReply(reviewId);
-            });
+            if (submitReplyBtn) {
+                submitReplyBtn.addEventListener('click', () => {
+                    submitReply(reviewId);
+                });
+            }
         }
 
         // Toggle like on a review
@@ -1712,9 +1792,14 @@
             const review = reviews.find(r => r.id === reviewId);
             if (!review) return;
             
+            // Get user details from localStorage
+            const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
+                name: 'Guest User'
+            };
+            
             const newReply = {
                 id: Date.now(),
-                replyerName: 'You', // In a real app, this would be the logged-in user
+                replyerName: userProfile.name,
                 content: replyText,
                 timestamp: new Date()
             };
