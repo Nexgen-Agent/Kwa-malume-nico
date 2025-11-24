@@ -560,15 +560,27 @@
             position: relative;
         }
 
+        .profile-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .profile-name-wrapper {
+            flex: 1;
+            margin-right: 20px;
+        }
+
         .profile-name {
             font-size: 1.8rem;
             margin-bottom: 5px;
             color: var(--gold);
+            word-wrap: break-word;
         }
 
         .profile-username {
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
             font-size: 1rem;
         }
 
@@ -609,9 +621,6 @@
         }
 
         .edit-profile-btn {
-            position: absolute;
-            top: 25px;
-            right: 25px;
             background: var(--gold);
             color: var(--ink);
             border: none;
@@ -623,6 +632,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .edit-profile-btn:hover {
@@ -799,6 +809,15 @@
             .profile-info-grid {
                 grid-template-columns: 1fr;
             }
+
+            .profile-header-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .edit-profile-btn {
+                align-self: flex-start;
+            }
         }
 
         @media (max-width: 768px) {
@@ -856,6 +875,7 @@
 <body>
     <!-- Background Video -->
     <video class="bg-video" autoplay muted loop playsinline>
+        <!-- Replace with your actual video file -->
         <source src="assets/video/venue.mp4" type="video/mp4">
         <source src="assets/video/venue.webm" type="video/webm">
         Your browser does not support the video tag.
@@ -865,6 +885,7 @@
     <!-- Header -->
     <header>
         <div class="brand">
+            <!-- Replace with your actual logo file -->
             <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
         </div>
 
@@ -909,7 +930,8 @@
     <div class="profile-header">
         <!-- Profile Banner -->
         <div class="profile-banner glass">
-            <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Crect width='1200' height='300' fill='%230a0a0a'/%3E%3Cpath d='M0 150 Q600 50 1200 150 L1200 300 L0 300 Z' fill='%23c89b2d' opacity='0.2'/%3E%3C/svg%3E" alt="Profile Banner" id="profileBanner">
+            <!-- Replace with your actual banner image -->
+            <img src="images/default-banner.jpg" alt="Profile Banner" id="profileBanner">
             <div class="profile-banner-overlay">
                 <button class="profile-btn" id="changeBannerBtn">
                     <i class="fas fa-camera"></i> Change Cover
@@ -919,7 +941,8 @@
 
         <!-- Profile Picture -->
         <div class="profile-picture-container glass">
-            <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23c89b2d'/%3E%3Ccircle cx='100' cy='80' r='40' fill='%23fffaf1'/%3E%3Cpath d='M40 180 Q100 140 160 180' fill='%23fffaf1'/%3E%3C/svg%3E" alt="Profile Picture" class="profile-picture" id="profilePicture">
+            <!-- Replace with your actual profile picture -->
+            <img src="images/default-profile.jpg" alt="Profile Picture" class="profile-picture" id="profilePicture">
             <div class="profile-picture-actions">
                 <button class="profile-btn" id="uploadPhotoBtn">
                     <i class="fas fa-upload"></i> Upload
@@ -933,8 +956,15 @@
         <div class="profile-sidebar">
             <!-- User Info Card -->
             <div class="profile-info-card glass">
-                <h1 class="profile-name" id="profileName">Malume Nicodemus</h1>
-                <p class="profile-username" id="profileUsername">@malumenico</p>
+                <div class="profile-header-section">
+                    <div class="profile-name-wrapper">
+                        <h1 class="profile-name" id="profileName">Malume Nicodemus</h1>
+                        <p class="profile-username" id="profileUsername">@malumenico</p>
+                    </div>
+                    <button class="edit-profile-btn" id="editProfileBtn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
                 
                 <div class="profile-info-grid" id="profileInfoGrid">
                     <div class="info-item">
@@ -977,10 +1007,7 @@
                     <input type="text" class="info-input" id="favoritesInput" value="Titanic Kota, Dunked Wings, Bugatti Kota, Russian Kota, Mavele Special" style="display: none;">
                 </div>
                 
-                <button class="edit-profile-btn" id="editProfileBtn">
-                    <i class="fas fa-edit"></i> Edit Profile
-                </button>
-                <button class="edit-profile-btn" id="saveProfileBtn" style="display: none;">
+                <button class="edit-profile-btn" id="saveProfileBtn" style="display: none; margin-top: 15px;">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
             </div>
