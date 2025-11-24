@@ -55,6 +55,8 @@
             min-height: 100dvh;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
+            display: flex;
+            flex-direction: column;
         }
 
         /* Ensure full viewport coverage */
@@ -785,6 +787,7 @@
             box-shadow: 
                 0 8px 32px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            margin-top: auto;
         }
 
         .footer-content {
@@ -1342,15 +1345,6 @@
             <input type="tel" id="customerPhone" placeholder="Enter your phone number" required>
         </div>
 
-        <!-- Dine In Fields -->
-        <div class="form-group" id="dineinFields">
-            <label for="tableNumber">Table Number *</label>
-            <input type="text" id="tableNumber" placeholder="Enter your table number" required>
-            <small style="color: rgba(255,255,255,0.7); margin-top: 5px; display: block;">
-                Please check the number on your table
-            </small>
-        </div>
-
         <div class="form-group">
             <label for="specialInstructions">Special Instructions</label>
             <textarea id="specialInstructions" placeholder="Any special instructions for your booking?" rows="3"></textarea>
@@ -1420,6 +1414,9 @@
                 <h3>Malume Nico</h3>
                 <p>Experience the perfect blend of exquisite dining and unforgettable moments. Book your special occasion with us today.</p>
                 <div class="social-links">
+                    <a href="https://www.facebook.com/malume.nicolaskota" class="social-link" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
                     <a href="https://www.tiktok.com/@malumenico5?_r=1&_t=ZS-91eOFfy1AAS" class="social-link" target="_blank" title="TikTok">
                         <i class="fab fa-tiktok"></i>
                     </a>
@@ -1661,15 +1658,9 @@
             // Validate customer details
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
-            const tableNumber = document.getElementById('tableNumber').value;
 
             if (!customerName || !customerPhone) {
                 alert('Please fill in your name and phone number.');
-                return;
-            }
-
-            if (!tableNumber) {
-                alert('Please enter your table number.');
                 return;
             }
 
@@ -1744,7 +1735,6 @@
                     guests,
                     message,
                     orderType: 'dinein',
-                    tableNumber,
                     specialInstructions,
                     subtotal,
                     total,
