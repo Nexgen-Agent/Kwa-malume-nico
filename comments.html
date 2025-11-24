@@ -2,24 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Reviews | Malume Nico</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Malume Nico">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0a0a0a">
-    <meta name="msapplication-TileColor" content="#c89b2d">
-    
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-startup-image" href="/splash/launch-1242x2688.png">
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* === RESET & BASE STYLES === */
@@ -38,6 +22,9 @@
             --dark-bg: #0a0a0a;
             --glass-bg: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.25);
+            --facebook-blue: #1877f2;
+            --facebook-bg: #f0f2f5;
+            --facebook-text: #1c1e21;
         }
 
         html {
@@ -52,16 +39,8 @@
             overflow-x: hidden;
             line-height: 1.6;
             min-height: 100vh;
-            min-height: 100dvh;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        /* Ensure full viewport coverage */
-        @supports (-webkit-touch-callout: none) {
-            body {
-                min-height: -webkit-fill-available;
-            }
         }
 
         /* === BACKGROUND VIDEO === */
@@ -87,7 +66,7 @@
             z-index: -1;
         }
 
-        /* === iOS GLASSMORPHISM EFFECT === */
+        /* === GLASS EFFECT === */
         .glass {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(20px) saturate(180%);
@@ -99,148 +78,207 @@
             border-radius: 20px;
         }
 
-        /* === FADE-IN SCROLLING ANIMATION === */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+        /* === FACEBOOK-STYLE REVIEW POSTS === */
+        .review-item {
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .review-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
-        .fade-in-left {
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .fade-in-left.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .fade-in-right {
-            opacity: 0;
-            transform: translateX(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .fade-in-right.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .fade-in-delay-1 {
-            transition-delay: 0.2s;
-        }
-
-        .fade-in-delay-2 {
-            transition-delay: 0.4s;
-        }
-
-        .fade-in-delay-3 {
-            transition-delay: 0.6s;
-        }
-
-        /* === RESTAURANT LOADING ANIMATION === */
-        .restaurant-loader {
-            display: none;
-            flex-direction: column;
+        .reviewer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px;
-            text-align: center;
+            color: var(--ink);
+            font-weight: bold;
+            font-size: 1.5rem;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
-        .restaurant-loader.active {
-            display: flex;
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .burger-loader {
-            width: 80px;
-            height: 60px;
-            position: relative;
-            margin-bottom: 20px;
+        .reviewer-info {
+            flex: 1;
         }
 
-        .burger-bun {
-            position: absolute;
-            width: 80px;
-            height: 15px;
-            background: var(--gold);
-            border-radius: 10px;
-            animation: bunBounce 1.5s infinite ease-in-out;
-        }
-
-        .burger-bun.top {
-            top: 0;
-            animation-delay: 0s;
-        }
-
-        .burger-bun.middle {
-            top: 22px;
-            background: var(--gold-light);
-            animation-delay: 0.1s;
-        }
-
-        .burger-bun.bottom {
-            top: 44px;
-            animation-delay: 0.2s;
-        }
-
-        .burger-patty {
-            position: absolute;
-            width: 70px;
-            height: 12px;
-            background: #8B4513;
-            border-radius: 8px;
-            top: 30px;
-            left: 5px;
-            animation: pattyCook 2s infinite ease-in-out;
-        }
-
-        .loading-text {
-            color: var(--gold);
+        .reviewer-name {
+            font-weight: 700;
+            margin-bottom: 5px;
             font-size: 1.1rem;
-            margin-top: 15px;
-            font-weight: 600;
         }
 
-        .loading-dots {
-            display: inline-block;
-            margin-left: 5px;
+        .review-time {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .loading-dots span {
-            animation: loadingDots 1.5s infinite;
+        .review-time i {
+            font-size: 0.7rem;
+        }
+
+        .review-rating {
+            color: var(--gold);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .review-content {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            padding: 10px 0;
+        }
+
+        /* === ENLARGED PHOTOS SECTION === */
+        .review-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .review-photo {
+            width: 100%;
+            height: 150px;
+            border-radius: 12px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .review-photo:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* === FACEBOOK-STYLE ACTIONS === */
+        .review-actions {
+            display: flex;
+            gap: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gold);
+        }
+
+        .action-btn.active {
+            color: var(--gold);
+        }
+
+        .action-btn.liked {
+            color: #ff6b6b;
+        }
+
+        /* === MODAL FOR ENLARGED IMAGES === */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
             opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes bunBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        .modal-image {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
         }
 
-        @keyframes pattyCook {
-            0%, 100% { transform: scale(1); background: #8B4513; }
-            50% { transform: scale(1.05); background: #A0522D; }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
         }
 
-        @keyframes loadingDots {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
         /* === HEADER & NAVIGATION === */
@@ -294,21 +332,6 @@
             color: var(--gold);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -321,105 +344,20 @@
             margin-left: auto;
         }
 
-        .mobile-menu-btn.active {
-            transform: rotate(90deg);
-        }
-
-        /* === MOBILE MENU OVERLAY === */
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            z-index: 99;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-20px);
-            transition: all 0.4s ease;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .mobile-nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            text-align: center;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .mobile-nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            padding: 15px 25px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        .mobile-nav-links a:hover {
-            color: var(--gold);
-            background: rgba(200, 155, 45, 0.15);
-            transform: translateX(10px);
-        }
-
-        .mobile-nav-links a i {
-            width: 24px;
-            text-align: center;
-        }
-
-        .close-mobile-menu {
-            position: absolute;
-            top: calc(30px + env(safe-area-inset-top));
-            right: 30px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .close-mobile-menu:hover {
-            transform: scale(1.1);
-            color: var(--gold);
-        }
-
         /* === HERO SECTION === */
         .hero {
             min-height: 40vh;
-            min-height: 40dvh;
             display: flex;
             align-items: center;
             padding: 0 5%;
             position: relative;
-            margin-top: 120px; /* Increased margin to prevent clinging */
+            margin-top: 120px;
         }
 
         .hero-content {
             max-width: 700px;
             padding: 40px;
-            margin: 0 auto; /* Center the content */
+            margin: 0 auto;
         }
 
         .hero h1 {
@@ -459,12 +397,7 @@
             opacity: 0.8;
         }
 
-        /* === COMMENTS & REVIEWS STYLES === */
-        .reviews-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
+        /* === REVIEW FORM === */
         .write-review-section {
             margin-bottom: 50px;
         }
@@ -493,11 +426,6 @@
             transform: scale(1.1);
         }
 
-        .star:hover {
-            color: var(--gold-light);
-            transform: scale(1.2);
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -516,11 +444,6 @@
             background: rgba(255, 255, 255, 0.15);
             color: white;
             font-size: 16px;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--gold);
         }
 
         .btn {
@@ -548,277 +471,6 @@
             box-shadow: 0 8px 20px rgba(200, 155, 45, 0.6);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .photo-upload {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .upload-btn {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .upload-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .uploaded-photos {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .uploaded-photo {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            position: relative;
-        }
-
-        .remove-photo {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* Reviews Feed */
-        .reviews-feed {
-            margin-bottom: 50px;
-            position: relative;
-            min-height: 200px;
-        }
-
-        .review-item {
-            padding: 25px;
-            margin-bottom: 25px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .review-item.updating {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .review-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .reviewer-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-            background: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink);
-            font-weight: bold;
-            font-size: 1.2rem;
-            overflow: hidden;
-        }
-
-        .reviewer-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .reviewer-info {
-            flex: 1;
-        }
-
-        .reviewer-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .review-time {
-            font-size: 0.85rem;
-            opacity: 0.7;
-        }
-
-        .review-rating {
-            color: var(--gold);
-            margin-bottom: 10px;
-        }
-
-        .review-content {
-            margin-bottom: 15px;
-        }
-
-        .review-photos {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .review-photo {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .review-photo:hover {
-            transform: scale(1.05);
-        }
-
-        .review-actions {
-            display: flex;
-            gap: 20px;
-        }
-
-        .action-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: color 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .action-btn:hover {
-            color: var(--gold);
-        }
-
-        .action-btn.active {
-            color: var(--gold);
-        }
-
-        .action-btn.liked {
-            color: #ff6b6b;
-        }
-
-        .action-btn.updating {
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        .replies-section {
-            margin-top: 20px;
-            padding-left: 20px;
-            border-left: 2px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .reply-item {
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .reply-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .replyer-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-            background: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .replyer-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .reply-time {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            margin-left: auto;
-        }
-
-        .reply-content {
-            font-size: 0.9rem;
-        }
-
-        .reply-form {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .reply-form input {
-            flex: 1;
-            padding: 10px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .reply-form button {
-            background: var(--gold);
-            color: var(--ink);
-            border: none;
-            border-radius: 20px;
-            padding: 0 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .reply-form button:hover {
-            background: var(--gold-light);
-        }
-
-        /* API Integration Section - HIDDEN */
-        .api-integration {
-            display: none; /* Hide the API integration section */
-        }
-
         /* === FOOTER === */
         footer {
             padding: 60px 5% 30px;
@@ -827,9 +479,6 @@
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .footer-content {
@@ -837,30 +486,6 @@
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
             margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            color: var(--gold);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--gold);
         }
 
         .social-links {
@@ -910,20 +535,7 @@
             padding: 12px 0;
             z-index: 1000;
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.3);
-            
             padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            height: calc(70px + env(safe-area-inset-bottom));
-        }
-
-        .bottom-nav::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: env(safe-area-inset-bottom);
-            background: rgba(10, 10, 10, 0.7);
-            z-index: -1;
         }
 
         .bottom-nav-item {
@@ -943,23 +555,6 @@
             min-height: 50px;
         }
 
-        .bottom-nav-icon {
-            font-size: 1.3rem;
-            margin-bottom: 4px;
-            transition: all 0.3s ease;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bottom-nav-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
         .bottom-nav-item.active {
             color: var(--gold);
         }
@@ -967,16 +562,6 @@
         .bottom-nav-item.active .bottom-nav-icon {
             transform: scale(1.1);
             color: var(--gold);
-        }
-
-        .bottom-nav-item.active .bottom-nav-label {
-            color: var(--gold);
-            font-weight: 600;
-        }
-
-        .bottom-nav-item:hover {
-            color: var(--gold);
-            transform: translateY(-2px);
         }
 
         /* === RESPONSIVE STYLES === */
@@ -996,56 +581,26 @@
             }
 
             .hero {
-                margin-top: 100px; /* Adjusted for mobile */
+                margin-top: 100px;
                 min-height: 30vh;
             }
 
-            .hero-content {
-                text-align: center;
-                padding: 20px;
+            .review-photos {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .review-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .reviewer-avatar {
-                margin-bottom: 10px;
-            }
-
-            .review-actions {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .reply-form {
-                flex-direction: column;
-            }
-
-            .reply-form button {
-                align-self: flex-end;
-                padding: 10px 20px;
+            .review-photo {
+                height: 120px;
             }
         }
 
         @media (max-width: 576px) {
             .review-photos {
-                justify-content: center;
+                grid-template-columns: 1fr;
             }
 
             .review-photo {
-                width: 80px;
-                height: 80px;
-            }
-
-            .uploaded-photos {
-                justify-content: center;
-            }
-
-            .uploaded-photo {
-                width: 60px;
-                height: 60px;
+                height: 200px;
             }
         }
 
@@ -1053,9 +608,6 @@
         @media (min-width: 769px) {
             .bottom-nav {
                 display: none;
-            }
-            body {
-                padding-bottom: 0;
             }
         }
     </style>
@@ -1087,33 +639,9 @@
         </button>
     </header>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <button class="close-mobile-menu" id="closeMobileMenu">
-            <i class="fas fa-times"></i>
-        </button>
-        <nav class="mobile-nav-links">
-            <a href="index.html" class="mobile-nav-link">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="index.html#about" class="mobile-nav-link">
-                <i class="fas fa-info-circle"></i> About
-            </a>
-            <a href="index.html#gallery" class="mobile-nav-link">
-                <i class="fas fa-images"></i> Gallery
-            </a>
-            <a href="index.html#menu" class="mobile-nav-link">
-                <i class="fas fa-utensils"></i> Menu
-            </a>
-            <a href="index.html#contact" class="mobile-nav-link">
-                <i class="fas fa-map-marker-alt"></i> Find Us
-            </a>
-        </nav>
-    </div>
-
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-content glass fade-in">
+        <div class="hero-content glass">
             <h1>What Our Guests Are Saying</h1>
             <p>Live reviews, reactions, and real customer experiences at Malume Nico. Share your thoughts and see what others love about our kotas!</p>
         </div>
@@ -1121,7 +649,7 @@
 
     <!-- Comments & Reviews Section -->
     <section id="reviews">
-        <div class="section-title fade-in">
+        <div class="section-title">
             <h2>Customer Reviews</h2>
             <p>Share your experience and see what others are saying</p>
         </div>
@@ -1129,7 +657,7 @@
         <div class="reviews-container">
             <!-- Write Review Section -->
             <div class="write-review-section">
-                <div class="review-form glass fade-in">
+                <div class="review-form glass">
                     <h3 style="color: var(--gold); margin-bottom: 20px; text-align: center;">Write a Review</h3>
                     
                     <div class="rating-selector">
@@ -1145,18 +673,6 @@
                         <textarea id="reviewText" rows="4" placeholder="Tell us about your experience..."></textarea>
                     </div>
                     
-                    <div class="photo-upload">
-                        <label>Add Photos (Optional)</label>
-                        <div class="upload-btn" id="uploadPhotoBtn">
-                            <i class="fas fa-camera"></i> Upload Photos
-                        </div>
-                        <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
-                    </div>
-                    
-                    <div class="uploaded-photos" id="uploadedPhotos">
-                        <!-- Uploaded photos will appear here -->
-                    </div>
-                    
                     <div style="text-align: center; margin-top: 20px;">
                         <button class="btn btn-primary" id="submitReview">
                             <i class="fas fa-paper-plane"></i> Post Review
@@ -1167,32 +683,25 @@
 
             <!-- Reviews Feed -->
             <div class="reviews-feed" id="reviewsFeed">
-                <!-- Restaurant Loading Animation -->
-                <div class="restaurant-loader glass" id="reviewsLoader">
-                    <div class="burger-loader">
-                        <div class="burger-bun top"></div>
-                        <div class="burger-patty"></div>
-                        <div class="burger-bun middle"></div>
-                        <div class="burger-bun bottom"></div>
-                    </div>
-                    <div class="loading-text">
-                        Preparing your reviews<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
-                    </div>
-                </div>
                 <!-- Reviews will be dynamically loaded here -->
-            </div>
-
-            <!-- API Integration Section - HIDDEN -->
-            <div class="api-integration glass fade-in" style="display: none;">
-                <!-- This section is now hidden from users -->
             </div>
         </div>
     </section>
 
+    <!-- Image Modal -->
+    <div class="modal-overlay" id="imageModal">
+        <div class="modal-content">
+            <img class="modal-image" id="modalImage" src="" alt="Enlarged review photo">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <div class="footer-column fade-in">
+            <div class="footer-column">
                 <h3>Malume Nico</h3>
                 <p>The best kota in Tzaneen. Serving delicious street food with love since 2010.</p>
                 <div class="social-links">
@@ -1211,7 +720,7 @@
                 </div>
             </div>
 
-            <div class="footer-column fade-in fade-in-delay-1">
+            <div class="footer-column">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
                     <li><a href="index.html">Home</a></li>
@@ -1222,7 +731,7 @@
                 </ul>
             </div>
 
-            <div class="footer-column fade-in fade-in-delay-2">
+            <div class="footer-column">
                 <h3>Contact Info</h3>
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Main Road, Mavele Village, Tzaneen</li>
@@ -1295,7 +804,7 @@
                         timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
                     }
                 ],
-                photos: [],
+                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"],
                 avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
@@ -1319,7 +828,7 @@
                 likes: 15,
                 liked: true,
                 replies: [],
-                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+                photos: ["https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"],
                 avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
@@ -1344,7 +853,7 @@
                         timestamp: new Date(Date.now() - 19 * 60 * 60 * 1000) // 19 hours ago
                     }
                 ],
-                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
+                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"],
                 avatar: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             },
             {
@@ -1358,72 +867,33 @@
                 replies: [],
                 photos: [
                     "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
                 ],
                 avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
             }
         ];
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const closeMobileMenu = document.getElementById('closeMobileMenu');
-        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuOverlay.classList.add('active');
-            mobileMenuBtn.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenuOverlay.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        mobileMenuOverlay.addEventListener('click', (e) => {
-            if (e.target === mobileMenuOverlay) {
-                mobileMenuOverlay.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-        });
-
-        // Header scroll effect
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
         // Review functionality
         let reviews = [];
         let currentRating = 0;
-        let uploadedPhotos = [];
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadReviews();
             renderReviews();
             initReviewForm();
-            setActiveNavItem();
-            initFadeInAnimations();
+            initImageModal();
             
-            // Set up live refresh
-            setInterval(refreshReviews, 30000); // Refresh every 30 seconds
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
         });
 
         // Load reviews from localStorage or use sample reviews
@@ -1441,21 +911,6 @@
             }
         }
 
-        // Set active page based on current URL
-        function setActiveNavItem() {
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            
-            const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
-            bottomNavItems.forEach(item => {
-                const href = item.getAttribute('href');
-                if (href === currentPage) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-        }
-
         // Initialize review form
         function initReviewForm() {
             // Star rating selector
@@ -1467,21 +922,35 @@
                 });
             });
 
-            // Photo upload
-            const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
-            const photoUpload = document.getElementById('photoUpload');
-            
-            uploadPhotoBtn.addEventListener('click', () => {
-                photoUpload.click();
-            });
-            
-            photoUpload.addEventListener('change', (e) => {
-                handlePhotoUpload(e.target.files);
-            });
-
             // Submit review
             const submitReview = document.getElementById('submitReview');
             submitReview.addEventListener('click', postReview);
+        }
+
+        // Initialize image modal
+        function initImageModal() {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalClose = document.getElementById('modalClose');
+            
+            // Close modal when clicking close button
+            modalClose.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside the image
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                }
+            });
         }
 
         // Set rating stars
@@ -1499,72 +968,6 @@
             });
         }
 
-        // Handle photo upload
-        function handlePhotoUpload(files) {
-            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
-            
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = (e) => {
-                        const photoData = {
-                            id: Date.now() + i,
-                            url: e.target.result
-                        };
-                        
-                        uploadedPhotos.push(photoData);
-                        renderUploadedPhotos();
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-
-        // Render uploaded photos
-        function renderUploadedPhotos() {
-            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
-            uploadedPhotosContainer.innerHTML = '';
-            
-            uploadedPhotos.forEach(photo => {
-                const photoElement = document.createElement('img');
-                photoElement.className = 'uploaded-photo';
-                photoElement.src = photo.url;
-                photoElement.alt = 'Uploaded photo';
-                
-                const removeBtn = document.createElement('span');
-                removeBtn.className = 'remove-photo';
-                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                removeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    removePhoto(photo.id);
-                });
-                
-                photoElement.appendChild(removeBtn);
-                uploadedPhotosContainer.appendChild(photoElement);
-            });
-        }
-
-        // Remove uploaded photo
-        function removePhoto(photoId) {
-            uploadedPhotos = uploadedPhotos.filter(photo => photo.id !== photoId);
-            renderUploadedPhotos();
-        }
-
-        // Show loading animation
-        function showLoadingAnimation() {
-            const loader = document.getElementById('reviewsLoader');
-            loader.classList.add('active');
-        }
-
-        // Hide loading animation
-        function hideLoadingAnimation() {
-            const loader = document.getElementById('reviewsLoader');
-            loader.classList.remove('active');
-        }
-
         // Post a new review
         function postReview() {
             const reviewText = document.getElementById('reviewText').value.trim();
@@ -1578,9 +981,6 @@
                 alert('Please select a rating');
                 return;
             }
-            
-            // Show loading animation
-            showLoadingAnimation();
             
             // Get user details from localStorage (assuming they've been set in profile)
             const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
@@ -1597,28 +997,20 @@
                 likes: 0,
                 liked: false,
                 replies: [],
-                photos: [...uploadedPhotos],
+                photos: [],
                 avatar: userProfile.avatar
             };
             
-            // Simulate API call delay
-            setTimeout(() => {
-                reviews.unshift(newReview);
-                saveReviews();
-                renderReviews();
-                
-                // Reset form
-                document.getElementById('reviewText').value = '';
-                setRating(0);
-                uploadedPhotos = [];
-                renderUploadedPhotos();
-                
-                // Hide loading animation
-                hideLoadingAnimation();
-                
-                // Show success message
-                showSuccessMessage('Thank you for your review!');
-            }, 800);
+            reviews.unshift(newReview);
+            saveReviews();
+            renderReviews();
+            
+            // Reset form
+            document.getElementById('reviewText').value = '';
+            setRating(0);
+            
+            // Show success message
+            showSuccessMessage('Thank you for your review!');
         }
 
         // Show success message
@@ -1663,16 +1055,12 @@
         function renderReviews() {
             const reviewsFeed = document.getElementById('reviewsFeed');
             
-            // Hide loading animation
-            hideLoadingAnimation();
-            
-            // Remove existing reviews (except loader)
-            const existingReviews = reviewsFeed.querySelectorAll('.review-item');
-            existingReviews.forEach(review => review.remove());
+            // Remove existing reviews
+            reviewsFeed.innerHTML = '';
             
             if (reviews.length === 0) {
-                reviewsFeed.innerHTML += `
-                    <div class="review-item glass fade-in" style="text-align: center; padding: 40px;">
+                reviewsFeed.innerHTML = `
+                    <div class="review-item glass" style="text-align: center; padding: 40px;">
                         <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
                         <h3 style="color: var(--gold); margin-bottom: 10px;">No Reviews Yet</h3>
                         <p>Be the first to share your experience at Malume Nico!</p>
@@ -1681,9 +1069,9 @@
                 return;
             }
             
-            reviews.forEach((review, index) => {
+            reviews.forEach((review) => {
                 const reviewElement = document.createElement('div');
-                reviewElement.className = `review-item glass fade-in ${index % 2 === 0 ? 'fade-in-left' : 'fade-in-right'} ${index > 1 ? 'fade-in-delay-' + (index % 4) : ''}`;
+                reviewElement.className = 'review-item glass';
                 reviewElement.innerHTML = createReviewHTML(review);
                 reviewsFeed.appendChild(reviewElement);
                 
@@ -1697,16 +1085,17 @@
             const timeAgo = getTimeAgo(review.timestamp);
             const starsHTML = createStarsHTML(review.rating);
             const photosHTML = createPhotosHTML(review.photos);
-            const repliesHTML = createRepliesHTML(review.replies);
             
             return `
                 <div class="review-header">
                     <div class="reviewer-avatar">
-                        ${review.avatar ? `<img src="${review.avatar}" alt="${review.reviewerName}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : review.reviewerName.charAt(0).toUpperCase()}
+                        ${review.avatar ? `<img src="${review.avatar}" alt="${review.reviewerName}">` : review.reviewerName.charAt(0).toUpperCase()}
                     </div>
                     <div class="reviewer-info">
                         <div class="reviewer-name">${review.reviewerName}</div>
-                        <div class="review-time">${timeAgo}</div>
+                        <div class="review-time">
+                            <i class="fas fa-clock"></i> ${timeAgo}
+                        </div>
                     </div>
                 </div>
                 
@@ -1725,15 +1114,11 @@
                         <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes}</span>
                     </button>
                     <button class="action-btn reply-btn" data-review-id="${review.id}">
-                        <i class="fas fa-reply"></i> Reply
+                        <i class="fas fa-comment"></i> Comment
                     </button>
-                </div>
-                
-                ${repliesHTML}
-                
-                <div class="reply-form" id="replyForm-${review.id}" style="display: none;">
-                    <input type="text" placeholder="Write a reply..." id="replyInput-${review.id}">
-                    <button class="btn-reply" data-review-id="${review.id}">Reply</button>
+                    <button class="action-btn share-btn" data-review-id="${review.id}">
+                        <i class="fas fa-share"></i> Share
+                    </button>
                 </div>
             `;
         }
@@ -1757,36 +1142,11 @@
             
             let photosHTML = '<div class="review-photos">';
             photos.forEach(photo => {
-                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo">`;
+                photosHTML += `<img src="${photo}" alt="Review photo" class="review-photo" data-src="${photo}">`;
             });
             photosHTML += '</div>';
             
             return photosHTML;
-        }
-
-        // Create replies HTML
-        function createRepliesHTML(replies) {
-            if (replies.length === 0) return '';
-            
-            let repliesHTML = '<div class="replies-section">';
-            replies.forEach(reply => {
-                const timeAgo = getTimeAgo(reply.timestamp);
-                repliesHTML += `
-                    <div class="reply-item">
-                        <div class="reply-header">
-                            <div class="replyer-avatar">
-                                ${reply.replyerName.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="replyer-name">${reply.replyerName}</div>
-                            <div class="reply-time">${timeAgo}</div>
-                        </div>
-                        <div class="reply-content">${reply.content}</div>
-                    </div>
-                `;
-            });
-            repliesHTML += '</div>';
-            
-            return repliesHTML;
         }
 
         // Add event listeners for a specific review
@@ -1799,21 +1159,23 @@
                 });
             }
             
-            // Reply button
-            const replyBtn = document.querySelector(`.reply-btn[data-review-id="${reviewId}"]`);
-            if (replyBtn) {
-                replyBtn.addEventListener('click', () => {
-                    toggleReplyForm(reviewId);
+            // Image click to enlarge
+            const reviewPhotos = document.querySelectorAll(`.review-photo`);
+            reviewPhotos.forEach(photo => {
+                photo.addEventListener('click', (e) => {
+                    const imageSrc = e.target.getAttribute('data-src');
+                    openImageModal(imageSrc);
                 });
-            }
+            });
+        }
+
+        // Open image modal with the clicked image
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
             
-            // Submit reply button
-            const submitReplyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
-            if (submitReplyBtn) {
-                submitReplyBtn.addEventListener('click', () => {
-                    submitReply(reviewId);
-                });
-            }
+            modalImage.src = imageSrc;
+            modal.classList.add('active');
         }
 
         // Toggle like on a review
@@ -1821,136 +1183,26 @@
             const review = reviews.find(r => r.id === reviewId);
             if (!review) return;
             
-            // Show updating state on the button
-            const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
-            const reviewItem = likeBtn.closest('.review-item');
-            
-            likeBtn.classList.add('updating');
-            reviewItem.classList.add('updating');
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                if (review.liked) {
-                    review.likes--;
-                    review.liked = false;
-                } else {
-                    review.likes++;
-                    review.liked = true;
-                }
-                
-                saveReviews();
-                
-                // Update only the like button and count
-                const likeCount = likeBtn.querySelector('.like-count');
-                likeCount.textContent = review.likes;
-                
-                if (review.liked) {
-                    likeBtn.classList.add('liked');
-                } else {
-                    likeBtn.classList.remove('liked');
-                }
-                
-                // Remove updating state
-                likeBtn.classList.remove('updating');
-                reviewItem.classList.remove('updating');
-            }, 500);
-        }
-
-        // Toggle reply form visibility
-        function toggleReplyForm(reviewId) {
-            const replyForm = document.getElementById(`replyForm-${reviewId}`);
-            if (replyForm.style.display === 'none') {
-                replyForm.style.display = 'flex';
+            if (review.liked) {
+                review.likes--;
+                review.liked = false;
             } else {
-                replyForm.style.display = 'none';
-            }
-        }
-
-        // Submit a reply to a review
-        function submitReply(reviewId) {
-            const replyInput = document.getElementById(`replyInput-${reviewId}`);
-            const replyText = replyInput.value.trim();
-            
-            if (!replyText) {
-                alert('Please enter a reply');
-                return;
+                review.likes++;
+                review.liked = true;
             }
             
-            const review = reviews.find(r => r.id === reviewId);
-            if (!review) return;
+            saveReviews();
             
-            // Show updating state
-            const replyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
-            const reviewItem = replyBtn.closest('.review-item');
+            // Update the like button and count
+            const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
+            const likeCount = likeBtn.querySelector('.like-count');
+            likeCount.textContent = review.likes;
             
-            replyBtn.disabled = true;
-            replyBtn.textContent = 'Posting...';
-            reviewItem.classList.add('updating');
-            
-            // Get user details from localStorage
-            const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
-                name: 'Guest User'
-            };
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                const newReply = {
-                    id: Date.now(),
-                    replyerName: userProfile.name,
-                    content: replyText,
-                    timestamp: new Date()
-                };
-                
-                review.replies.push(newReply);
-                saveReviews();
-                
-                // Update the replies section
-                const repliesSection = reviewItem.querySelector('.replies-section');
-                if (repliesSection) {
-                    const timeAgo = getTimeAgo(newReply.timestamp);
-                    const replyHTML = `
-                        <div class="reply-item">
-                            <div class="reply-header">
-                                <div class="replyer-avatar">
-                                    ${newReply.replyerName.charAt(0).toUpperCase()}
-                                </div>
-                                <div class="replyer-name">${newReply.replyerName}</div>
-                                <div class="reply-time">${timeAgo}</div>
-                            </div>
-                            <div class="reply-content">${newReply.content}</div>
-                        </div>
-                    `;
-                    repliesSection.innerHTML += replyHTML;
-                } else {
-                    // If no replies section exists, create one
-                    const timeAgo = getTimeAgo(newReply.timestamp);
-                    const repliesHTML = `
-                        <div class="replies-section">
-                            <div class="reply-item">
-                                <div class="reply-header">
-                                    <div class="replyer-avatar">
-                                        ${newReply.replyerName.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div class="replyer-name">${newReply.replyerName}</div>
-                                    <div class="reply-time">${timeAgo}</div>
-                                </div>
-                                <div class="reply-content">${newReply.content}</div>
-                            </div>
-                        </div>
-                    `;
-                    const reviewActions = reviewItem.querySelector('.review-actions');
-                    reviewActions.insertAdjacentHTML('afterend', repliesHTML);
-                }
-                
-                // Reset form
-                replyInput.value = '';
-                toggleReplyForm(reviewId);
-                
-                // Remove updating state
-                replyBtn.disabled = false;
-                replyBtn.textContent = 'Reply';
-                reviewItem.classList.remove('updating');
-            }, 800);
+            if (review.liked) {
+                likeBtn.classList.add('liked');
+            } else {
+                likeBtn.classList.remove('liked');
+            }
         }
 
         // Format time ago
@@ -1978,36 +1230,6 @@
         // Save reviews to localStorage
         function saveReviews() {
             localStorage.setItem('malumeNicoReviews', JSON.stringify(reviews));
-        }
-
-        // Refresh reviews (simulate live updates)
-        function refreshReviews() {
-            // In a real app, this would fetch new reviews from the server
-            console.log('Refreshing reviews...');
-            
-            // For demo purposes, we'll just re-render
-            // But in production, you might want to do a more efficient update
-            // renderReviews();
-        }
-
-        // Fade-in animation on scroll
-        function initFadeInAnimations() {
-            const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
-            
-            const fadeInObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
-            fadeElements.forEach(element => {
-                fadeInObserver.observe(element);
-            });
         }
     </script>
 </body>
