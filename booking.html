@@ -647,19 +647,6 @@
             font-size: 0.9rem;
         }
 
-        .delivery-info {
-            background: rgba(200, 155, 45, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 3px solid var(--gold);
-        }
-
-        .delivery-info p {
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
         .payment-method-view {
             margin-top: 30px;
         }
@@ -1345,28 +1332,6 @@
             </div>
         </div>
 
-        <div class="order-type-selection">
-            <h4 class="order-type-title">How would you like to receive your booking?</h4>
-            <div class="order-type-options">
-                <button class="order-type-btn active" data-type="dinein">
-                    <i class="fas fa-utensils"></i>
-                    <span>Dine In</span>
-                </button>
-                <button class="order-type-btn" data-type="collection">
-                    <i class="fas fa-car"></i>
-                    <span>Collection</span>
-                </button>
-                <button class="order-type-btn" data-type="delivery">
-                    <i class="fas fa-truck"></i>
-                    <span>Delivery</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="delivery-info">
-            <p><i class="fas fa-info-circle"></i> Free delivery for orders over R280. R30 delivery fee for orders under R280.</p>
-        </div>
-
         <div class="form-group">
             <label for="customerName">Full Name *</label>
             <input type="text" id="customerName" placeholder="Enter your full name" required>
@@ -1384,27 +1349,6 @@
             <small style="color: rgba(255,255,255,0.7); margin-top: 5px; display: block;">
                 Please check the number on your table
             </small>
-        </div>
-
-        <!-- Collection Fields -->
-        <div class="form-group" id="collectionFields" style="display: none;">
-            <label for="collectionTime">Preferred Collection Time</label>
-            <select id="collectionTime">
-                <option value="asap">As soon as possible</option>
-                <option value="15min">In 15 minutes</option>
-                <option value="30min">In 30 minutes</option>
-                <option value="45min">In 45 minutes</option>
-                <option value="1hour">In 1 hour</option>
-            </select>
-            <small style="color: rgba(255,255,255,0.7); margin-top: 5px; display: block;">
-                We'll notify you when your booking is ready for collection
-            </small>
-        </div>
-
-        <!-- Delivery Fields -->
-        <div class="form-group" id="deliveryFields" style="display: none;">
-            <label for="deliveryAddress">Delivery Address *</label>
-            <textarea id="deliveryAddress" placeholder="Enter your full delivery address" rows="3" required></textarea>
         </div>
 
         <div class="form-group">
@@ -1629,33 +1573,6 @@
             'Grand': 6500
         };
 
-        // Order type functionality
-        const orderTypeBtns = document.querySelectorAll('.order-type-btn');
-        const dineinFields = document.getElementById('dineinFields');
-        const collectionFields = document.getElementById('collectionFields');
-        const deliveryFields = document.getElementById('deliveryFields');
-        let orderType = 'dinein';
-
-        orderTypeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                orderTypeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                orderType = btn.getAttribute('data-type');
-
-                // Show/hide appropriate fields
-                dineinFields.style.display = orderType === 'dinein' ? 'block' : 'none';
-                collectionFields.style.display = orderType === 'collection' ? 'block' : 'none';
-                deliveryFields.style.display = orderType === 'delivery' ? 'block' : 'none';
-
-                // Update required fields
-                document.getElementById('tableNumber').required = orderType === 'dinein';
-                document.getElementById('deliveryAddress').required = orderType === 'delivery';
-
-                // Update summary with new total
-                updateBookingSummary();
-            });
-        });
-
         // Update booking summary
         function updateBookingSummary() {
             const packageType = document.getElementById('packageType').value;
@@ -1665,8 +1582,7 @@
             
             if (packageType && packagePrices[packageType]) {
                 const subtotal = packagePrices[packageType];
-                const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-                const total = subtotal + deliveryFee;
+                const total = subtotal;
 
                 // Format date
                 const formattedDate = date ? new Date(date).toLocaleDateString('en-ZA', {
@@ -1746,20 +1662,14 @@
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const tableNumber = document.getElementById('tableNumber').value;
-            const deliveryAddress = document.getElementById('deliveryAddress').value;
 
             if (!customerName || !customerPhone) {
                 alert('Please fill in your name and phone number.');
                 return;
             }
 
-            if (orderType === 'dinein' && !tableNumber) {
+            if (!tableNumber) {
                 alert('Please enter your table number.');
-                return;
-            }
-
-            if (orderType === 'delivery' && !deliveryAddress) {
-                alert('Please enter your delivery address.');
                 return;
             }
 
@@ -1818,11 +1728,9 @@
                 const guests = document.getElementById('guests').value;
                 const message = document.getElementById('message').value;
                 const specialInstructions = document.getElementById('specialInstructions').value;
-                const collectionTime = document.getElementById('collectionTime').value;
 
                 const subtotal = packagePrices[packageType];
-                const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-                const total = subtotal + deliveryFee;
+                const total = subtotal;
 
                 // Create booking object
                 const booking = {
@@ -1835,13 +1743,10 @@
                     time,
                     guests,
                     message,
-                    orderType,
+                    orderType: 'dinein',
                     tableNumber,
-                    collectionTime,
-                    deliveryAddress,
                     specialInstructions,
                     subtotal,
-                    deliveryFee,
                     total,
                     paymentMethod: 'card',
                     status: 'confirmed',
