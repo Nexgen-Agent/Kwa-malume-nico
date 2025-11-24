@@ -315,12 +315,13 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            margin-top: 80px;
+            margin-top: 120px; /* Increased margin to prevent clinging */
         }
 
         .hero-content {
             max-width: 700px;
             padding: 40px;
+            margin: 0 auto; /* Center the content */
         }
 
         .hero h1 {
@@ -544,6 +545,13 @@
             color: var(--ink);
             font-weight: bold;
             font-size: 1.2rem;
+            overflow: hidden;
+        }
+
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .reviewer-info {
@@ -695,56 +703,9 @@
             background: var(--gold-light);
         }
 
-        /* API Integration Section */
+        /* API Integration Section - HIDDEN */
         .api-integration {
-            padding: 30px;
-            margin-top: 50px;
-        }
-
-        .api-section {
-            margin-bottom: 30px;
-        }
-
-        .api-section h3 {
-            color: var(--gold);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .api-section p {
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-
-        .api-endpoint {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-family: monospace;
-            border-left: 3px solid var(--gold);
-        }
-
-        .api-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .api-status.connected {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
-        }
-
-        .api-status.disconnected {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
+            display: none; /* Hide the API integration section */
         }
 
         /* === FOOTER === */
@@ -924,7 +885,7 @@
             }
 
             .hero {
-                margin-top: 70px;
+                margin-top: 100px; /* Adjusted for mobile */
                 min-height: 30vh;
             }
 
@@ -1098,56 +1059,9 @@
                 <!-- Reviews will be dynamically loaded here -->
             </div>
 
-            <!-- API Integration Section -->
-            <div class="api-integration glass fade-in">
-                <h2 style="color: var(--gold); margin-bottom: 30px; text-align: center;">External Review Integration</h2>
-                
-                <div class="api-section">
-                    <h3><i class="fab fa-google"></i> Google Reviews API</h3>
-                    <p>Integration with Google My Business reviews to display and sync customer feedback.</p>
-                    <div class="api-endpoint">
-                        GET /api/google-reviews?place_id=malume_nico_tzaneen
-                    </div>
-                    <div class="api-status disconnected">
-                        <i class="fas fa-circle"></i> Not Connected
-                    </div>
-                </div>
-                
-                <div class="api-section">
-                    <h3><i class="fab fa-yelp"></i> Yelp Fusion API</h3>
-                    <p>Connect with Yelp reviews to showcase ratings and feedback from Yelp users.</p>
-                    <div class="api-endpoint">
-                        GET /api/yelp-reviews?business_id=malume-nico-tzaneen
-                    </div>
-                    <div class="api-status disconnected">
-                        <i class="fas fa-circle"></i> Not Connected
-                    </div>
-                </div>
-                
-                <div class="api-section">
-                    <h3><i class="fas fa-star"></i> Trustpilot API</h3>
-                    <p>Integration with Trustpilot for verified customer reviews and ratings.</p>
-                    <div class="api-endpoint">
-                        GET /api/trustpilot-reviews?business_unit_id=malume_nico
-                    </div>
-                    <div class="api-status disconnected">
-                        <i class="fas fa-circle"></i> Not Connected
-                    </div>
-                </div>
-                
-                <div class="api-section">
-                    <h3><i class="fas fa-server"></i> Custom Review API</h3>
-                    <p>Internal API endpoints for managing and displaying reviews from our database.</p>
-                    <div class="api-endpoint">
-                        GET /api/get-reviews?limit=20&offset=0
-                    </div>
-                    <div class="api-endpoint">
-                        POST /api/post-review
-                    </div>
-                    <div class="api-status connected">
-                        <i class="fas fa-circle"></i> Connected
-                    </div>
-                </div>
+            <!-- API Integration Section - HIDDEN -->
+            <div class="api-integration glass fade-in" style="display: none;">
+                <!-- This section is now hidden from users -->
             </div>
         </div>
     </section>
@@ -1867,73 +1781,6 @@
                 fadeInObserver.observe(element);
             });
         }
-
-        // API Integration Placeholder Functions
-        // These would be implemented by backend developers
-        
-        /*
-        // Google Reviews API Integration
-        async function fetchGoogleReviews() {
-            try {
-                // Backend developers: Implement this endpoint
-                const response = await fetch('/api/google-reviews?place_id=malume_nico_tzaneen');
-                const data = await response.json();
-                return data.reviews;
-            } catch (error) {
-                console.error('Failed to fetch Google reviews:', error);
-                return [];
-            }
-        }
-        
-        // Yelp Fusion API Integration
-        async function fetchYelpReviews() {
-            try {
-                // Backend developers: Implement this endpoint
-                const response = await fetch('/api/yelp-reviews?business_id=malume-nico-tzaneen');
-                const data = await response.json();
-                return data.reviews;
-            } catch (error) {
-                console.error('Failed to fetch Yelp reviews:', error);
-                return [];
-            }
-        }
-        
-        // Trustpilot API Integration
-        async function fetchTrustpilotReviews() {
-            try {
-                // Backend developers: Implement this endpoint
-                const response = await fetch('/api/trustpilot-reviews?business_unit_id=malume_nico');
-                const data = await response.json();
-                return data.reviews;
-            } catch (error) {
-                console.error('Failed to fetch Trustpilot reviews:', error);
-                return [];
-            }
-        }
-        
-        // Custom API for posting reviews
-        async function postReviewToServer(review) {
-            try {
-                // Backend developers: Implement this endpoint
-                const response = await fetch('/api/post-review', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(review)
-                });
-                
-                if (response.ok) {
-                    return await response.json();
-                } else {
-                    throw new Error('Failed to post review');
-                }
-            } catch (error) {
-                console.error('Failed to post review:', error);
-                throw error;
-            }
-        }
-        */
     </script>
 </body>
 </html>
