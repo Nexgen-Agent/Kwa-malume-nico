@@ -13,14 +13,9 @@
     <meta name="theme-color" content="#0a0a0a">
     <meta name="msapplication-TileColor" content="#c89b2d">
     
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-startup-image" href="/splash/launch-1242x2688.png">
-    
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* === RESET & BASE STYLES === */
         * {
@@ -692,6 +687,19 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
+        /* Favorite Tags */
+        .favorite-tag {
+            display: inline-block;
+            background: rgba(200, 155, 45, 0.2);
+            color: var(--gold);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(200, 155, 45, 0.3);
+        }
+
         /* === FOOTER === */
         footer {
             padding: 60px 5% 30px;
@@ -850,6 +858,7 @@
     <video class="bg-video" autoplay muted loop playsinline>
         <source src="assets/video/venue.mp4" type="video/mp4">
         <source src="assets/video/venue.webm" type="video/webm">
+        Your browser does not support the video tag.
     </video>
     <div class="video-overlay"></div>
 
@@ -900,7 +909,7 @@
     <div class="profile-header">
         <!-- Profile Banner -->
         <div class="profile-banner glass">
-            <img src="images/default-banner.jpg" alt="Profile Banner" id="profileBanner">
+            <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Crect width='1200' height='300' fill='%230a0a0a'/%3E%3Cpath d='M0 150 Q600 50 1200 150 L1200 300 L0 300 Z' fill='%23c89b2d' opacity='0.2'/%3E%3C/svg%3E" alt="Profile Banner" id="profileBanner">
             <div class="profile-banner-overlay">
                 <button class="profile-btn" id="changeBannerBtn">
                     <i class="fas fa-camera"></i> Change Cover
@@ -910,7 +919,7 @@
 
         <!-- Profile Picture -->
         <div class="profile-picture-container glass">
-            <img src="images/default-profile.jpg" alt="Profile Picture" class="profile-picture" id="profilePicture">
+            <img src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='100' fill='%23c89b2d'/%3E%3Ccircle cx='100' cy='80' r='40' fill='%23fffaf1'/%3E%3Cpath d='M40 180 Q100 140 160 180' fill='%23fffaf1'/%3E%3C/svg%3E" alt="Profile Picture" class="profile-picture" id="profilePicture">
             <div class="profile-picture-actions">
                 <button class="profile-btn" id="uploadPhotoBtn">
                     <i class="fas fa-upload"></i> Upload
@@ -924,19 +933,19 @@
         <div class="profile-sidebar">
             <!-- User Info Card -->
             <div class="profile-info-card glass">
-                <h1 class="profile-name" id="profileName">John Doe</h1>
-                <p class="profile-username" id="profileUsername">@johndoe</p>
+                <h1 class="profile-name" id="profileName">Malume Nicodemus</h1>
+                <p class="profile-username" id="profileUsername">@malumenico</p>
                 
                 <div class="profile-info-grid" id="profileInfoGrid">
                     <div class="info-item">
                         <span class="info-label">Email</span>
-                        <span class="info-value" id="profileEmail">johndoe@example.com</span>
-                        <input type="email" class="info-input" id="emailInput" value="johndoe@example.com" style="display: none;">
+                        <span class="info-value" id="profileEmail">malume.nicodemus@example.com</span>
+                        <input type="email" class="info-input" id="emailInput" value="malume.nicodemus@example.com" style="display: none;">
                     </div>
                     <div class="info-item">
                         <span class="info-label">Phone</span>
-                        <span class="info-value" id="profilePhone">+27 79 123 4567</span>
-                        <input type="tel" class="info-input" id="phoneInput" value="+27 79 123 4567" style="display: none;">
+                        <span class="info-value" id="profilePhone">+27 79 651 6990</span>
+                        <input type="tel" class="info-input" id="phoneInput" value="+27 79 651 6990" style="display: none;">
                     </div>
                     <div class="info-item">
                         <span class="info-label">Birthday</span>
@@ -944,31 +953,28 @@
                         <input type="text" class="info-input" id="birthdayInput" value="January 15" style="display: none;">
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Relationship</span>
-                        <span class="info-value" id="profileRelationship">Single</span>
-                        <select class="info-input" id="relationshipInput" style="display: none;">
-                            <option value="Single">Single</option>
-                            <option value="In a relationship">In a relationship</option>
-                            <option value="Married">Married</option>
-                            <option value="It's complicated">It's complicated</option>
-                        </select>
+                        <span class="info-label">Location</span>
+                        <span class="info-value" id="profileLocation">Tzaneen, Limpopo</span>
+                        <input type="text" class="info-input" id="locationInput" value="Tzaneen, Limpopo" style="display: none;">
                     </div>
                 </div>
                 
                 <div class="info-item full-width">
                     <span class="info-label">Bio</span>
-                    <p class="info-value" id="profileBio">Food lover and kota enthusiast! Always looking for the next delicious meal at Malume Nico.</p>
-                    <textarea class="info-input" id="bioInput" style="display: none; height: 80px;">Food lover and kota enthusiast! Always looking for the next delicious meal at Malume Nico.</textarea>
+                    <p class="info-value" id="profileBio">The best kota in Tzaneen! Serving delicious street food with love since 2010. Known for my legendary Titanic Kota and crispy Dunked Wings.</p>
+                    <textarea class="info-input" id="bioInput" style="display: none; height: 80px;">The best kota in Tzaneen! Serving delicious street food with love since 2010. Known for my legendary Titanic Kota and crispy Dunked Wings.</textarea>
                 </div>
                 
                 <div class="info-item full-width">
-                    <span class="info-label">Favorite Dishes</span>
+                    <span class="info-label">Specialties</span>
                     <div class="info-value" id="profileFavorites">
                         <span class="favorite-tag">Titanic Kota</span>
                         <span class="favorite-tag">Dunked Wings</span>
                         <span class="favorite-tag">Bugatti Kota</span>
+                        <span class="favorite-tag">Russian Kota</span>
+                        <span class="favorite-tag">Mavele Special</span>
                     </div>
-                    <input type="text" class="info-input" id="favoritesInput" value="Titanic Kota, Dunked Wings, Bugatti Kota" style="display: none;">
+                    <input type="text" class="info-input" id="favoritesInput" value="Titanic Kota, Dunked Wings, Bugatti Kota, Russian Kota, Mavele Special" style="display: none;">
                 </div>
                 
                 <button class="edit-profile-btn" id="editProfileBtn">
@@ -1004,11 +1010,66 @@
 
         <!-- Main Content -->
         <div class="profile-main">
-            <!-- You can add other profile content here in the future -->
+            <!-- Restaurant Stats -->
+            <div class="glass" style="padding: 25px;">
+                <h2 style="color: var(--gold); margin-bottom: 20px;">Restaurant Stats</h2>
+                <div class="profile-info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Years in Business</span>
+                        <span class="info-value">14</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Happy Customers</span>
+                        <span class="info-value">10,000+</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Kotas Sold</span>
+                        <span class="info-value">50,000+</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Customer Rating</span>
+                        <span class="info-value">4.9/5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="glass" style="padding: 25px;">
+                <h2 style="color: var(--gold); margin-bottom: 20px;">Recent Activity</h2>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05);">
+                        <div style="background: var(--gold); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-star" style="color: var(--ink);"></i>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600;">New 5-star review</p>
+                            <p style="font-size: 0.8rem; opacity: 0.7;">"Best kota in Tzaneen! The Titanic is legendary!"</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05);">
+                        <div style="background: var(--gold); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-utensils" style="color: var(--ink);"></i>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600;">New menu item added</p>
+                            <p style="font-size: 0.8rem; opacity: 0.7;">Mavele Special Kota now available</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.05);">
+                        <div style="background: var(--gold); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-calendar-alt" style="color: var(--ink);"></i>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600;">Special event planned</p>
+                            <p style="font-size: 0.8rem; opacity: 0.7;">Kota Festival on December 15th</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Footer (Replaced with coupon.html footer) -->
+    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-column fade-in">
@@ -1096,16 +1157,16 @@
     </nav>
 
     <script>
-        // Profile Data
+        // Profile Data for Malume Nicodemus
         let profileData = {
-            name: "John Doe",
-            username: "@johndoe",
-            email: "johndoe@example.com",
-            phone: "+27 79 123 4567",
+            name: "Malume Nicodemus",
+            username: "@malumenico",
+            email: "malume.nicodemus@example.com",
+            phone: "+27 79 651 6990",
             birthday: "January 15",
-            relationship: "Single",
-            bio: "Food lover and kota enthusiast! Always looking for the next delicious meal at Malume Nico.",
-            favorites: ["Titanic Kota", "Dunked Wings", "Bugatti Kota"]
+            location: "Tzaneen, Limpopo",
+            bio: "The best kota in Tzaneen! Serving delicious street food with love since 2010. Known for my legendary Titanic Kota and crispy Dunked Wings.",
+            favorites: ["Titanic Kota", "Dunked Wings", "Bugatti Kota", "Russian Kota", "Mavele Special"]
         };
 
         // Mobile Menu Toggle
@@ -1194,7 +1255,7 @@
             profileData.email = document.getElementById('emailInput').value;
             profileData.phone = document.getElementById('phoneInput').value;
             profileData.birthday = document.getElementById('birthdayInput').value;
-            profileData.relationship = document.getElementById('relationshipInput').value;
+            profileData.location = document.getElementById('locationInput').value;
             profileData.bio = document.getElementById('bioInput').value;
             profileData.favorites = document.getElementById('favoritesInput').value.split(',').map(f => f.trim());
             
@@ -1202,7 +1263,7 @@
             document.getElementById('profileEmail').textContent = profileData.email;
             document.getElementById('profilePhone').textContent = profileData.phone;
             document.getElementById('profileBirthday').textContent = profileData.birthday;
-            document.getElementById('profileRelationship').textContent = profileData.relationship;
+            document.getElementById('profileLocation').textContent = profileData.location;
             document.getElementById('profileBio').textContent = profileData.bio;
             
             // Update favorites tags
@@ -1217,6 +1278,9 @@
             
             // In a real app, you would save to Supabase here
             console.log('Profile data saved:', profileData);
+            
+            // Show success message
+            alert('Profile updated successfully!');
         }
 
         // Image Upload Functionality
@@ -1239,7 +1303,37 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize fade-in animations
             initFadeInAnimations();
+            
+            // Set the default profile data
+            setProfileData();
         });
+
+        // Set profile data
+        function setProfileData() {
+            document.getElementById('profileName').textContent = profileData.name;
+            document.getElementById('profileUsername').textContent = profileData.username;
+            document.getElementById('profileEmail').textContent = profileData.email;
+            document.getElementById('emailInput').value = profileData.email;
+            document.getElementById('profilePhone').textContent = profileData.phone;
+            document.getElementById('phoneInput').value = profileData.phone;
+            document.getElementById('profileBirthday').textContent = profileData.birthday;
+            document.getElementById('birthdayInput').value = profileData.birthday;
+            document.getElementById('profileLocation').textContent = profileData.location;
+            document.getElementById('locationInput').value = profileData.location;
+            document.getElementById('profileBio').textContent = profileData.bio;
+            document.getElementById('bioInput').value = profileData.bio;
+            
+            // Set favorites
+            const favoritesContainer = document.getElementById('profileFavorites');
+            favoritesContainer.innerHTML = '';
+            profileData.favorites.forEach(favorite => {
+                const tag = document.createElement('span');
+                tag.className = 'favorite-tag';
+                tag.textContent = favorite;
+                favoritesContainer.appendChild(tag);
+            });
+            document.getElementById('favoritesInput').value = profileData.favorites.join(', ');
+        }
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
