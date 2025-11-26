@@ -148,7 +148,52 @@
             transition-delay: 0.6s;
         }
 
-        /* === HEADER & NAVIGATION === */
+        /* === UPDATED: HEADER CART TOTAL === */
+        .header-cart-total {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 6px 15px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: 20px;
+            margin-right: auto;
+        }
+
+        .header-cart-total.visible {
+            display: flex;
+            animation: slideInTop 0.5s ease;
+        }
+
+        .header-total-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .header-total-amount {
+            font-size: 14px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* === UPDATED: HEADER & NAVIGATION === */
         header {
             position: fixed;
             top: 0;
@@ -181,7 +226,7 @@
             object-fit: contain;
         }
 
-        /* UPDATED: Navigation links for authentication */
+        /* UPDATED: Navigation links for authentication - SAME AS HOMEPAGE */
         .nav-links {
             display: flex;
             gap: 20px;
@@ -237,13 +282,45 @@
             z-index: 101;
             transition: transform 0.3s ease;
             margin-left: auto;
+            width: 30px;
+            height: 30px;
+            position: relative;
         }
 
-        .mobile-menu-btn.active {
-            transform: rotate(90deg);
+        /* NEW: Custom hamburger icon with equal lines - SAME AS HOMEPAGE */
+        .hamburger {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
         }
 
-        /* === MOBILE MENU OVERLAY === */
+        .hamburger-line {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        /* Equal X animation - all lines same length */
+        .mobile-menu-btn.active .hamburger-line:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        /* === UPDATED: MOBILE MENU OVERLAY - SAME AS HOMEPAGE === */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -304,23 +381,6 @@
         .mobile-nav-links a i {
             width: 24px;
             text-align: center;
-        }
-
-        .close-mobile-menu {
-            position: absolute;
-            top: calc(30px + env(safe-area-inset-top));
-            right: 30px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .close-mobile-menu:hover {
-            transform: scale(1.1);
-            color: var(--gold);
         }
 
         /* === SECTIONS === */
@@ -1071,7 +1131,9 @@
             }
 
             .mobile-menu-btn {
-                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .welcome-coupon {
@@ -1172,14 +1234,13 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <!-- UPDATED: Header with same navigation as homepage -->
     <header>
         <div class="brand">
-            <!-- REPLACE THE LOGO URL BELOW WITH YOUR ACTUAL LOGO URL -->
             <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
         </div>
 
-        <!-- UPDATED: Authentication navigation links -->
+        <!-- UPDATED: Authentication navigation links - SAME AS HOMEPAGE -->
         <nav class="nav-links">
             <a href="profile.html" class="login-btn">
                 <i class="fas fa-sign-in-alt"></i> Login
@@ -1189,17 +1250,19 @@
             </a>
         </nav>
 
+        <!-- UPDATED: Mobile menu button with custom hamburger icon - SAME AS HOMEPAGE -->
         <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
+            <div class="hamburger">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
         </button>
     </header>
 
-    <!-- Mobile Menu Overlay -->
+    <!-- UPDATED: Mobile Menu Overlay (removed close button) - SAME AS HOMEPAGE -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <button class="close-mobile-menu" id="closeMobileMenu">
-            <i class="fas fa-times"></i>
-        </button>
-        <!-- UPDATED: Mobile authentication navigation links -->
+        <!-- UPDATED: Mobile authentication navigation links - SAME AS HOMEPAGE -->
         <nav class="mobile-nav-links">
             <a href="profile.html" class="mobile-nav-link">
                 <i class="fas fa-sign-in-alt"></i> Login
@@ -1504,24 +1567,19 @@
         const modalDescription = document.getElementById('modalDescription');
         const modalCost = document.getElementById('modalCost');
 
-        // Mobile Menu Toggle
+        // UPDATED: Enhanced Mobile Menu Toggle - SAME AS HOMEPAGE
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const closeMobileMenu = document.getElementById('closeMobileMenu');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
+        // Toggle mobile menu
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuOverlay.classList.add('active');
-            mobileMenuBtn.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            mobileMenuOverlay.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            document.body.style.overflow = mobileMenuOverlay.classList.contains('active') ? 'hidden' : 'auto';
         });
 
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
+        // Close mobile menu when clicking on a link
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenuOverlay.classList.remove('active');
@@ -1539,7 +1597,7 @@
             }
         });
 
-        // Header scroll effect
+        // UPDATED: Header scroll effect - SAME AS HOMEPAGE
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if (window.scrollY > 100) {
@@ -1559,7 +1617,25 @@
             
             // Set up event listeners
             setupEventListeners();
+            
+            // Set active nav item
+            setActiveNavItem();
         });
+
+        // Set active page based on current URL
+        function setActiveNavItem() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            
+            const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+            bottomNavItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
 
         // Set up event listeners
         function setupEventListeners() {
@@ -1774,7 +1850,7 @@
             renderRewards();
         }
 
-        // Fade-in animation on scroll
+        // UPDATED: Fade-in animation on scroll - SAME AS HOMEPAGE
         function initFadeInAnimations() {
             const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
             
