@@ -147,7 +147,7 @@
             transition-delay: 0.6s;
         }
 
-        /* === HEADER & NAVIGATION === */
+        /* === UPDATED: HEADER & NAVIGATION (HOME PAGE STYLE) === */
         header {
             position: fixed;
             top: 0;
@@ -180,9 +180,10 @@
             object-fit: contain;
         }
 
+        /* UPDATED: Navigation links for authentication (Home Page Style) */
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             margin-left: auto;
         }
 
@@ -192,25 +193,37 @@
             font-weight: 500;
             transition: color 0.3s;
             position: relative;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a.login-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links a.signup-btn {
+            background: var(--gold);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .nav-links a:hover {
-            color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(200, 155, 45, 0.4);
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gold);
-            transition: width 0.3s;
+        .nav-links a.login-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
+        .nav-links a.signup-btn:hover {
+            background: var(--gold-light);
         }
 
         .mobile-menu-btn {
@@ -223,13 +236,45 @@
             z-index: 101;
             transition: transform 0.3s ease;
             margin-left: auto;
+            width: 30px;
+            height: 30px;
+            position: relative;
         }
 
-        .mobile-menu-btn.active {
-            transform: rotate(90deg);
+        /* NEW: Custom hamburger icon with equal lines (Home Page Style) */
+        .hamburger {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
         }
 
-        /* === MOBILE MENU OVERLAY === */
+        .hamburger-line {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        /* Equal X animation - all lines same length */
+        .mobile-menu-btn.active .hamburger-line:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        /* === MOBILE MENU OVERLAY (Home Page Style) === */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -290,23 +335,6 @@
         .mobile-nav-links a i {
             width: 24px;
             text-align: center;
-        }
-
-        .close-mobile-menu {
-            position: absolute;
-            top: calc(30px + env(safe-area-inset-top));
-            right: 30px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 28px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .close-mobile-menu:hover {
-            transform: scale(1.1);
-            color: var(--gold);
         }
 
         /* === SECTIONS === */
@@ -997,7 +1025,9 @@
             }
 
             .mobile-menu-btn {
-                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
@@ -1081,50 +1111,42 @@
     </video>
     <div class="video-overlay"></div>
 
-    <!-- Header with Navigation -->
+    <!-- UPDATED: Header with Home Page Style Navigation -->
     <header>
         <div class="brand">
             <!-- REPLACE THE LOGO URL BELOW WITH YOUR ACTUAL LOGO URL -->
             <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
         </div>
 
+        <!-- UPDATED: Authentication navigation links (Home Page Style) -->
         <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="index.html#about">About</a>
-            <a href="index.html#gallery">Gallery</a>
-            <a href="index.html#menu">Menu</a>
-            <a href="index.html#contact">Find Us</a>
-            <a href="booking.html" style="color: var(--gold);">Bookings</a>
+            <a href="profile.html" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="profile.html" class="signup-btn">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
         </nav>
 
+        <!-- UPDATED: Mobile menu button with custom hamburger icon (Home Page Style) -->
         <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <i class="fas fa-bars"></i>
+            <div class="hamburger">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
         </button>
     </header>
 
-    <!-- Mobile Menu Overlay -->
+    <!-- UPDATED: Mobile Menu Overlay (Home Page Style) -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <button class="close-mobile-menu" id="closeMobileMenu">
-            <i class="fas fa-times"></i>
-        </button>
+        <!-- UPDATED: Mobile authentication navigation links -->
         <nav class="mobile-nav-links">
-            <a href="index.html" class="mobile-nav-link">
-                <i class="fas fa-home"></i> Home
+            <a href="profile.html" class="mobile-nav-link">
+                <i class="fas fa-sign-in-alt"></i> Login
             </a>
-            <a href="index.html#about" class="mobile-nav-link">
-                <i class="fas fa-info-circle"></i> About
-            </a>
-            <a href="index.html#gallery" class="mobile-nav-link">
-                <i class="fas fa-images"></i> Gallery
-            </a>
-            <a href="index.html#menu" class="mobile-nav-link">
-                <i class="fas fa-utensils"></i> Menu
-            </a>
-            <a href="index.html#contact" class="mobile-nav-link">
-                <i class="fas fa-map-marker-alt"></i> Find Us
-            </a>
-            <a href="booking.html" class="mobile-nav-link" style="color: var(--gold);">
-                <i class="fas fa-calendar-check"></i> Bookings
+            <a href="profile.html" class="mobile-nav-link">
+                <i class="fas fa-user-plus"></i> Sign Up
             </a>
         </nav>
     </div>
@@ -1585,28 +1607,23 @@
     </nav>
 
     <script>
-        // Mobile Menu Toggle
+        // UPDATED: Enhanced Mobile Menu Toggle (Home Page Style)
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const closeMobileMenu = document.getElementById('closeMobileMenu');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
+        // Toggle mobile menu
         mobileMenuBtn.addEventListener('click', () => {
-            mobileMenuBtn.classList.add('active');
-            mobileMenuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            mobileMenuOverlay.classList.toggle('active');
+            mobileMenuBtn.classList.toggle('active');
+            document.body.style.overflow = mobileMenuOverlay.classList.contains('active') ? 'hidden' : 'auto';
         });
 
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenuBtn.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-
+        // Close mobile menu when clicking on a link
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenuBtn.classList.remove('active');
                 mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
         });
@@ -1614,8 +1631,8 @@
         // Close mobile menu when clicking outside
         mobileMenuOverlay.addEventListener('click', (e) => {
             if (e.target === mobileMenuOverlay) {
-                mobileMenuBtn.classList.remove('active');
                 mobileMenuOverlay.classList.remove('active');
+                mobileMenuBtn.classList.remove('active');
                 document.body.style.overflow = 'auto';
             }
         });
