@@ -482,7 +482,7 @@
             transform: translateY(-2px);
         }
 
-        /* === HEADER & NAVIGATION === */
+        /* === FIXED: HEADER & NAVIGATION WITH LOGO OVERLAY === */
         header {
             position: fixed;
             top: 0;
@@ -493,26 +493,43 @@
             justify-content: flex-start;
             align-items: center;
             z-index: 100;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
             padding-top: calc(15px + env(safe-area-inset-top));
+            /* Gradient overlay to prevent logo cut-off */
+            background: linear-gradient(to bottom, 
+                rgba(10, 10, 10, 0.95) 0%,
+                rgba(10, 10, 10, 0.85) 30%,
+                transparent 100%);
+            min-height: 100px;
         }
 
         header.scrolled {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* FIXED: Brand with overlay to prevent logo cut-off */
         .brand {
-            display: flex;
-            align-items: center;
+            position: relative;
+            z-index: 1;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .logo {
             height: 70px;
             width: auto;
             object-fit: contain;
+            position: relative;
+            z-index: 2;
+            display: block;
         }
 
         /* UPDATED: Navigation links for authentication */
@@ -672,7 +689,7 @@
             text-align: center;
         }
 
-        /* === HERO SECTION === */
+        /* === FIXED: HERO SECTION WITH HEADER OFFSET === */
         .hero {
             min-height: 100vh;
             min-height: 100dvh;
@@ -680,6 +697,8 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
+            margin-top: 0;
+            padding-top: 100px; /* Add padding to account for fixed header */
         }
 
         .hero-content {
@@ -2233,14 +2252,34 @@
             }
         });
 
-        // Header scroll effect
+        // FIXED: Header scroll effect - prevent hiding on mobile scroll
+        let lastScrollTop = 0;
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
-            if (window.scrollY > 100) {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Only hide/show header on desktop, keep visible on mobile
+            if (window.innerWidth > 768) {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    // Scrolling down
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    header.style.transform = 'translateY(0)';
+                }
+            } else {
+                // On mobile, always keep header visible but change background
+                header.style.transform = 'translateY(0)';
+            }
+            
+            // Add scrolled class for background change
+            if (scrollTop > 50) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
+            
+            lastScrollTop = scrollTop;
         });
 
         // Image Zoom Modal
@@ -2807,6 +2846,66 @@
             });
         }
 
+        // FIXED: Handle keyboard events to prevent header issues
+        function handleKeyboardEvents() {
+            let originalHeight = window.innerHeight;
+            let isKeyboardOpen = false;
+            
+            window.addEventListener('resize', () => {
+                const newHeight = window.innerHeight;
+                const header = document.querySelector('header');
+                
+                // Detect if keyboard is open (viewport shrinks significantly on mobile)
+                if (newHeight < originalHeight * 0.6 && window.innerWidth <= 768) {
+                    isKeyboardOpen = true;
+                    // When keyboard is open, use fixed positioning and solid background
+                    header.style.paddingTop = '15px';
+                    header.style.background = 'rgba(10, 10, 10, 0.98)';
+                    header.style.backdropFilter = 'blur(20px)';
+                } else if (newHeight > originalHeight * 0.9 || window.innerWidth > 768) {
+                    // Keyboard closed or on desktop
+                    isKeyboardOpen = false;
+                    header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
+                    header.style.background = 'rgba(10, 10, 10, 0.7)';
+                }
+                
+                originalHeight = newHeight;
+            });
+            
+            // Handle focus/blur for form inputs
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    const header = document.querySelector('header');
+                    header.style.background = 'rgba(10, 10, 10, 0.98)';
+                    header.style.zIndex = '1000';
+                    
+                    // On mobile, ensure header stays at top
+                    if (window.innerWidth <= 768) {
+                        header.style.position = 'fixed';
+                        header.style.top = '0';
+                        header.style.paddingTop = '15px';
+                        
+                        // Scroll header slightly into view
+                        setTimeout(() => {
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+                        }, 100);
+                    }
+                });
+                
+                input.addEventListener('blur', () => {
+                    const header = document.querySelector('header');
+                    if (!isKeyboardOpen) {
+                        header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
+                        header.style.background = 'rgba(10, 10, 10, 0.7)';
+                    }
+                });
+            });
+        }
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
@@ -2817,42 +2916,38 @@
             // Initialize fade-in animations
             initFadeInAnimations();
 
-            // Handle keyboard events to keep header in place
+            // Initialize keyboard handling
             handleKeyboardEvents();
-        });
 
-        // Handle keyboard events to ensure header stays fixed
-        function handleKeyboardEvents() {
-            let originalHeight = window.innerHeight;
+            // Force initial header positioning
+            const header = document.querySelector('header');
+            header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
             
-            window.addEventListener('resize', () => {
-                const newHeight = window.innerHeight;
+            // iOS Safari specific fix for safe area
+            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                // Set initial height
+                document.body.style.minHeight = window.innerHeight + 'px';
                 
-                // Check if keyboard is likely open (viewport height decreased significantly)
-                if (newHeight < originalHeight * 0.7) {
-                    // Force header to stay at top
-                    document.querySelector('header').style.position = 'fixed';
-                    document.querySelector('header').style.top = '0';
-                } else {
-                    // Reset to normal
-                    document.querySelector('header').style.position = 'fixed';
-                    document.querySelector('header').style.top = '0';
-                }
-                
-                originalHeight = newHeight;
-            });
-
-            // Also handle focus events on form inputs
-            const formInputs = document.querySelectorAll('input, textarea, select');
-            formInputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    // Ensure header stays visible
-                    document.querySelector('header').style.position = 'fixed';
-                    document.querySelector('header').style.top = '0';
-                    document.querySelector('header').style.zIndex = '1000';
+                // Handle orientation changes
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        document.body.style.minHeight = window.innerHeight + 'px';
+                        header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
+                        
+                        // Force reflow to fix rendering
+                        void header.offsetHeight;
+                    }, 300);
                 });
-            });
-        }
+                
+                // Handle window resize (for browser UI changes)
+                window.addEventListener('resize', () => {
+                    setTimeout(() => {
+                        document.body.style.minHeight = window.innerHeight + 'px';
+                        header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
+                    }, 100);
+                });
+            }
+        });
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
