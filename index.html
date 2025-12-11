@@ -482,7 +482,7 @@
             transform: translateY(-2px);
         }
 
-        /* === UPDATED: HEADER & NAVIGATION - NOW TRANSPARENT LIKE PROFILE.HTML === */
+        /* === HEADER & NAVIGATION === */
         header {
             position: fixed;
             top: 0;
@@ -495,15 +495,6 @@
             z-index: 100;
             transition: background 0.3s;
             padding-top: calc(15px + env(safe-area-inset-top));
-            /* REMOVED: Gradient background */
-            /* background: linear-gradient(to bottom, 
-                rgba(10, 10, 10, 0.95) 0%,
-                rgba(10, 10, 10, 0.85) 30%,
-                rgba(10, 10, 10, 0.4) 70%,
-                transparent 100%); */
-            /* REMOVED: Fixed height and min-height */
-            /* min-height: 120px;
-            height: calc(120px + env(safe-area-inset-top)); */
         }
 
         header.scrolled {
@@ -513,7 +504,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* UPDATED: Brand - now simple and transparent like profile.html */
         .brand {
             display: flex;
             align-items: center;
@@ -682,7 +672,7 @@
             text-align: center;
         }
 
-        /* === FIXED: HERO SECTION === */
+        /* === HERO SECTION === */
         .hero {
             min-height: 100vh;
             min-height: 100dvh;
@@ -690,7 +680,6 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            padding-top: 100px; /* Adjusted for the new header height */
         }
 
         .hero-content {
@@ -1471,15 +1460,6 @@
             .header-total-amount {
                 font-size: 14px;
             }
-            
-            /* Mobile header adjustments */
-            header {
-                padding-top: calc(10px + env(safe-area-inset-top));
-            }
-            
-            .logo {
-                height: 60px;
-            }
         }
 
         @media (max-width: 768px) {
@@ -1487,10 +1467,6 @@
                 padding: 60px 5%;
             }
 
-            .hero {
-                padding-top: 90px;
-            }
-            
             .hero-content {
                 text-align: center;
                 padding: 20px;
@@ -1546,16 +1522,6 @@
                 order: -1;
                 height: 250px;
             }
-            
-            /* Mobile header further adjustments */
-            header {
-                padding: 15px 5%;
-                padding-top: calc(10px + env(safe-area-inset-top));
-            }
-            
-            .logo {
-                height: 55px;
-            }
         }
 
         @media (max-width: 576px) {
@@ -1592,20 +1558,6 @@
 
             .header-cart-total {
                 display: none !important;
-            }
-            
-            /* Small mobile adjustments */
-            header {
-                padding: 10px 5%;
-                padding-top: calc(10px + env(safe-area-inset-top));
-            }
-            
-            .logo {
-                height: 50px;
-            }
-            
-            .hero {
-                padding-top: 80px;
             }
         }
 
@@ -1658,7 +1610,7 @@
         <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
     </div>
 
-    <!-- Fixed Header with Protected Logo -->
+    <!-- Header with Cart Total -->
     <header>
         <div class="brand">
             <!-- REPLACE THE LOGO URL BELOW WITH YOUR ACTUAL LOGO URL -->
@@ -2281,7 +2233,7 @@
             }
         });
 
-        // Header scroll effect - now matches profile.html
+        // Header scroll effect
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if (window.scrollY > 100) {
@@ -2855,47 +2807,6 @@
             });
         }
 
-        // FIXED: Handle keyboard and browser UI changes
-        function handleMobileBrowserUI() {
-            let originalHeight = window.innerHeight;
-            
-            window.addEventListener('resize', () => {
-                const newHeight = window.innerHeight;
-                const header = document.querySelector('header');
-                
-                // When browser UI changes (address bar hides/shows)
-                if (newHeight > originalHeight) {
-                    // Browser UI hiding (getting more screen space)
-                    header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
-                } else if (newHeight < originalHeight) {
-                    // Browser UI showing (less screen space)
-                    header.style.paddingTop = '15px';
-                }
-                
-                originalHeight = newHeight;
-            });
-            
-            // Handle iOS Safari specifically
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                // Ensure header stays at top during scroll
-                document.addEventListener('scroll', () => {
-                    const header = document.querySelector('header');
-                    header.style.position = 'fixed';
-                    header.style.top = '0';
-                });
-                
-                // Handle orientation change
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => {
-                        const header = document.querySelector('header');
-                        header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
-                        // Force reflow
-                        void header.offsetHeight;
-                    }, 300);
-                });
-            }
-        }
-
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
@@ -2906,30 +2817,42 @@
             // Initialize fade-in animations
             initFadeInAnimations();
 
-            // Initialize mobile browser UI handling
-            handleMobileBrowserUI();
-
-            // Set initial header padding
-            const header = document.querySelector('header');
-            header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
-            
-            // iOS Safari specific optimizations
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                // Prevent elastic scrolling
-                document.body.style.overscrollBehavior = 'none';
-                
-                // Force header to stay in place
-                window.addEventListener('scroll', () => {
-                    header.style.position = 'fixed';
-                    header.style.top = '0';
-                });
-                
-                // Handle safe area on load
-                setTimeout(() => {
-                    header.style.paddingTop = `calc(15px + env(safe-area-inset-top))`;
-                }, 100);
-            }
+            // Handle keyboard events to keep header in place
+            handleKeyboardEvents();
         });
+
+        // Handle keyboard events to ensure header stays fixed
+        function handleKeyboardEvents() {
+            let originalHeight = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                const newHeight = window.innerHeight;
+                
+                // Check if keyboard is likely open (viewport height decreased significantly)
+                if (newHeight < originalHeight * 0.7) {
+                    // Force header to stay at top
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                } else {
+                    // Reset to normal
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                }
+                
+                originalHeight = newHeight;
+            });
+
+            // Also handle focus events on form inputs
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    // Ensure header stays visible
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                    document.querySelector('header').style.zIndex = '1000';
+                });
+            });
+        }
 
         // Fade-in animation on scroll
         function initFadeInAnimations() {
