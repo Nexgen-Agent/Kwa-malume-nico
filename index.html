@@ -482,7 +482,7 @@
             transform: translateY(-2px);
         }
 
-        /* === FIXED: HEADER & NAVIGATION === */
+        /* === UPDATED: HEADER & NAVIGATION - NOW TRANSPARENT LIKE PROFILE.HTML === */
         header {
             position: fixed;
             top: 0;
@@ -493,52 +493,36 @@
             justify-content: flex-start;
             align-items: center;
             z-index: 100;
-            transition: all 0.3s ease;
+            transition: background 0.3s;
             padding-top: calc(15px + env(safe-area-inset-top));
-            /* FIX: Extended gradient background to prevent logo cut-off */
-            background: linear-gradient(to bottom, 
+            /* REMOVED: Gradient background */
+            /* background: linear-gradient(to bottom, 
                 rgba(10, 10, 10, 0.95) 0%,
                 rgba(10, 10, 10, 0.85) 30%,
                 rgba(10, 10, 10, 0.4) 70%,
-                transparent 100%);
-            min-height: 120px;
-            height: calc(120px + env(safe-area-inset-top));
+                transparent 100%); */
+            /* REMOVED: Fixed height and min-height */
+            /* min-height: 120px;
+            height: calc(120px + env(safe-area-inset-top)); */
         }
 
         header.scrolled {
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            height: auto;
-            min-height: 90px;
         }
 
-        /* FIXED: Brand with protected overlay */
+        /* UPDATED: Brand - now simple and transparent like profile.html */
         .brand {
-            position: relative;
-            z-index: 1;
-            padding: 10px 20px;
-            background: rgba(10, 10, 10, 0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
         .logo {
-            height: 80px;
+            height: 70px;
             width: auto;
             object-fit: contain;
-            position: relative;
-            z-index: 2;
-            display: block;
         }
 
         /* UPDATED: Navigation links for authentication */
@@ -706,7 +690,7 @@
             align-items: center;
             padding: 0 5%;
             position: relative;
-            padding-top: 120px; /* Account for header height */
+            padding-top: 100px; /* Adjusted for the new header height */
         }
 
         .hero-content {
@@ -1490,17 +1474,11 @@
             
             /* Mobile header adjustments */
             header {
-                min-height: 100px;
-                height: calc(100px + env(safe-area-inset-top));
                 padding-top: calc(10px + env(safe-area-inset-top));
             }
             
-            .brand {
-                padding: 8px 15px;
-            }
-            
             .logo {
-                height: 70px;
+                height: 60px;
             }
         }
 
@@ -1510,7 +1488,7 @@
             }
 
             .hero {
-                padding-top: 100px;
+                padding-top: 90px;
             }
             
             .hero-content {
@@ -1571,16 +1549,12 @@
             
             /* Mobile header further adjustments */
             header {
-                min-height: 90px;
-                height: calc(90px + env(safe-area-inset-top));
-            }
-            
-            .brand {
-                padding: 6px 12px;
+                padding: 15px 5%;
+                padding-top: calc(10px + env(safe-area-inset-top));
             }
             
             .logo {
-                height: 65px;
+                height: 55px;
             }
         }
 
@@ -1622,22 +1596,16 @@
             
             /* Small mobile adjustments */
             header {
-                min-height: 80px;
-                height: calc(80px + env(safe-area-inset-top));
                 padding: 10px 5%;
                 padding-top: calc(10px + env(safe-area-inset-top));
             }
             
-            .brand {
-                padding: 5px 10px;
-            }
-            
             .logo {
-                height: 60px;
+                height: 50px;
             }
             
             .hero {
-                padding-top: 90px;
+                padding-top: 80px;
             }
         }
 
@@ -2313,35 +2281,14 @@
             }
         });
 
-        // FIXED: Header scroll effect - prevents logo from being cut off
-        let lastScrollTop = 0;
-        const header = document.querySelector('header');
-        
+        // Header scroll effect - now matches profile.html
         window.addEventListener('scroll', () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // Only apply hide/show on desktop
-            if (window.innerWidth > 768) {
-                if (scrollTop > lastScrollTop && scrollTop > 100) {
-                    // Scrolling down
-                    header.style.transform = 'translateY(-100%)';
-                } else {
-                    // Scrolling up
-                    header.style.transform = 'translateY(0)';
-                }
-            } else {
-                // On mobile, always keep header visible
-                header.style.transform = 'translateY(0)';
-            }
-            
-            // Add scrolled class for background change
-            if (scrollTop > 50) {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
             }
-            
-            lastScrollTop = scrollTop;
         });
 
         // Image Zoom Modal
