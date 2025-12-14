@@ -707,7 +707,119 @@
             object-fit: contain;
         }
 
-        /* UPDATED: User Profile Menu */
+        /* MOBILE MENU BUTTON */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 101;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+            width: 30px;
+            height: 30px;
+            position: relative;
+        }
+
+        /* Custom hamburger icon with equal lines */
+        .hamburger {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger-line {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        /* Equal X animation - all lines same length */
+        .mobile-menu-btn.active .hamburger-line:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .mobile-menu-btn.active .hamburger-line:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        /* MOBILE MENU OVERLAY */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .mobile-nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--gold);
+            background: rgba(200, 155, 45, 0.15);
+            transform: translateX(10px);
+        }
+
+        .mobile-nav-links a i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* User Profile Menu */
         .user-menu {
             display: flex;
             align-items: center;
@@ -880,6 +992,34 @@
             max-width: 600px;
             margin: 0 auto;
             opacity: 0.8;
+        }
+
+        /* === ABOUT SECTION === */
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            align-items: center;
+        }
+
+        .about-text {
+            padding: 20px;
+        }
+
+        .about-image-container {
+            height: 350px;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
         }
 
         /* === GALLERY SECTION === */
@@ -1209,6 +1349,15 @@
             font-size: 0.9rem;
         }
 
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
         .delivery-info {
             background: rgba(200, 155, 45, 0.1);
             padding: 15px;
@@ -1324,13 +1473,157 @@
             color: var(--ink);
         }
 
+        /* === CONTACT & LOCATION === */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink);
+            font-size: 20px;
+        }
+
+        .map-container {
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .google-map {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 16px;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .map-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .map-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* === FOOTER === */
+        footer {
+            padding: 60px 5% 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+
         /* === RESPONSIVE STYLES === */
         @media (max-width: 992px) {
             .nav-links {
-                display: none;
-            }
-
-            .user-name {
                 display: none;
             }
 
@@ -1338,6 +1631,10 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+            }
+
+            .user-name {
+                display: none;
             }
 
             .hero-btns {
@@ -1397,6 +1694,28 @@
                 padding: 20px;
                 max-width: 90%;
             }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image-container {
+                order: -1;
+                height: 250px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .order-type-options {
+                flex-direction: column;
+            }
+
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1433,6 +1752,14 @@
 
             .header-cart-total {
                 display: none !important;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 250px;
             }
         }
 
@@ -1887,9 +2214,11 @@
 
                 <!-- Card Payment Details -->
                 <div class="payment-details" id="cardPaymentDetails">
-                    <div class="form-group">
-                        <label for="cardNumber">Card Number *</label>
-                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number *</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                        </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -1986,6 +2315,14 @@
                     loading="lazy" 
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
+                <div class="map-controls">
+                    <button class="map-btn" id="openInMaps" title="Open in Google Maps">
+                        <i class="fas fa-external-link-alt"></i>
+                    </button>
+                    <button class="map-btn" id="refreshMap" title="Refresh Map">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -2080,8 +2417,6 @@
         // ====================
         // SUPABASE CONFIGURATION
         // ====================
-        // IMPORTANT: Replace these with your actual Supabase credentials
-        // Get these from your Supabase project settings > API
         const SUPABASE_URL = 'https://your-project-id.supabase.co';
         const SUPABASE_ANON_KEY = 'your-anon-key-here';
 
@@ -2122,7 +2457,6 @@
                     }
                     
                     if (session?.user) {
-                        // User is logged in
                         localStorage.setItem(this.currentUserKey, JSON.stringify({
                             id: session.user.id,
                             email: session.user.email,
@@ -2130,10 +2464,8 @@
                             createdAt: new Date().toISOString()
                         }));
                         
-                        // Migrate guest data if any
                         await this.migrateGuestData(session.user.id);
                     } else {
-                        // Check for guest session
                         const guestSession = this.getGuestSession();
                         if (!guestSession) {
                             this.createGuestSession();
@@ -2153,7 +2485,6 @@
                     return JSON.parse(userData);
                 }
                 
-                // Fallback to guest session
                 const guestSession = this.getGuestSession();
                 if (guestSession) {
                     return { ...guestSession, isGuest: true };
@@ -2218,7 +2549,6 @@
                     if (error) throw error;
                     
                     if (data?.user) {
-                        // Update current user
                         localStorage.setItem(this.currentUserKey, JSON.stringify({
                             id: data.user.id,
                             email: data.user.email,
@@ -2226,7 +2556,6 @@
                             createdAt: new Date().toISOString()
                         }));
                         
-                        // Clear guest session
                         this.clearGuestSession();
                         
                         return { success: true, data };
@@ -2276,12 +2605,8 @@
                     const { error } = await supabase.auth.signOut();
                     if (error) throw error;
                     
-                    // Clear user data
                     localStorage.removeItem(this.currentUserKey);
-                    
-                    // Create new guest session
                     this.createGuestSession();
-                    
                     this.updateUI();
                     return { success: true };
                 } catch (error) {
@@ -2318,7 +2643,6 @@
                 orders.unshift(order);
                 localStorage.setItem(this.orderHistoryKey, JSON.stringify(orders));
                 
-                // Update guest session with last order
                 const currentUser = this.getCurrentUser();
                 if (currentUser?.isGuest) {
                     this.updateGuestSession({ lastOrder: order });
@@ -2336,14 +2660,6 @@
             async migrateGuestData(userId) {
                 const guestSession = this.getGuestSession();
                 if (guestSession) {
-                    // Migrate cart
-                    const cart = this.getCart();
-                    // Migrate orders
-                    const orders = this.getOrderHistory();
-                    
-                    // You would typically send this to your Supabase database here
-                    // For now, we'll just keep in localStorage with user reference
-                    
                     console.log('Guest data migrated to user:', userId);
                 }
             },
@@ -2357,7 +2673,6 @@
                 const userName = document.getElementById('userName');
                 
                 if (currentUser && !currentUser.isGuest) {
-                    // User is logged in
                     if (userMenu) userMenu.style.display = 'flex';
                     if (authLinks) authLinks.style.display = 'none';
                     if (userAvatar) {
@@ -2368,7 +2683,6 @@
                         userName.textContent = currentUser.email?.split('@')[0] || 'User';
                     }
                 } else {
-                    // Guest or not logged in
                     if (userMenu) userMenu.style.display = 'none';
                     if (authLinks) authLinks.style.display = 'flex';
                 }
@@ -2381,7 +2695,6 @@
                 const cartCount = document.getElementById('cartCount');
                 if (cartCount) cartCount.textContent = totalItems;
                 
-                // Update total amount
                 const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
                 const deliveryFee = window.orderType === 'delivery' && subtotal < 280 ? 30 : 0;
                 const total = subtotal + deliveryFee;
@@ -2394,7 +2707,6 @@
                 if (totalAmount) totalAmount.textContent = `R${total.toFixed(2)}`;
                 if (headerTotalAmount) headerTotalAmount.textContent = `R${total.toFixed(2)}`;
                 
-                // Show/hide total button based on cart content
                 if (floatingTotalBtn) {
                     if (cart.length > 0) {
                         floatingTotalBtn.style.display = 'flex';
@@ -2403,7 +2715,6 @@
                     }
                 }
                 
-                // Show/hide header cart total
                 if (headerCartTotal) {
                     if (cart.length > 0) {
                         headerCartTotal.classList.add('visible');
@@ -2429,7 +2740,6 @@
                 this.saveOrder(order);
                 this.clearCart();
                 
-                // Update guest session with email if provided
                 if (orderData.email) {
                     this.updateGuestSession({ email: orderData.email, lastOrder: order });
                 }
@@ -2446,7 +2756,6 @@
                     });
                     
                     if (result.success) {
-                        // Link order to account
                         const orders = this.getOrderHistory();
                         const updatedOrders = orders.map(order => {
                             if (order.id === orderId) {
@@ -2610,6 +2919,10 @@
         const postPurchaseEmail = document.getElementById('postPurchaseEmail');
         const postPurchaseError = document.getElementById('postPurchaseError');
 
+        // Google Maps elements
+        const openInMapsBtn = document.getElementById('openInMaps');
+        const refreshMapBtn = document.getElementById('refreshMap');
+
         // ====================
         // EVENT LISTENERS
         // ====================
@@ -2625,6 +2938,9 @@
             
             // Mobile menu
             initMobileMenu();
+            
+            // Google Maps
+            initGoogleMaps();
             
             // Header scroll effect
             window.addEventListener('scroll', () => {
@@ -2656,13 +2972,10 @@
                     return;
                 }
                 
-                // Check if user is authenticated
                 const currentUser = AuthManager.getCurrentUser();
                 if (currentUser && !currentUser.isGuest) {
-                    // User is logged in, proceed directly to checkout form
                     showCheckoutView();
                 } else {
-                    // Show guest checkout modal
                     showGuestCheckoutModal();
                 }
             });
@@ -2677,29 +2990,24 @@
                     btn.classList.add('active');
                     orderType = btn.getAttribute('data-type');
                     
-                    // Show/hide appropriate fields
                     dineinFields.style.display = orderType === 'dinein' ? 'block' : 'none';
                     collectionFields.style.display = orderType === 'collection' ? 'block' : 'none';
                     deliveryFields.style.display = orderType === 'delivery' ? 'block' : 'none';
                     
-                    // Update required fields
                     document.getElementById('tableNumber').required = orderType === 'dinein';
                     document.getElementById('deliveryAddress').required = orderType === 'delivery';
                     
-                    // Update total amount
                     updateTotalAmount();
                 });
             });
             
             // Continue shopping button
             continueShopping.addEventListener('click', () => {
-                // Clear cart and close
                 cart = [];
                 AuthManager.saveCart(cart);
                 cartContainer.classList.remove('open');
                 showCartView();
                 
-                // Reset form
                 document.getElementById('customerName').value = '';
                 document.getElementById('customerPhone').value = '';
                 document.getElementById('customerEmail').value = '';
@@ -2707,13 +3015,11 @@
                 document.getElementById('deliveryAddress').value = '';
                 document.getElementById('specialInstructions').value = '';
                 
-                // Reset payment form
                 document.getElementById('cardNumber').value = '';
                 document.getElementById('expiryDate').value = '';
                 document.getElementById('cvv').value = '';
                 document.getElementById('cardName').value = '';
                 
-                // Hide floating buttons
                 hideAllFloatingButtons();
             });
             
@@ -2771,7 +3077,6 @@
                     return;
                 }
                 
-                // Create or update guest session with email
                 const guestSession = AuthManager.getGuestSession();
                 if (guestSession) {
                     AuthManager.updateGuestSession({ email: email || guestSession.email });
@@ -2779,11 +3084,9 @@
                     AuthManager.createGuestSession(email);
                 }
                 
-                // Close modal and proceed to checkout
                 guestCheckoutModal.classList.remove('active');
                 showCheckoutView();
                 
-                // Pre-fill email in checkout form if provided
                 if (email) {
                     document.getElementById('customerEmail').value = email;
                 }
@@ -2809,7 +3112,6 @@
                     return;
                 }
                 
-                // Create account
                 const result = await AuthManager.signUp(email, password);
                 
                 if (result.success) {
@@ -2817,8 +3119,6 @@
                     setTimeout(() => {
                         guestCheckoutModal.classList.remove('active');
                         showCheckoutView();
-                        
-                        // Pre-fill email in checkout form
                         document.getElementById('customerEmail').value = email;
                     }, 1500);
                 } else {
@@ -2840,7 +3140,6 @@
                     return;
                 }
                 
-                // Login
                 const result = await AuthManager.signIn(email, password);
                 
                 if (result.success) {
@@ -2848,8 +3147,6 @@
                     setTimeout(() => {
                         guestCheckoutModal.classList.remove('active');
                         showCheckoutView();
-                        
-                        // Pre-fill email in checkout form
                         document.getElementById('customerEmail').value = email;
                     }, 1500);
                 } else {
@@ -2873,7 +3170,6 @@
                     return;
                 }
                 
-                // Create account
                 const result = await AuthManager.createAccountAfterPurchase(email, password, currentOrder?.id);
                 
                 if (result.success) {
@@ -2881,7 +3177,6 @@
                     postPurchaseModal.classList.remove('active');
                     cartContainer.classList.remove('open');
                     
-                    // Redirect to profile page
                     setTimeout(() => {
                         window.location.href = 'profile.html';
                     }, 1000);
@@ -2910,6 +3205,9 @@
             document.getElementById('userAvatar')?.addEventListener('click', () => {
                 window.location.href = 'profile.html';
             });
+
+            // Handle mobile keyboard
+            handleMobileKeyboardEvents();
         });
 
         // ====================
@@ -2920,7 +3218,6 @@
             authError.classList.remove('active');
             authSuccess.classList.remove('active');
             
-            // Reset forms
             document.getElementById('guestEmail').value = '';
             document.getElementById('signupEmail').value = '';
             document.getElementById('signupPassword').value = '';
@@ -2928,7 +3225,6 @@
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
             
-            // Show options by default
             guestEmailForm.classList.remove('active');
             createAccountForm.classList.remove('active');
             loginForm.classList.remove('active');
@@ -3015,18 +3311,6 @@
             floatingProcessPaymentBtn.classList.add('active');
         }
         
-        function showPaymentView() {
-            cartTitle.textContent = 'Payment';
-            cartItemsView.style.display = 'none';
-            checkoutForm.classList.remove('active');
-            paymentMethodView.classList.add('active');
-            paymentProcessing.classList.remove('active');
-            paymentSuccess.classList.remove('active');
-            
-            hideAllFloatingButtons();
-            floatingProcessPaymentBtn.classList.add('active');
-        }
-        
         function hideAllFloatingButtons() {
             floatingCheckoutBtn.classList.remove('active');
             floatingProcessPaymentBtn.classList.remove('active');
@@ -3073,7 +3357,6 @@
                 menuContainer.appendChild(menuItem);
             });
 
-            // Add event listeners to new add to cart buttons
             document.querySelectorAll('.add-to-cart').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-id');
@@ -3083,7 +3366,6 @@
 
                     addToCart(id, name, price, image);
 
-                    // Button animation
                     btn.textContent = 'Added!';
                     setTimeout(() => {
                         btn.textContent = 'Add to Cart';
@@ -3091,7 +3373,6 @@
                 });
             });
 
-            // Add event listeners to menu item images for zoom
             document.querySelectorAll('.menu-item-image').forEach(img => {
                 img.addEventListener('click', () => {
                     const imageUrl = img.getAttribute('data-image');
@@ -3157,7 +3438,6 @@
                 cartItems.appendChild(cartItem);
             });
 
-            // Add event listeners to quantity buttons
             document.querySelectorAll('.quantity-btn.decrease').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-id');
@@ -3172,7 +3452,6 @@
                 });
             });
 
-            // Add event listeners to cart item images for zoom
             document.querySelectorAll('.cart-item-image').forEach(img => {
                 img.addEventListener('click', () => {
                     const imageUrl = img.getAttribute('data-image');
@@ -3204,7 +3483,6 @@
         }
         
         async function processPayment() {
-            // Validate form
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const customerEmail = document.getElementById('customerEmail').value;
@@ -3227,7 +3505,6 @@
                 return;
             }
             
-            // Validate payment details
             const cardNumber = document.getElementById('cardNumber').value;
             const expiryDate = document.getElementById('expiryDate').value;
             const cvv = document.getElementById('cvv').value;
@@ -3254,12 +3531,10 @@
                 return;
             }
             
-            // Calculate totals
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
             const total = subtotal + deliveryFee;
             
-            // Create order object
             const orderDetails = {
                 items: cart,
                 customer: {
@@ -3278,41 +3553,33 @@
                 status: 'confirmed'
             };
             
-            // Show processing
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.add('active');
             
-            // Simulate payment processing
             setTimeout(async () => {
                 paymentProcessing.classList.remove('active');
                 paymentSuccess.classList.add('active');
                 
-                // Generate order number
                 const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
                 orderNumber.textContent = randomOrderNum;
                 
-                // Complete order with ID
                 const completeOrder = {
                     ...orderDetails,
                     id: randomOrderNum,
                     createdAt: new Date().toISOString()
                 };
                 
-                // Save order
                 currentOrder = AuthManager.saveOrder(completeOrder);
                 
-                // Check if we should show post-purchase account creation
                 const currentUser = AuthManager.getCurrentUser();
                 const orderEmail = customerEmail || (currentUser?.isGuest ? currentUser.email : null);
                 
                 if (currentUser?.isGuest && orderEmail) {
-                    // Guest with email - show post-purchase modal
                     setTimeout(() => {
                         showPostPurchaseModal(orderEmail);
                     }, 2000);
                 }
                 
-                // Clear cart
                 cart = [];
                 AuthManager.saveCart(cart);
                 updateCart();
@@ -3324,6 +3591,8 @@
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
             const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            if (!mobileMenuBtn || !mobileMenuOverlay) return;
             
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenuOverlay.classList.toggle('active');
@@ -3346,6 +3615,35 @@
                     document.body.style.overflow = 'auto';
                 }
             });
+        }
+        
+        function initGoogleMaps() {
+            const openInMapsBtn = document.getElementById('openInMaps');
+            const refreshMapBtn = document.getElementById('refreshMap');
+            
+            if (!openInMapsBtn || !refreshMapBtn) return;
+            
+            openInMapsBtn.addEventListener('click', () => {
+                window.open('https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A', '_blank');
+            });
+            
+            refreshMapBtn.addEventListener('click', () => {
+                const mapFrame = document.querySelector('.google-map');
+                const currentSrc = mapFrame.src;
+                mapFrame.src = currentSrc;
+                
+                refreshMapBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                setTimeout(() => {
+                    refreshMapBtn.innerHTML = '<i class="fas fa-redo"></i>';
+                }, 1000);
+            });
+            
+            const mapFrame = document.querySelector('.google-map');
+            if (mapFrame) {
+                mapFrame.addEventListener('click', () => {
+                    window.open('https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A', '_blank');
+                });
+            }
         }
         
         function setActiveNavItem() {
@@ -3379,61 +3677,32 @@
             });
         }
 
-        // ====================
-        // SUPABASE SETUP INSTRUCTIONS
-        // ====================
-        /*
-        To set up Supabase:
-        
-        1. Go to https://supabase.com and create an account
-        2. Create a new project
-        3. Go to Project Settings > API
-        4. Copy:
-           - Project URL (replace SUPABASE_URL)
-           - anon/public key (replace SUPABASE_ANON_KEY)
-        
-        5. In Supabase SQL Editor, run these SQL commands:
-        
-        -- Enable Row Level Security
-        alter table public.profiles enable row level security;
-        
-        -- Create profiles table
-        create table if not exists public.profiles (
-          id uuid references auth.users on delete cascade primary key,
-          email text,
-          guest_id text,
-          first_order_id text,
-          account_created_after_purchase boolean default false,
-          created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-          updated_at timestamp with time zone default timezone('utc'::text, now()) not null
-        );
-        
-        -- Create orders table
-        create table if not exists public.orders (
-          id text primary key,
-          user_id uuid references auth.users(id),
-          guest_id text,
-          items jsonb,
-          customer_info jsonb,
-          order_type text,
-          subtotal decimal,
-          delivery_fee decimal,
-          total decimal,
-          status text default 'confirmed',
-          payment_method text,
-          created_at timestamp with time zone default timezone('utc'::text, now()) not null
-        );
-        
-        -- Create user_migrations table
-        create table if not exists public.user_migrations (
-          id serial primary key,
-          user_id uuid references auth.users(id),
-          guest_id text,
-          migrated_at timestamp with time zone default timezone('utc'::text, now()) not null
-        );
-        
-        6. Update the SUPABASE_URL and SUPABASE_ANON_KEY in the code above
-        */
+        function handleMobileKeyboardEvents() {
+            let originalHeight = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                const newHeight = window.innerHeight;
+                
+                if (newHeight < originalHeight * 0.7) {
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                } else {
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                }
+                
+                originalHeight = newHeight;
+            });
+            
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    document.querySelector('header').style.position = 'fixed';
+                    document.querySelector('header').style.top = '0';
+                    document.querySelector('header').style.zIndex = '1000';
+                });
+            });
+        }
     </script>
 </body>
 </html>
