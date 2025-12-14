@@ -21,22 +21,6 @@
     <link rel="manifest" href="/manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- SUPABASE SETUP (Ready for when you want to use it) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase configuration - replace with your actual credentials when ready
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
-        
-        // Initialize Supabase client (only if credentials are provided)
-        let supabase = null;
-        if (SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE' && 
-            SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-    </script>
-    
     <style>
         /* === RESET & BASE STYLES === */
         * {
@@ -54,9 +38,6 @@
             --dark-bg: #0a0a0a;
             --glass-bg: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.25);
-            --success: #2e7d32;
-            --warning: #f57c00;
-            --error: #d32f2f;
         }
 
         html {
@@ -81,312 +62,6 @@
             body {
                 min-height: -webkit-fill-available;
             }
-        }
-
-        /* === AUTHENTICATION MODAL === */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .auth-modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .auth-modal-content {
-            width: 90%;
-            max-width: 450px;
-            padding: 30px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .auth-modal.active .auth-modal-content {
-            transform: scale(1);
-        }
-
-        .auth-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .auth-tab.active {
-            background: var(--gold);
-            color: var(--ink);
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .auth-form h3 {
-            color: var(--gold);
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.5rem;
-        }
-
-        .auth-form .form-group {
-            margin-bottom: 20px;
-        }
-
-        .auth-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .auth-form input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 16px;
-        }
-
-        .auth-form input:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-
-        .auth-form .btn {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .auth-form .divider {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .auth-form .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .auth-form .divider span {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0 15px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .auth-form .forgot-password {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: var(--gold);
-            text-decoration: none;
-        }
-
-        .auth-form .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .close-auth-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* === PROGRESSIVE AUTHENTICATION FLOW === */
-        .guest-checkout-option {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            z-index: 1002;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        }
-
-        .guest-checkout-option.active {
-            display: block;
-            transform: translateY(0);
-        }
-
-        .guest-checkout-content {
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .guest-checkout-content h3 {
-            color: var(--gold);
-            margin-bottom: 15px;
-        }
-
-        .guest-checkout-content p {
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .guest-checkout-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .guest-checkout-buttons .btn {
-            flex: 1;
-            max-width: 200px;
-        }
-
-        /* === POST-PURCHASE AUTH PROMPT === */
-        .post-purchase-prompt {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 3001;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .post-purchase-prompt.active {
-            display: flex;
-        }
-
-        .post-purchase-content {
-            width: 90%;
-            max-width: 500px;
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-        }
-
-        .post-purchase-content .success-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2.5rem;
-            color: var(--ink);
-        }
-
-        .post-purchase-content h2 {
-            color: var(--gold);
-            margin-bottom: 15px;
-        }
-
-        .post-purchase-content p {
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-
-        .post-purchase-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .post-purchase-buttons .btn {
-            flex: 1;
-            max-width: 200px;
-        }
-
-        /* === USER PROFILE INDICATOR === */
-        .user-profile-indicator {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            padding: 8px 15px;
-            color: white;
-            font-weight: 500;
-            margin-left: 20px;
-        }
-
-        .user-profile-indicator.visible {
-            display: flex;
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: var(--ink);
-        }
-
-        .user-name {
-            font-size: 14px;
         }
 
         /* === BACKGROUND VIDEO === */
@@ -845,7 +520,6 @@
             display: flex;
             gap: 20px;
             margin-left: auto;
-            align-items: center;
         }
 
         .nav-links a {
@@ -1786,10 +1460,6 @@
             .header-total-amount {
                 font-size: 14px;
             }
-
-            .user-profile-indicator {
-                display: none !important;
-            }
         }
 
         @media (max-width: 768px) {
@@ -1852,22 +1522,6 @@
                 order: -1;
                 height: 250px;
             }
-
-            .guest-checkout-buttons {
-                flex-direction: column;
-            }
-
-            .guest-checkout-buttons .btn {
-                max-width: 100%;
-            }
-
-            .post-purchase-buttons {
-                flex-direction: column;
-            }
-
-            .post-purchase-buttons .btn {
-                max-width: 100%;
-            }
         }
 
         @media (max-width: 576px) {
@@ -1905,14 +1559,6 @@
             .header-cart-total {
                 display: none !important;
             }
-
-            .auth-modal-content {
-                padding: 20px;
-            }
-
-            .post-purchase-content {
-                padding: 25px;
-            }
         }
 
         /* Hide bottom nav on desktop */
@@ -1936,105 +1582,6 @@
         <source src="assets/video/venue.webm" type="video/webm">
     </video>
     <div class="video-overlay"></div>
-
-    <!-- Authentication Modal -->
-    <div class="auth-modal" id="authModal">
-        <div class="auth-modal-content glass">
-            <button class="close-auth-modal" id="closeAuthModal">
-                <i class="fas fa-times"></i>
-            </button>
-            
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">Login</button>
-                <button class="auth-tab" data-tab="signup">Sign Up</button>
-            </div>
-
-            <!-- Login Form -->
-            <div class="auth-form active" id="loginForm">
-                <h3>Welcome Back</h3>
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password">
-                </div>
-                <button class="btn btn-primary" id="loginBtn">Login</button>
-                <a href="#" class="forgot-password">Forgot Password?</a>
-                <div class="divider">
-                    <span>Or continue with</span>
-                </div>
-                <button class="btn btn-secondary" id="guestContinueBtn">
-                    <i class="fas fa-user-clock"></i> Continue as Guest
-                </button>
-            </div>
-
-            <!-- Signup Form -->
-            <div class="auth-form" id="signupForm">
-                <h3>Create Account</h3>
-                <div class="form-group">
-                    <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a password">
-                </div>
-                <div class="form-group">
-                    <label for="signupPhone">Phone Number</label>
-                    <input type="tel" id="signupPhone" placeholder="Enter your phone number">
-                </div>
-                <button class="btn btn-primary" id="signupBtn">Create Account</button>
-                <div class="divider">
-                    <span>Or</span>
-                </div>
-                <button class="btn btn-secondary" id="guestCheckoutBtn">
-                    <i class="fas fa-shopping-cart"></i> Checkout as Guest
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Guest Checkout Option -->
-    <div class="guest-checkout-option" id="guestCheckoutOption">
-        <div class="guest-checkout-content">
-            <h3>Continue as Guest or Create Account?</h3>
-            <p>Create an account to save your details, track orders, and earn rewards!</p>
-            <div class="guest-checkout-buttons">
-                <button class="btn btn-secondary" id="continueGuestBtn">
-                    <i class="fas fa-user-clock"></i> Continue as Guest
-                </button>
-                <button class="btn btn-primary" id="createAccountCheckoutBtn">
-                    <i class="fas fa-user-plus"></i> Create Account
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Post-Purchase Authentication Prompt -->
-    <div class="post-purchase-prompt" id="postPurchasePrompt">
-        <div class="post-purchase-content glass">
-            <div class="success-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            <h2>Order Confirmed! 🎉</h2>
-            <p>Your order has been placed successfully. Create an account to track this order, save your details for next time, and earn coupons!</p>
-            <p><strong>Order #: <span id="orderNumberDisplay">MN-2023-001</span></strong></p>
-            <div class="post-purchase-buttons">
-                <button class="btn btn-secondary" id="skipAccountBtn">
-                    <i class="fas fa-times"></i> Skip for Now
-                </button>
-                <button class="btn btn-primary" id="createAccountAfterPurchaseBtn">
-                    <i class="fas fa-user-plus"></i> Create Account
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Image Zoom Modal -->
     <div class="image-zoom-modal" id="imageZoomModal">
@@ -2077,21 +1624,12 @@
 
         <!-- UPDATED: Authentication navigation links -->
         <nav class="nav-links">
-            <!-- User Profile Indicator (shown when logged in) -->
-            <div class="user-profile-indicator" id="userProfileIndicator">
-                <div class="user-avatar" id="userAvatar">M</div>
-                <div class="user-name" id="userName">Malume</div>
-            </div>
-            
-            <!-- Auth Links (shown when not logged in) -->
-            <div id="authLinks">
-                <a href="#" class="login-btn" id="loginLink">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="#" class="signup-btn" id="signupLink">
-                    <i class="fas fa-user-plus"></i> Sign Up
-                </a>
-            </div>
+            <a href="profile.html" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="profile.html" class="signup-btn">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
         </nav>
 
         <!-- UPDATED: Mobile menu button with custom hamburger icon -->
@@ -2108,41 +1646,11 @@
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
         <!-- UPDATED: Mobile authentication navigation links -->
         <nav class="mobile-nav-links">
-            <!-- User Profile Mobile (shown when logged in) -->
-            <div id="mobileUserProfile" style="display: none;">
-                <a href="profile.html" class="mobile-nav-link">
-                    <i class="fas fa-user"></i> My Profile
-                </a>
-                <a href="#" class="mobile-nav-link" id="mobileLogoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-            
-            <!-- Mobile Auth Links (shown when not logged in) -->
-            <div id="mobileAuthLinks">
-                <a href="#" class="mobile-nav-link" id="mobileLoginLink">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="#" class="mobile-nav-link" id="mobileSignupLink">
-                    <i class="fas fa-user-plus"></i> Sign Up
-                </a>
-            </div>
-            
-            <!-- Common Links -->
-            <a href="index.html" class="mobile-nav-link">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="comments.html" class="mobile-nav-link">
-                <i class="fas fa-comments"></i> Comments
-            </a>
-            <a href="booking.html" class="mobile-nav-link">
-                <i class="fas fa-calendar-check"></i> Bookings
-            </a>
-            <a href="coupon.html" class="mobile-nav-link">
-                <i class="fas fa-tag"></i> Coupons
+            <a href="profile.html" class="mobile-nav-link">
+                <i class="fas fa-sign-in-alt"></i> Login
             </a>
             <a href="profile.html" class="mobile-nav-link">
-                <i class="fas fa-user"></i> Profile
+                <i class="fas fa-user-plus"></i> Sign Up
             </a>
         </nav>
     </div>
@@ -2286,36 +1794,6 @@
 
             <!-- Checkout Form View -->
             <div class="checkout-form" id="checkoutForm">
-                <!-- Guest/Account Choice Section -->
-                <div class="order-type-selection" id="authChoiceSection">
-                    <h4 class="order-type-title">Checkout Options</h4>
-                    <div class="order-type-options">
-                        <button class="order-type-btn active" id="guestCheckoutChoice">
-                            <i class="fas fa-user-clock"></i>
-                            <span>Continue as Guest</span>
-                        </button>
-                        <button class="order-type-btn" id="accountCheckoutChoice">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Create Account</span>
-                        </button>
-                    </div>
-                    <p style="text-align: center; margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
-                        Create an account to save your details and earn rewards!
-                    </p>
-                </div>
-
-                <!-- Account Creation Fields (hidden by default) -->
-                <div id="accountCreationFields" style="display: none;">
-                    <div class="form-group">
-                        <label for="checkoutEmail">Email *</label>
-                        <input type="email" id="checkoutEmail" placeholder="Enter your email">
-                    </div>
-                    <div class="form-group">
-                        <label for="checkoutPassword">Password *</label>
-                        <input type="password" id="checkoutPassword" placeholder="Create a password">
-                    </div>
-                </div>
-
                 <div class="order-type-selection">
                     <h4 class="order-type-title">How would you like to receive your order?</h4>
                     <div class="order-type-options">
@@ -2641,623 +2119,6 @@
     </nav>
 
     <script>
-        // ======================
-        // AUTHENTICATION SYSTEM
-        // ======================
-        
-        // User state management
-        let currentUser = JSON.parse(localStorage.getItem('malumenico_user')) || null;
-        let isGuest = localStorage.getItem('malumenico_isGuest') === 'true';
-        
-        // Progressive authentication flow state
-        let checkoutFlow = {
-            step: 'browsing', // browsing -> cart -> checkout -> payment -> complete
-            requiresAuthChoice: false,
-            guestOrderData: null
-        };
-        
-        // DOM Elements
-        const authModal = document.getElementById('authModal');
-        const closeAuthModal = document.getElementById('closeAuthModal');
-        const authTabs = document.querySelectorAll('.auth-tab');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
-        const guestContinueBtn = document.getElementById('guestContinueBtn');
-        const guestCheckoutBtn = document.getElementById('guestCheckoutBtn');
-        
-        const guestCheckoutOption = document.getElementById('guestCheckoutOption');
-        const continueGuestBtn = document.getElementById('continueGuestBtn');
-        const createAccountCheckoutBtn = document.getElementById('createAccountCheckoutBtn');
-        
-        const postPurchasePrompt = document.getElementById('postPurchasePrompt');
-        const skipAccountBtn = document.getElementById('skipAccountBtn');
-        const createAccountAfterPurchaseBtn = document.getElementById('createAccountAfterPurchaseBtn');
-        
-        const userProfileIndicator = document.getElementById('userProfileIndicator');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
-        const authLinks = document.getElementById('authLinks');
-        
-        const loginLink = document.getElementById('loginLink');
-        const signupLink = document.getElementById('signupLink');
-        
-        // Mobile elements
-        const mobileLoginLink = document.getElementById('mobileLoginLink');
-        const mobileSignupLink = document.getElementById('mobileSignupLink');
-        const mobileUserProfile = document.getElementById('mobileUserProfile');
-        const mobileAuthLinks = document.getElementById('mobileAuthLinks');
-        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-        
-        // Checkout flow elements
-        const authChoiceSection = document.getElementById('authChoiceSection');
-        const guestCheckoutChoice = document.getElementById('guestCheckoutChoice');
-        const accountCheckoutChoice = document.getElementById('accountCheckoutChoice');
-        const accountCreationFields = document.getElementById('accountCreationFields');
-        const checkoutEmail = document.getElementById('checkoutEmail');
-        const checkoutPassword = document.getElementById('checkoutPassword');
-        
-        // ======================
-        // INITIALIZATION
-        // ======================
-        
-        // Initialize user state on page load
-        function initUserState() {
-            if (currentUser) {
-                showUserProfile();
-                updateUserUI();
-            } else if (isGuest) {
-                updateGuestUI();
-            } else {
-                showAuthLinks();
-            }
-        }
-        
-        // Update UI for logged in user
-        function updateUserUI() {
-            const initials = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-            userAvatar.textContent = initials;
-            userName.textContent = currentUser.name || 'User';
-            
-            // Update mobile UI
-            mobileUserProfile.style.display = 'block';
-            mobileAuthLinks.style.display = 'none';
-        }
-        
-        // Update UI for guest user
-        function updateGuestUI() {
-            userProfileIndicator.classList.remove('visible');
-            authLinks.style.display = 'flex';
-            
-            // Update mobile UI
-            mobileUserProfile.style.display = 'none';
-            mobileAuthLinks.style.display = 'block';
-        }
-        
-        // Show user profile in header
-        function showUserProfile() {
-            userProfileIndicator.classList.add('visible');
-            authLinks.style.display = 'none';
-        }
-        
-        // Show authentication links in header
-        function showAuthLinks() {
-            userProfileIndicator.classList.remove('visible');
-            authLinks.style.display = 'flex';
-        }
-        
-        // ======================
-        // AUTHENTICATION MODAL
-        // ======================
-        
-        // Open auth modal
-        function openAuthModal(tab = 'login') {
-            authModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            // Set active tab
-            authTabs.forEach(t => t.classList.remove('active'));
-            if (tab === 'login') {
-                document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
-                loginForm.classList.add('active');
-                signupForm.classList.remove('active');
-            } else {
-                document.querySelector('.auth-tab[data-tab="signup"]').classList.add('active');
-                signupForm.classList.add('active');
-                loginForm.classList.remove('active');
-            }
-        }
-        
-        // Close auth modal
-        function closeAuthModalFunc() {
-            authModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Switch between login and signup tabs
-        authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                authTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                if (tabName === 'login') {
-                    loginForm.classList.add('active');
-                    signupForm.classList.remove('active');
-                } else {
-                    signupForm.classList.add('active');
-                    loginForm.classList.remove('active');
-                }
-            });
-        });
-        
-        // ======================
-        // AUTHENTICATION ACTIONS
-        // ======================
-        
-        // Simulated login (replace with Supabase when ready)
-        function handleLogin(email, password) {
-            // For demo purposes - in production, use Supabase auth
-            const demoUser = {
-                id: 'demo_user_001',
-                name: 'Malume Nico Fan',
-                email: email,
-                phone: '+27 79 651 6990'
-            };
-            
-            currentUser = demoUser;
-            isGuest = false;
-            localStorage.setItem('malumenico_user', JSON.stringify(currentUser));
-            localStorage.setItem('malumenico_isGuest', 'false');
-            
-            closeAuthModalFunc();
-            showUserProfile();
-            updateUserUI();
-            
-            // Show success message
-            showNotification('Successfully logged in!', 'success');
-            
-            // If we were in checkout flow, continue
-            if (checkoutFlow.requiresAuthChoice) {
-                proceedWithAccountCheckout();
-            }
-        }
-        
-        // Simulated signup (replace with Supabase when ready)
-        function handleSignup(name, email, password, phone) {
-            // For demo purposes - in production, use Supabase auth
-            const demoUser = {
-                id: 'demo_user_' + Date.now(),
-                name: name,
-                email: email,
-                phone: phone
-            };
-            
-            currentUser = demoUser;
-            isGuest = false;
-            localStorage.setItem('malumenico_user', JSON.stringify(currentUser));
-            localStorage.setItem('malumenico_isGuest', 'false');
-            
-            closeAuthModalFunc();
-            showUserProfile();
-            updateUserUI();
-            
-            // Show success message
-            showNotification('Account created successfully!', 'success');
-            
-            // If we were in checkout flow, continue
-            if (checkoutFlow.requiresAuthChoice) {
-                proceedWithAccountCheckout();
-            }
-        }
-        
-        // Logout function
-        function handleLogout() {
-            currentUser = null;
-            isGuest = false;
-            localStorage.removeItem('malumenico_user');
-            localStorage.removeItem('malumenico_isGuest');
-            
-            showAuthLinks();
-            updateGuestUI();
-            
-            // Show notification
-            showNotification('Logged out successfully', 'info');
-        }
-        
-        // ======================
-        // PROGRESSIVE AUTH FLOW
-        // ======================
-        
-        // Show guest checkout option
-        function showGuestCheckoutOption() {
-            guestCheckoutOption.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Hide guest checkout option
-        function hideGuestCheckoutOption() {
-            guestCheckoutOption.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Show post-purchase auth prompt
-        function showPostPurchasePrompt(orderNumber) {
-            document.getElementById('orderNumberDisplay').textContent = orderNumber;
-            postPurchasePrompt.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Hide post-purchase auth prompt
-        function hidePostPurchasePrompt() {
-            postPurchasePrompt.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Continue as guest in checkout
-        function continueAsGuest() {
-            isGuest = true;
-            localStorage.setItem('malumenico_isGuest', 'true');
-            hideGuestCheckoutOption();
-            
-            // Show checkout form with guest option selected
-            guestCheckoutChoice.classList.add('active');
-            accountCheckoutChoice.classList.remove('active');
-            accountCreationFields.style.display = 'none';
-            
-            // Enable checkout form
-            enableCheckoutForm();
-        }
-        
-        // Proceed with account creation during checkout
-        function proceedWithAccountCheckout() {
-            hideGuestCheckoutOption();
-            
-            // Show checkout form with account option selected
-            guestCheckoutChoice.classList.remove('active');
-            accountCheckoutChoice.classList.add('active');
-            accountCreationFields.style.display = 'block';
-            
-            // If user is already logged in, fill their details
-            if (currentUser) {
-                document.getElementById('customerName').value = currentUser.name || '';
-                document.getElementById('customerPhone').value = currentUser.phone || '';
-                checkoutEmail.value = currentUser.email || '';
-            }
-            
-            // Enable checkout form
-            enableCheckoutForm();
-        }
-        
-        // Enable checkout form after auth choice
-        function enableCheckoutForm() {
-            checkoutFlow.requiresAuthChoice = false;
-            document.querySelectorAll('#checkoutForm input, #checkoutForm textarea, #checkoutForm select').forEach(el => {
-                el.disabled = false;
-            });
-        }
-        
-        // ======================
-        // EVENT LISTENERS
-        // ======================
-        
-        // Open auth modal from header links
-        loginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('login');
-        });
-        
-        signupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('signup');
-        });
-        
-        // Mobile auth links
-        mobileLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeMobileMenu();
-            openAuthModal('login');
-        });
-        
-        mobileSignupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeMobileMenu();
-            openAuthModal('signup');
-        });
-        
-        mobileLogoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeMobileMenu();
-            handleLogout();
-        });
-        
-        // Close auth modal
-        closeAuthModal.addEventListener('click', closeAuthModalFunc);
-        
-        // Auth modal background click
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                closeAuthModalFunc();
-            }
-        });
-        
-        // Login button
-        loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-            
-            handleLogin(email, password);
-        });
-        
-        // Signup button
-        signupBtn.addEventListener('click', () => {
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const phone = document.getElementById('signupPhone').value;
-            
-            if (!name || !email || !password || !phone) {
-                showNotification('Please fill in all fields', 'error');
-                return;
-            }
-            
-            handleSignup(name, email, password, phone);
-        });
-        
-        // Guest continue buttons
-        guestContinueBtn.addEventListener('click', () => {
-            closeAuthModalFunc();
-            isGuest = true;
-            localStorage.setItem('malumenico_isGuest', 'true');
-            showNotification('Continuing as guest', 'info');
-        });
-        
-        guestCheckoutBtn.addEventListener('click', () => {
-            closeAuthModalFunc();
-            continueAsGuest();
-        });
-        
-        // Guest checkout option buttons
-        continueGuestBtn.addEventListener('click', continueAsGuest);
-        
-        createAccountCheckoutBtn.addEventListener('click', () => {
-            hideGuestCheckoutOption();
-            openAuthModal('signup');
-        });
-        
-        // Post-purchase auth prompt buttons
-        skipAccountBtn.addEventListener('click', () => {
-            hidePostPurchasePrompt();
-            showNotification('You can create an account anytime from your profile', 'info');
-        });
-        
-        createAccountAfterPurchaseBtn.addEventListener('click', () => {
-            hidePostPurchasePrompt();
-            openAuthModal('signup');
-        });
-        
-        // Checkout auth choice buttons
-        guestCheckoutChoice.addEventListener('click', () => {
-            guestCheckoutChoice.classList.add('active');
-            accountCheckoutChoice.classList.remove('active');
-            accountCreationFields.style.display = 'none';
-        });
-        
-        accountCheckoutChoice.addEventListener('click', () => {
-            if (!currentUser) {
-                // Show auth modal if not logged in
-                openAuthModal('signup');
-            } else {
-                // Already logged in, just select account option
-                guestCheckoutChoice.classList.remove('active');
-                accountCheckoutChoice.classList.add('active');
-                accountCreationFields.style.display = 'block';
-                checkoutEmail.value = currentUser.email || '';
-            }
-        });
-        
-        // ======================
-        // CHECKOUT FLOW INTEGRATION
-        // ======================
-        
-        // Modified floatingPlaceOrderBtn event listener to include auth flow
-        const originalPlaceOrderHandler = floatingPlaceOrderBtn.onclick;
-        
-        floatingPlaceOrderBtn.addEventListener('click', function() {
-            const customerName = document.getElementById('customerName').value;
-            const customerPhone = document.getElementById('customerPhone').value;
-            
-            // Check if we need to ask for auth choice
-            if (!currentUser && !isGuest && !checkoutFlow.requiresAuthChoice) {
-                checkoutFlow.requiresAuthChoice = true;
-                showGuestCheckoutOption();
-                return;
-            }
-            
-            // If account checkout is selected but no user is logged in
-            if (accountCheckoutChoice.classList.contains('active') && !currentUser) {
-                showNotification('Please create an account or continue as guest', 'error');
-                return;
-            }
-            
-            // Continue with original checkout validation
-            if (originalPlaceOrderHandler) {
-                originalPlaceOrderHandler.call(this);
-            }
-        });
-        
-        // Modified payment success handler to show post-purchase auth prompt
-        const originalPaymentSuccess = function() {
-            // Original payment success logic here...
-            
-            // Generate random order number
-            const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
-            orderNumber.textContent = randomOrderNum;
-            
-            // Store order in localStorage
-            const currentOrder = JSON.parse(localStorage.getItem('currentOrder') || '{}');
-            currentOrder.orderNumber = randomOrderNum;
-            currentOrder.paymentMethod = selectedPaymentMethod;
-            currentOrder.status = 'confirmed';
-            currentOrder.timestamp = new Date().toISOString();
-
-            let orders = JSON.parse(localStorage.getItem('orders') || '[]');
-            orders.push(currentOrder);
-            localStorage.setItem('orders', JSON.stringify(orders));
-
-            // Clear current order
-            localStorage.removeItem('currentOrder');
-            
-            // Show post-purchase auth prompt for guest users
-            if (isGuest && !currentUser) {
-                setTimeout(() => {
-                    showPostPurchasePrompt(randomOrderNum);
-                }, 1000);
-            }
-        };
-        
-        // ======================
-        // HELPER FUNCTIONS
-        // ======================
-        
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                </div>
-                <button class="notification-close"><i class="fas fa-times"></i></button>
-            `;
-            
-            // Add styles for notification
-            if (!document.querySelector('.notification-styles')) {
-                const style = document.createElement('style');
-                style.className = 'notification-styles';
-                style.textContent = `
-                    .notification {
-                        position: fixed;
-                        top: 100px;
-                        right: 20px;
-                        background: rgba(255, 255, 255, 0.15);
-                        backdrop-filter: blur(20px);
-                        -webkit-backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                        border-radius: 10px;
-                        padding: 15px 20px;
-                        color: white;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 15px;
-                        max-width: 350px;
-                        z-index: 9999;
-                        transform: translateX(150%);
-                        transition: transform 0.3s ease;
-                    }
-                    .notification.show {
-                        transform: translateX(0);
-                    }
-                    .notification-success {
-                        border-left: 4px solid var(--success);
-                    }
-                    .notification-error {
-                        border-left: 4px solid var(--error);
-                    }
-                    .notification-info {
-                        border-left: 4px solid var(--gold);
-                    }
-                    .notification-content {
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                    }
-                    .notification-close {
-                        background: none;
-                        border: none;
-                        color: white;
-                        cursor: pointer;
-                        opacity: 0.7;
-                    }
-                    .notification-close:hover {
-                        opacity: 1;
-                    }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            document.body.appendChild(notification);
-            
-            // Show notification
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            // Close button
-            notification.querySelector('.notification-close').addEventListener('click', () => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            });
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.classList.remove('show');
-                    setTimeout(() => {
-                        notification.remove();
-                    }, 300);
-                }
-            }, 5000);
-        }
-        
-        function closeMobileMenu() {
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // ======================
-        // INITIALIZE
-        // ======================
-        
-        // Initialize everything when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            initUserState();
-            
-            // Check if we're returning from a guest checkout flow
-            if (localStorage.getItem('malumenico_showPostPurchase') === 'true') {
-                const orderNum = localStorage.getItem('malumenico_lastOrder');
-                if (orderNum && isGuest && !currentUser) {
-                    setTimeout(() => {
-                        showPostPurchasePrompt(orderNum);
-                    }, 1000);
-                }
-                localStorage.removeItem('malumenico_showPostPurchase');
-            }
-            
-            // Rest of your existing initialization code...
-            renderMenuItems();
-            updateCart();
-            setActiveNavItem();
-            initGoogleMaps();
-            initFadeInAnimations();
-            handleKeyboardEvents();
-        });
-        
-        // ======================
-        // YOUR EXISTING CODE (with minor modifications)
-        // ======================
-        
         // Menu data with image URLs
         const menuItems = [
             { 
@@ -3591,6 +2452,143 @@
             showCheckoutView();
         });
 
+        // Floating place order button
+        floatingPlaceOrderBtn.addEventListener('click', () => {
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const tableNumber = document.getElementById('tableNumber').value;
+            const collectionTime = document.getElementById('collectionTime').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            const specialInstructions = document.getElementById('specialInstructions').value;
+
+            if (!customerName || !customerPhone) {
+                alert('Please fill in your name and phone number.');
+                return;
+            }
+
+            if (orderType === 'dinein' && !tableNumber) {
+                alert('Please enter your table number.');
+                return;
+            }
+
+            if (orderType === 'delivery' && !deliveryAddress) {
+                alert('Please enter your delivery address.');
+                return;
+            }
+
+            // Store order details
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+            const total = subtotal + deliveryFee;
+
+            const orderDetails = {
+                items: cart,
+                customer: {
+                    name: customerName,
+                    phone: customerPhone,
+                    table: tableNumber,
+                    collectionTime: collectionTime,
+                    address: deliveryAddress,
+                    instructions: specialInstructions
+                },
+                type: orderType,
+                subtotal: subtotal,
+                deliveryFee: deliveryFee,
+                total: total
+            };
+
+            localStorage.setItem('currentOrder', JSON.stringify(orderDetails));
+
+            // Proceed to payment
+            showPaymentView();
+        });
+
+        // Floating process payment button
+        floatingProcessPaymentBtn.addEventListener('click', () => {
+            // Validate card details
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardName = document.getElementById('cardName').value;
+
+            if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                alert('Please fill in all card details.');
+                return;
+            }
+
+            // Validate card number format (basic validation)
+            const cardNumberClean = cardNumber.replace(/\s/g, '');
+            if (!/^\d{16}$/.test(cardNumberClean)) {
+                alert('Please enter a valid 16-digit card number.');
+                return;
+            }
+
+            // Validate expiry date format
+            if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                alert('Please enter expiry date in MM/YY format.');
+                return;
+            }
+
+            // Validate CVV
+            if (!/^\d{3,4}$/.test(cvv)) {
+                alert('Please enter a valid CVV (3 or 4 digits).');
+                return;
+            }
+
+            // Show processing
+            paymentMethodView.classList.remove('active');
+            paymentProcessing.classList.add('active');
+
+            // Simulate payment processing
+            setTimeout(() => {
+                paymentProcessing.classList.remove('active');
+                paymentSuccess.classList.add('active');
+
+                // Generate random order number
+                const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+                orderNumber.textContent = randomOrderNum;
+
+                // Store order in localStorage
+                const currentOrder = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+                currentOrder.orderNumber = randomOrderNum;
+                currentOrder.paymentMethod = selectedPaymentMethod;
+                currentOrder.status = 'confirmed';
+                currentOrder.timestamp = new Date().toISOString();
+
+                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push(currentOrder);
+                localStorage.setItem('orders', JSON.stringify(orders));
+
+                // Clear current order
+                localStorage.removeItem('currentOrder');
+            }, 3000);
+        });
+
+        // Continue shopping button
+        continueShopping.addEventListener('click', () => {
+            // Clear cart and close
+            cart = [];
+            updateCart();
+            cartContainer.classList.remove('open');
+            showCartView();
+
+            // Reset form
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('tableNumber').value = '';
+            document.getElementById('deliveryAddress').value = '';
+            document.getElementById('specialInstructions').value = '';
+            
+            // Reset payment form
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('expiryDate').value = '';
+            document.getElementById('cvv').value = '';
+            document.getElementById('cardName').value = '';
+            
+            // Hide floating buttons
+            hideAllFloatingButtons();
+        });
+
         // Render menu items with images
         function renderMenuItems(category = 'all') {
             const menuContainer = document.getElementById('menuItems');
@@ -3808,6 +2806,20 @@
                 window.open('https://maps.app.goo.gl/uqVM3QCeHKkSN1v1A', '_blank');
             });
         }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenuItems();
+            updateCart();
+            setActiveNavItem();
+            initGoogleMaps();
+            
+            // Initialize fade-in animations
+            initFadeInAnimations();
+
+            // Handle keyboard events to keep header in place
+            handleKeyboardEvents();
+        });
 
         // Handle keyboard events to ensure header stays fixed
         function handleKeyboardEvents() {
