@@ -38,8 +38,6 @@
             --dark-bg: #0a0a0a;
             --glass-bg: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.25);
-            --success: #4CAF50;
-            --error: #f44336;
         }
 
         html {
@@ -203,291 +201,8 @@
             color: var(--gold);
         }
 
-        /* === AUTHENTICATION MODAL === */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            z-index: 2001;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            padding: 20px;
-            padding-top: calc(20px + env(safe-area-inset-top));
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        }
-
-        .auth-modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .auth-modal-content {
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 420px;
-            padding: 40px 35px;
-            transform: scale(0.9);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        }
-
-        .auth-modal.active .auth-modal-content {
-            transform: scale(1);
-        }
-
-        .close-auth-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: none;
-            border: none;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .close-auth-modal:hover {
-            color: var(--gold);
-            background: rgba(255, 255, 255, 0.1);
-            transform: rotate(90deg);
-        }
-
-        .auth-modal h3 {
-            color: var(--gold);
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .auth-modal .form-group {
-            margin-bottom: 24px;
-        }
-
-        .auth-modal .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 15px;
-        }
-
-        .auth-modal .form-group input {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s;
-            font-family: inherit;
-        }
-
-        .auth-modal .form-group input:focus {
-            outline: none;
-            border-color: var(--gold);
-            background: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 0 0 3px rgba(200, 155, 45, 0.15);
-        }
-
-        .auth-modal .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 35px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-            gap: 5px;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 16px;
-            text-align: center;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .auth-tab:hover {
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .auth-tab.active {
-            color: var(--gold);
-        }
-
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gold);
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 2px 8px rgba(200, 155, 45, 0.4);
-        }
-
-        .auth-form {
-            display: none;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 50px;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-family: inherit;
-            letter-spacing: 0.3px;
-        }
-
-        .auth-btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--ink);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 6px 20px rgba(200, 155, 45, 0.3);
-        }
-
-        .auth-btn-primary:hover {
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(200, 155, 45, 0.4);
-        }
-
-        .auth-btn-secondary {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .auth-btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .guest-option {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        .guest-option p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .auth-message {
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 15px;
-            display: none;
-            animation: slideInDown 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .auth-message.success {
-            background: rgba(76, 175, 80, 0.15);
-            border-color: rgba(76, 175, 80, 0.3);
-            color: #a5d6a7;
-            display: block;
-        }
-
-        .auth-message.error {
-            background: rgba(244, 67, 54, 0.15);
-            border-color: rgba(244, 67, 54, 0.3);
-            color: #ef9a9a;
-            display: block;
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-        }
-
-        /* === POST-PURCHASE MODAL === */
+        /* === GUEST CHECKOUT MODAL === */
+        .guest-checkout-modal,
         .post-purchase-modal {
             display: none;
             position: fixed;
@@ -496,335 +211,213 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            z-index: 2002;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2001;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
             padding: 20px;
         }
 
+        .guest-checkout-modal.active,
         .post-purchase-modal.active {
             display: flex;
-            opacity: 1;
+            animation: fadeIn 0.3s ease;
         }
 
-        .post-purchase-content {
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 24px;
+        .guest-checkout-modal .modal-content,
+        .post-purchase-modal .modal-content {
+            max-width: 400px;
             width: 100%;
-            max-width: 450px;
-            padding: 40px 35px;
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .post-purchase-modal.active .post-purchase-content {
-            transform: scale(1);
-        }
-
-        .post-purchase-icon {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            font-size: 3rem;
-            color: var(--ink);
-            box-shadow: 0 10px 30px rgba(200, 155, 45, 0.4);
-            animation: pulseGlow 2s infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                box-shadow: 0 10px 30px rgba(200, 155, 45, 0.4);
-            }
-            50% {
-                box-shadow: 0 15px 40px rgba(200, 155, 45, 0.6);
-            }
-        }
-
-        .post-purchase-content h3 {
+        .guest-checkout-modal h3 {
             color: var(--gold);
-            margin-bottom: 15px;
+            text-align: center;
+            margin-bottom: 10px;
             font-size: 1.8rem;
-            font-weight: 700;
         }
 
-        .post-purchase-content p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 20px;
-            line-height: 1.6;
-            font-size: 16px;
-        }
-
-        .benefits-list {
-            text-align: left;
-            margin: 25px 0;
-            padding-left: 20px;
-            list-style: none;
-        }
-
-        .benefits-list li {
-            color: rgba(255, 255, 255, 0.85);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .benefits-list li i {
-            color: var(--gold);
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .post-purchase-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 30px;
-        }
-
-        /* === USER PROFILE INDICATOR === */
-        .user-indicator {
-            display: none;
-            align-items: center;
-            gap: 12px;
-            margin-left: auto;
-            margin-right: 20px;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            transition: all 0.3s ease;
-        }
-
-        .user-indicator.visible {
-            display: flex;
-        }
-
-        .user-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--ink);
-            font-weight: 800;
-            font-size: 18px;
-            box-shadow: 0 4px 12px rgba(200, 155, 45, 0.3);
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .user-name {
-            color: white;
-            font-weight: 700;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-
-        .user-points {
-            color: var(--gold);
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-left: 10px;
-            white-space: nowrap;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* === GUEST CHECKOUT INDICATOR === */
-        .guest-checkout-indicator {
-            background: rgba(200, 155, 45, 0.15);
-            padding: 18px 20px;
-            border-radius: 16px;
-            margin-bottom: 25px;
-            border-left: 4px solid var(--gold);
-            display: none;
-            animation: slideInRight 0.5s ease;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .guest-checkout-indicator p {
-            margin: 0;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .guest-checkout-indicator a {
-            color: var(--gold);
-            text-decoration: underline;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .guest-checkout-indicator a:hover {
-            color: var(--gold-light);
-            text-decoration: none;
-        }
-
-        /* === CHECKOUT OPTIONS === */
-        .checkout-options {
-            margin: 30px 0;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: none;
-        }
-
-        .checkout-options.visible {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .checkout-options-title {
+        .guest-checkout-modal p {
             text-align: center;
-            color: var(--gold);
-            margin-bottom: 25px;
-            font-size: 1.3rem;
-            font-weight: 700;
+            opacity: 0.8;
+            margin-bottom: 30px;
         }
 
-        .checkout-option-buttons {
+        .checkout-options {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            margin-bottom: 25px;
         }
 
         .checkout-option-btn {
-            width: 100%;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 15px;
-            font-family: inherit;
-            letter-spacing: 0.3px;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .checkout-option-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .checkout-option-btn:hover::before {
-            transform: translateX(100%);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: left;
         }
 
         .checkout-option-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .checkout-option-btn.guest {
             background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            border-color: var(--gold);
         }
 
-        .checkout-option-btn.guest:hover {
-            background: rgba(255, 255, 255, 0.22);
+        .checkout-option-btn i:first-child {
+            font-size: 1.5rem;
+            color: var(--gold);
         }
 
-        .checkout-option-btn.account {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            border-color: rgba(255, 255, 255, 0.3);
+        .checkout-option-btn h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .checkout-option-btn p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin: 0;
+            text-align: left;
+        }
+
+        .checkout-option-btn i:last-child {
+            margin-left: auto;
+            opacity: 0.5;
+        }
+
+        .option-divider {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .option-divider::before,
+        .option-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .option-divider span {
+            padding: 0 15px;
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        .privacy-note {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* === POST-PURCHASE MODAL === */
+        .post-purchase-modal .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
             color: var(--ink);
         }
 
-        .checkout-option-btn.account:hover {
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            box-shadow: 0 10px 25px rgba(200, 155, 45, 0.4);
+        .post-purchase-modal h3 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: white;
         }
 
-        .option-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.4);
+        .post-purchase-modal > p {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .account-offer {
+            background: rgba(200, 155, 45, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid rgba(200, 155, 45, 0.3);
+        }
+
+        .offer-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .offer-header i {
             color: var(--gold);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-size: 1.5rem;
+        }
+
+        .offer-header h4 {
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-left: 5px;
+        }
+
+        .benefits-list i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .account-offer .btn {
+            width: 100%;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .offer-note {
+            text-align: center;
+            margin-top: 15px;
+            opacity: 0.6;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* === UPDATED: HEADER CART TOTAL === */
@@ -2086,17 +1679,6 @@
             .header-total-amount {
                 font-size: 14px;
             }
-            
-            .user-indicator {
-                display: none !important;
-            }
-            
-            .user-indicator.mobile-visible {
-                display: flex !important;
-                margin: 20px auto;
-                justify-content: center;
-                width: auto;
-            }
         }
 
         @media (max-width: 768px) {
@@ -2159,21 +1741,6 @@
                 order: -1;
                 height: 250px;
             }
-            
-            .auth-modal-content,
-            .post-purchase-content {
-                padding: 30px 25px;
-                margin: 15px;
-            }
-            
-            .checkout-option-buttons {
-                gap: 12px;
-            }
-            
-            .checkout-option-btn {
-                padding: 18px;
-                font-size: 15px;
-            }
         }
 
         @media (max-width: 576px) {
@@ -2211,25 +1778,6 @@
             .header-cart-total {
                 display: none !important;
             }
-            
-            .auth-tabs {
-                flex-direction: column;
-                gap: 10px;
-                margin-bottom: 25px;
-            }
-            
-            .auth-tab {
-                padding: 14px;
-                border-radius: 12px;
-            }
-            
-            .auth-tab.active::after {
-                display: none;
-            }
-            
-            .checkout-options {
-                padding: 20px;
-            }
         }
 
         /* Hide bottom nav on desktop */
@@ -2264,107 +1812,76 @@
         </div>
     </div>
 
-    <!-- Authentication Modal -->
-    <div class="auth-modal" id="authModal">
-        <div class="auth-modal-content">
-            <button class="close-auth-modal" id="closeAuthModal">
-                <i class="fas fa-times"></i>
-            </button>
+    <!-- Guest Checkout Modal -->
+    <div class="guest-checkout-modal" id="guestCheckoutModal">
+        <div class="modal-content glass">
+            <h3>Choose How to Continue</h3>
+            <p>Select your preferred checkout method</p>
             
-            <h3>Welcome to Malume Nico</h3>
-            
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">Login</button>
-                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            <div class="checkout-options">
+                <button class="checkout-option-btn" id="continueAsGuestBtn">
+                    <i class="fas fa-user-clock"></i>
+                    <div>
+                        <h4>Continue as Guest</h4>
+                        <p>Quick checkout without account</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <div class="option-divider">
+                    <span>OR</span>
+                </div>
+                
+                <button class="checkout-option-btn" id="createAccountForRewardsBtn">
+                    <i class="fas fa-gift"></i>
+                    <div>
+                        <h4>Create Account for Rewards</h4>
+                        <p>Earn coupons & track orders</p>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-
-            <div class="auth-message" id="authMessage"></div>
-
-            <!-- Login Form -->
-            <form class="auth-form active" id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="auth-btn auth-btn-primary">
-                    <i class="fas fa-sign-in-alt"></i> Sign In to Account
-                </button>
-                
-                <div class="guest-option">
-                    <p>Just want to order quickly?</p>
-                    <button type="button" class="auth-btn auth-btn-secondary" id="continueAsGuestBtn">
-                        <i class="fas fa-user-clock"></i> Continue as Guest
-                    </button>
-                </div>
-            </form>
-
-            <!-- Sign Up Form -->
-            <form class="auth-form" id="signupForm">
-                <div class="form-group">
-                    <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" placeholder="Your full name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="your@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPhone">Phone Number</label>
-                    <input type="tel" id="signupPhone" placeholder="+27 79 123 4567" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a secure password" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupConfirmPassword">Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
-                </div>
-                <button type="submit" class="auth-btn auth-btn-primary">
-                    <i class="fas fa-user-plus"></i> Create Account & Earn Rewards
-                </button>
-                
-                <div class="guest-option">
-                    <p>Already have an account?</p>
-                    <button type="button" class="auth-btn auth-btn-secondary" id="switchToLogin">
-                        <i class="fas fa-sign-in-alt"></i> Login Instead
-                    </button>
-                </div>
-            </form>
             
-            <div class="auth-footer">
-                <p>By creating an account, you agree to receive exclusive offers and updates</p>
+            <div class="modal-footer">
+                <p class="privacy-note">
+                    <i class="fas fa-lock"></i> Your information is secure. Guest checkout doesn't create an account.
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- Post-purchase Account Creation Modal -->
+    <!-- Post-Purchase Account Modal -->
     <div class="post-purchase-modal" id="postPurchaseModal">
-        <div class="post-purchase-content">
-            <div class="post-purchase-icon">
-                <i class="fas fa-gift"></i>
+        <div class="modal-content glass">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
             </div>
-            <h3>🎉 Order Successful!</h3>
-            <p>Your order <strong id="orderNumberDisplay">MN-2023-001</strong> has been confirmed!</p>
-            <p>Create an account to unlock these benefits:</p>
-            <ul class="benefits-list">
-                <li><i class="fas fa-check-circle"></i> Track this order in real-time</li>
-                <li><i class="fas fa-history"></i> View your complete order history</li>
-                <li><i class="fas fa-tag"></i> Earn loyalty points for every order</li>
-                <li><i class="fas fa-bolt"></i> Faster checkout with saved details</li>
-                <li><i class="fas fa-star"></i> Exclusive member-only offers</li>
-            </ul>
-            <div class="post-purchase-buttons">
-                <button class="btn btn-primary" id="createAccountAfterOrder">
+            <h3>Order Confirmed! 🎉</h3>
+            <p>Your order #<span id="confirmedOrderNumber">MN-1234</span> is being prepared.</p>
+            
+            <div class="account-offer">
+                <div class="offer-header">
+                    <i class="fas fa-crown"></i>
+                    <h4>Unlock Rewards</h4>
+                </div>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-check"></i> Track this order & get updates</li>
+                    <li><i class="fas fa-check"></i> Earn loyalty points</li>
+                    <li><i class="fas fa-check"></i> Get exclusive coupons</li>
+                    <li><i class="fas fa-check"></i> Faster checkout next time</li>
+                </ul>
+                
+                <button class="btn btn-primary" id="createAccountPostPurchase">
                     <i class="fas fa-user-plus"></i> Create Free Account
                 </button>
+                
                 <button class="btn btn-secondary" id="skipAccountCreation">
-                    <i class="fas fa-user-clock"></i> Continue as Guest
+                    Maybe Later
                 </button>
+                
+                <p class="offer-note">
+                    <small>No credit card required. Cancel anytime.</small>
+                </p>
             </div>
         </div>
     </div>
@@ -2381,7 +1898,7 @@
             <div class="total-amount" id="totalAmount">R0.00</div>
         </div>
 
-        <button class="floating-action-btn" id="floatingCheckoutBtn">Proceed to Checkout</button>
+        <button class="floating-action-btn" id="floatingCheckoutBtn">Checkout</button>
         <button class="floating-action-btn" id="floatingPlaceOrderBtn">Place Order</button>
         <button class="floating-action-btn" id="floatingProcessPaymentBtn">Process Payment</button>
     </div>
@@ -2389,6 +1906,7 @@
     <!-- Header with Cart Total -->
     <header>
         <div class="brand">
+            <!-- REPLACE THE LOGO URL BELOW WITH YOUR ACTUAL LOGO URL -->
             <img src="assets/svg/logo.svg" alt="Malume Nico" class="logo">
         </div>
 
@@ -2397,30 +1915,17 @@
             <div class="header-total-amount" id="headerTotalAmount">R0.00</div>
         </div>
 
-        <!-- User Profile Indicator (shown when logged in) -->
-        <div class="user-indicator" id="userIndicator">
-            <div class="user-avatar" id="userAvatar">G</div>
-            <div class="user-info">
-                <div class="user-name" id="userName">Guest User</div>
-                <div class="user-points">
-                    <i class="fas fa-star"></i>
-                    <span id="userPoints">0 points</span>
-                </div>
-            </div>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
-        </div>
-
-        <!-- Authentication Navigation Links (shown when not logged in) -->
-        <nav class="nav-links" id="authNavLinks">
-            <a href="#" class="login-btn" id="openAuthModal">
+        <!-- UPDATED: Authentication navigation links -->
+        <nav class="nav-links">
+            <a href="profile.html" class="login-btn">
                 <i class="fas fa-sign-in-alt"></i> Login
             </a>
-            <a href="#" class="signup-btn" id="openSignupModal">
+            <a href="profile.html" class="signup-btn">
                 <i class="fas fa-user-plus"></i> Sign Up
             </a>
         </nav>
 
-        <!-- Mobile Menu Button -->
+        <!-- UPDATED: Mobile menu button with custom hamburger icon -->
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <div class="hamburger">
                 <div class="hamburger-line"></div>
@@ -2430,29 +1935,15 @@
         </button>
     </header>
 
-    <!-- Mobile Menu Overlay -->
+    <!-- UPDATED: Mobile Menu Overlay (removed close button) -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">
-        <!-- Mobile User Indicator -->
-        <div class="user-indicator mobile-visible" id="mobileUserIndicator" style="display: none;">
-            <div class="user-avatar" id="mobileUserAvatar">G</div>
-            <div class="user-info">
-                <div class="user-name" id="mobileUserName">Guest User</div>
-                <div class="user-points">
-                    <i class="fas fa-star"></i>
-                    <span id="mobileUserPoints">0 points</span>
-                </div>
-            </div>
-        </div>
-        
+        <!-- UPDATED: Mobile authentication navigation links -->
         <nav class="mobile-nav-links">
-            <a href="#" class="mobile-nav-link" id="mobileOpenAuthModal">
+            <a href="profile.html" class="mobile-nav-link">
                 <i class="fas fa-sign-in-alt"></i> Login
             </a>
-            <a href="#" class="mobile-nav-link" id="mobileOpenSignupModal">
+            <a href="profile.html" class="mobile-nav-link">
                 <i class="fas fa-user-plus"></i> Sign Up
-            </a>
-            <a href="#" class="mobile-nav-link" id="mobileLogoutBtn" style="display: none;">
-                <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </nav>
     </div>
@@ -2582,36 +2073,6 @@
         </div>
 
         <div class="cart-content">
-            <!-- Guest Checkout Indicator -->
-            <div class="guest-checkout-indicator" id="guestCheckoutIndicator">
-                <p>
-                    <i class="fas fa-user-clock"></i>
-                    Checking out as guest. 
-                    <a href="#" id="createAccountLink">Create an account</a> 
-                    to save your details and earn rewards!
-                </p>
-            </div>
-
-            <!-- Checkout Options (Guest vs Account) -->
-            <div class="checkout-options" id="checkoutOptions">
-                <h4 class="checkout-options-title">How would you like to checkout?</h4>
-                <div class="checkout-option-buttons">
-                    <button class="checkout-option-btn guest" id="checkoutAsGuestBtn">
-                        <i class="fas fa-user-clock"></i>
-                        Continue as Guest
-                        <span class="option-badge">Quick & Easy</span>
-                    </button>
-                    <button class="checkout-option-btn account" id="checkoutWithAccountBtn">
-                        <i class="fas fa-user-check"></i>
-                        Create Account for Rewards
-                        <span class="option-badge">+100 Points</span>
-                    </button>
-                </div>
-                <p style="text-align: center; margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.5;">
-                    <i class="fas fa-info-circle"></i> Accounts get loyalty points, order tracking, and exclusive offers
-                </p>
-            </div>
-
             <!-- Cart Items View -->
             <div class="cart-items" id="cartItemsView">
                 <div class="cart-items" id="cartItems">
@@ -2626,6 +2087,14 @@
 
             <!-- Checkout Form View -->
             <div class="checkout-form" id="checkoutForm">
+                <!-- Guest notice -->
+                <div class="guest-notice" style="margin-bottom: 20px; padding: 15px; background: rgba(200, 155, 45, 0.1); border-radius: 12px; border-left: 3px solid var(--gold);">
+                    <p style="margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-user-clock"></i>
+                        <span>You're checking out as a guest. <a href="profile.html" style="color: var(--gold); text-decoration: underline;">Create an account</a> to earn rewards.</span>
+                    </p>
+                </div>
+
                 <div class="order-type-selection">
                     <h4 class="order-type-title">How would you like to receive your order?</h4>
                     <div class="order-type-options">
@@ -2951,68 +2420,6 @@
     </nav>
 
     <script>
-        // ============================================
-        // AUTHENTICATION SYSTEM - GUEST-FIRST FLOW
-        // ============================================
-        
-        // User state management
-        let currentUser = JSON.parse(localStorage.getItem('malumenico_user')) || null;
-        let isGuestCheckout = false;
-        let userLoyaltyPoints = parseInt(localStorage.getItem('malumenico_points')) || 0;
-        
-        // ============================================
-        // DOM ELEMENTS FOR AUTHENTICATION
-        // ============================================
-        
-        // Authentication Modal Elements
-        const authModal = document.getElementById('authModal');
-        const closeAuthModal = document.getElementById('closeAuthModal');
-        const authTabs = document.querySelectorAll('.auth-tab');
-        const authForms = document.querySelectorAll('.auth-form');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const authMessage = document.getElementById('authMessage');
-        const continueAsGuestBtn = document.getElementById('continueAsGuestBtn');
-        const switchToLoginBtn = document.getElementById('switchToLogin');
-        
-        // Header Navigation Elements
-        const userIndicator = document.getElementById('userIndicator');
-        const authNavLinks = document.getElementById('authNavLinks');
-        const openAuthModalBtn = document.getElementById('openAuthModal');
-        const openSignupModalBtn = document.getElementById('openSignupModal');
-        const logoutBtn = document.getElementById('logoutBtn');
-        
-        // User Info Elements
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
-        const userPoints = document.getElementById('userPoints');
-        
-        // Mobile User Elements
-        const mobileUserIndicator = document.getElementById('mobileUserIndicator');
-        const mobileUserAvatar = document.getElementById('mobileUserAvatar');
-        const mobileUserName = document.getElementById('mobileUserName');
-        const mobileUserPoints = document.getElementById('mobileUserPoints');
-        const mobileOpenAuthModal = document.getElementById('mobileOpenAuthModal');
-        const mobileOpenSignupModal = document.getElementById('mobileOpenSignupModal');
-        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-        
-        // Checkout Flow Elements
-        const checkoutOptions = document.getElementById('checkoutOptions');
-        const checkoutAsGuestBtn = document.getElementById('checkoutAsGuestBtn');
-        const checkoutWithAccountBtn = document.getElementById('checkoutWithAccountBtn');
-        const guestCheckoutIndicator = document.getElementById('guestCheckoutIndicator');
-        const createAccountLink = document.getElementById('createAccountLink');
-        
-        // Post-purchase Modal Elements
-        const postPurchaseModal = document.getElementById('postPurchaseModal');
-        const orderNumberDisplay = document.getElementById('orderNumberDisplay');
-        const createAccountAfterOrder = document.getElementById('createAccountAfterOrder');
-        const skipAccountCreation = document.getElementById('skipAccountCreation');
-        
-        // ============================================
-        // YOUR ORIGINAL CODE (PRESERVED)
-        // ============================================
-        
         // Menu data with image URLs
         const menuItems = [
             { 
@@ -3196,6 +2603,15 @@
         const openInMapsBtn = document.getElementById('openInMaps');
         const refreshMapBtn = document.getElementById('refreshMap');
 
+        // Guest checkout elements
+        const guestCheckoutModal = document.getElementById('guestCheckoutModal');
+        const postPurchaseModal = document.getElementById('postPurchaseModal');
+        const continueAsGuestBtn = document.getElementById('continueAsGuestBtn');
+        const createAccountForRewardsBtn = document.getElementById('createAccountForRewardsBtn');
+        const createAccountPostPurchase = document.getElementById('createAccountPostPurchase');
+        const skipAccountCreation = document.getElementById('skipAccountCreation');
+        const confirmedOrderNumber = document.getElementById('confirmedOrderNumber');
+
         // Bottom Navigation Functionality
         const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
 
@@ -3216,6 +2632,8 @@
         let cart = [];
         let orderType = 'dinein';
         let selectedPaymentMethod = 'card'; // Only card is available
+        let isGuestCheckout = true;
+        let userEmailForPostPurchase = '';
 
         // Function to update header total amount
         function updateHeaderTotalAmount() {
@@ -3243,8 +2661,6 @@
         closeCartBtn.addEventListener('click', () => {
             cartContainer.classList.remove('open');
             hideAllFloatingButtons();
-            guestCheckoutIndicator.style.display = 'none';
-            checkoutOptions.style.display = 'none';
         });
 
         // Order type selection
@@ -3278,35 +2694,58 @@
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
             
-            // Show checkout options if cart has items
-            if (cart.length > 0) {
-                checkoutOptions.classList.add('visible');
-                guestCheckoutIndicator.style.display = 'none';
-            } else {
-                checkoutOptions.style.display = 'none';
-                guestCheckoutIndicator.style.display = 'none';
-            }
-            
             // Show floating checkout button
             hideAllFloatingButtons();
+            if (cart.length > 0) {
+                floatingCheckoutBtn.classList.add('active');
+            }
         }
+
+        // Show guest checkout modal
+        floatingCheckoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty. Add some items before checking out.');
+                return;
+            }
+            showGuestCheckoutModal();
+        });
+
+        function showGuestCheckoutModal() {
+            cartContainer.classList.add('open');
+            guestCheckoutModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Hide other views
+            cartTitle.textContent = 'Checkout Method';
+            cartItemsView.style.display = 'none';
+            checkoutForm.classList.remove('active');
+            paymentMethodView.classList.remove('active');
+            
+            hideAllFloatingButtons();
+        }
+
+        // Continue as guest option
+        continueAsGuestBtn.addEventListener('click', () => {
+            isGuestCheckout = true;
+            guestCheckoutModal.classList.remove('active');
+            showCheckoutView();
+        });
+
+        // Create account for rewards option
+        createAccountForRewardsBtn.addEventListener('click', () => {
+            isGuestCheckout = false;
+            guestCheckoutModal.classList.remove('active');
+            showAccountCreationModal();
+        });
 
         // Show checkout view
         function showCheckoutView() {
             cartTitle.textContent = 'Checkout';
             cartItemsView.style.display = 'none';
-            checkoutOptions.style.display = 'none';
             checkoutForm.classList.add('active');
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            
-            // Show guest checkout indicator if applicable
-            if (isGuestCheckout && !currentUser) {
-                guestCheckoutIndicator.style.display = 'block';
-            } else {
-                guestCheckoutIndicator.style.display = 'none';
-            }
             
             // Show floating place order button
             hideAllFloatingButtons();
@@ -3317,14 +2756,10 @@
         function showPaymentView() {
             cartTitle.textContent = 'Payment';
             cartItemsView.style.display = 'none';
-            checkoutOptions.style.display = 'none';
             checkoutForm.classList.remove('active');
             paymentMethodView.classList.add('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
-            
-            // Hide guest indicator in payment view
-            guestCheckoutIndicator.style.display = 'none';
             
             // Show floating process payment button
             hideAllFloatingButtons();
@@ -3338,132 +2773,22 @@
             floatingProcessPaymentBtn.classList.remove('active');
         }
 
-        // Update total amount display
-        function updateTotalAmount() {
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-            const total = subtotal + deliveryFee;
-            
-            totalAmount.textContent = `R${total.toFixed(2)}`;
-            
-            // Update header total as well
-            updateHeaderTotalAmount();
-            
-            // Show/hide total button based on cart content
-            if (cart.length > 0) {
-                floatingTotalBtn.style.display = 'flex';
-                floatingCheckoutBtn.classList.add('active');
-            } else {
-                floatingTotalBtn.style.display = 'none';
-                floatingCheckoutBtn.classList.remove('active');
-            }
-        }
-
-        // Floating checkout button
-        floatingCheckoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert('Your cart is empty. Add some items before checking out.');
-                return;
-            }
-            
-            // If user is already logged in, go directly to checkout
-            if (currentUser) {
-                isGuestCheckout = false;
-                showCheckoutView();
-            } else {
-                // Show checkout options (guest vs account)
-                showCartView();
-                checkoutOptions.classList.add('visible');
-                cartItemsView.style.display = 'block';
-            }
-        });
-
         // Floating place order button
         floatingPlaceOrderBtn.addEventListener('click', () => {
-            const customerName = document.getElementById('customerName').value;
-            const customerPhone = document.getElementById('customerPhone').value;
-            const tableNumber = document.getElementById('tableNumber').value;
-            const collectionTime = document.getElementById('collectionTime').value;
-            const deliveryAddress = document.getElementById('deliveryAddress').value;
-            const specialInstructions = document.getElementById('specialInstructions').value;
-
-            if (!customerName || !customerPhone) {
-                alert('Please fill in your name and phone number.');
-                return;
-            }
-
-            if (orderType === 'dinein' && !tableNumber) {
-                alert('Please enter your table number.');
-                return;
-            }
-
-            if (orderType === 'delivery' && !deliveryAddress) {
-                alert('Please enter your delivery address.');
-                return;
-            }
-
-            // Store order details
-            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-            const total = subtotal + deliveryFee;
-
-            const orderDetails = {
-                items: cart,
-                customer: {
-                    name: customerName,
-                    phone: customerPhone,
-                    table: tableNumber,
-                    collectionTime: collectionTime,
-                    address: deliveryAddress,
-                    instructions: specialInstructions,
-                    isGuest: isGuestCheckout,
-                    userId: currentUser?.id || null
-                },
-                type: orderType,
-                subtotal: subtotal,
-                deliveryFee: deliveryFee,
-                total: total,
-                timestamp: new Date().toISOString()
-            };
-
+            if (!validateCheckoutForm()) return;
+            
+            // Store order details with guest flag
+            const orderDetails = getOrderDetails();
+            orderDetails.isGuest = isGuestCheckout;
+            
             localStorage.setItem('currentOrder', JSON.stringify(orderDetails));
-
-            // Proceed to payment
             showPaymentView();
         });
 
         // Floating process payment button
         floatingProcessPaymentBtn.addEventListener('click', () => {
-            // Validate card details
-            const cardNumber = document.getElementById('cardNumber').value;
-            const expiryDate = document.getElementById('expiryDate').value;
-            const cvv = document.getElementById('cvv').value;
-            const cardName = document.getElementById('cardName').value;
-
-            if (!cardNumber || !expiryDate || !cvv || !cardName) {
-                alert('Please fill in all card details.');
-                return;
-            }
-
-            // Validate card number format (basic validation)
-            const cardNumberClean = cardNumber.replace(/\s/g, '');
-            if (!/^\d{16}$/.test(cardNumberClean)) {
-                alert('Please enter a valid 16-digit card number.');
-                return;
-            }
-
-            // Validate expiry date format
-            if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
-                alert('Please enter expiry date in MM/YY format.');
-                return;
-            }
-
-            // Validate CVV
-            if (!/^\d{3,4}$/.test(cvv)) {
-                alert('Please enter a valid CVV (3 or 4 digits).');
-                return;
-            }
-
+            if (!validatePaymentForm()) return;
+            
             // Show processing
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.add('active');
@@ -3476,8 +2801,9 @@
                 // Generate random order number
                 const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
                 orderNumber.textContent = randomOrderNum;
+                confirmedOrderNumber.textContent = randomOrderNum;
 
-                // Store order in localStorage
+                // Store order
                 const currentOrder = JSON.parse(localStorage.getItem('currentOrder') || '{}');
                 currentOrder.orderNumber = randomOrderNum;
                 currentOrder.paymentMethod = selectedPaymentMethod;
@@ -3491,23 +2817,54 @@
                 // Clear current order
                 localStorage.removeItem('currentOrder');
                 
-                // Award loyalty points if user is logged in
-                if (currentUser && !currentOrder.customer.isGuest) {
-                    userLoyaltyPoints += 100;
-                    localStorage.setItem('malumenico_points', userLoyaltyPoints.toString());
-                    updateUserPointsDisplay();
+                // If guest checkout, show post-purchase offer after delay
+                if (currentOrder.isGuest) {
+                    setTimeout(() => {
+                        showPostPurchaseOffer(randomOrderNum);
+                    }, 2000);
                 }
             }, 3000);
         });
 
-        // Continue shopping button (modified for post-purchase flow)
-        continueShopping.addEventListener('click', () => {
-            const orderNum = orderNumber.textContent;
+        // Show post-purchase account creation offer
+        function showPostPurchaseOffer(orderNumber) {
+            paymentSuccess.classList.remove('active');
+            postPurchaseModal.classList.add('active');
+            cartTitle.textContent = 'Order Confirmed';
             
+            // Pre-fill email if available
+            const currentOrder = JSON.parse(localStorage.getItem('orders') || '[]').pop();
+            if (currentOrder && currentOrder.customer && currentOrder.customer.email) {
+                userEmailForPostPurchase = currentOrder.customer.email;
+            }
+        }
+
+        // Create account post-purchase
+        createAccountPostPurchase.addEventListener('click', () => {
+            // Redirect to profile page for account creation
+            window.location.href = 'profile.html?action=signup&order=' + confirmedOrderNumber.textContent;
+        });
+
+        // Skip account creation
+        skipAccountCreation.addEventListener('click', () => {
+            postPurchaseModal.classList.remove('active');
+            cartContainer.classList.remove('open');
+            showCartView();
+            
+            // Reset cart
+            cart = [];
+            updateCart();
+            hideAllFloatingButtons();
+        });
+
+        // Continue shopping button
+        continueShopping.addEventListener('click', () => {
             // Clear cart and close
             cart = [];
             updateCart();
             cartContainer.classList.remove('open');
+            guestCheckoutModal.classList.remove('active');
+            postPurchaseModal.classList.remove('active');
             showCartView();
 
             // Reset form
@@ -3525,18 +2882,26 @@
             
             // Hide floating buttons
             hideAllFloatingButtons();
-            
-            // Show post-purchase modal for guest users
-            if (isGuestCheckout && !currentUser) {
-                setTimeout(() => {
-                    showPostPurchaseModal(orderNum);
-                }, 500);
-            }
-            
-            // Reset guest checkout flag
-            isGuestCheckout = false;
-            guestCheckoutIndicator.style.display = 'none';
         });
+
+        // Update total amount display
+        function updateTotalAmount() {
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+            const total = subtotal + deliveryFee;
+            
+            totalAmount.textContent = `R${total.toFixed(2)}`;
+            
+            // Update header total as well
+            updateHeaderTotalAmount();
+            
+            // Show/hide total button based on cart content
+            if (cart.length > 0) {
+                floatingTotalBtn.style.display = 'flex';
+            } else {
+                floatingTotalBtn.style.display = 'none';
+            }
+        }
 
         // Render menu items with images
         function renderMenuItems(category = 'all') {
@@ -3583,10 +2948,8 @@
 
                     // Button animation
                     btn.textContent = 'Added!';
-                    btn.style.background = 'var(--success)';
                     setTimeout(() => {
                         btn.textContent = 'Add to Cart';
-                        btn.style.background = 'var(--gold)';
                     }, 1500);
                 });
             });
@@ -3617,12 +2980,8 @@
             }
 
             updateCart();
-            
-            // Auto-open cart on mobile
-            if (window.innerWidth <= 768) {
-                cartContainer.classList.add('open');
-                showCartView();
-            }
+            cartContainer.classList.add('open');
+            showCartView();
         }
 
         // Update cart display
@@ -3736,6 +3095,118 @@
             });
         });
 
+        // Enhanced form validation for guest checkout
+        function validateCheckoutForm() {
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const tableNumber = document.getElementById('tableNumber').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+
+            // Basic validation
+            if (!customerName || !customerPhone) {
+                alert('Please fill in your name and phone number.');
+                return false;
+            }
+
+            // Order type specific validation
+            if (orderType === 'dinein' && !tableNumber) {
+                alert('Please enter your table number.');
+                return false;
+            }
+
+            if (orderType === 'delivery' && !deliveryAddress) {
+                alert('Please enter your delivery address.');
+                return false;
+            }
+
+            // Phone validation
+            const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
+            if (!phoneRegex.test(customerPhone.replace(/\s/g, ''))) {
+                alert('Please enter a valid phone number.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Enhanced payment validation
+        function validatePaymentForm() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const cardName = document.getElementById('cardName').value;
+
+            if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                alert('Please fill in all card details.');
+                return false;
+            }
+
+            // Validate card number format
+            const cardNumberClean = cardNumber.replace(/\s/g, '');
+            if (!/^\d{16}$/.test(cardNumberClean)) {
+                alert('Please enter a valid 16-digit card number.');
+                return false;
+            }
+
+            // Validate expiry date
+            if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+                alert('Please enter expiry date in MM/YY format.');
+                return false;
+            }
+
+            // Validate CVV
+            if (!/^\d{3,4}$/.test(cvv)) {
+                alert('Please enter a valid CVV (3 or 4 digits).');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Get order details including guest flag
+        function getOrderDetails() {
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const tableNumber = document.getElementById('tableNumber').value;
+            const collectionTime = document.getElementById('collectionTime').value;
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            const specialInstructions = document.getElementById('specialInstructions').value;
+
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
+            const total = subtotal + deliveryFee;
+
+            return {
+                items: cart,
+                customer: {
+                    name: customerName,
+                    phone: customerPhone,
+                    table: tableNumber,
+                    collectionTime: collectionTime,
+                    address: deliveryAddress,
+                    instructions: specialInstructions
+                },
+                type: orderType,
+                subtotal: subtotal,
+                deliveryFee: deliveryFee,
+                total: total,
+                isGuest: isGuestCheckout
+            };
+        }
+
+        // Show account creation modal (for rewards path)
+        function showAccountCreationModal() {
+            // In a real implementation, this would show a signup form
+            // For now, we'll redirect to profile page with signup intent
+            alert('Redirecting to account creation for rewards...');
+            // Uncomment in production:
+            // window.location.href = 'profile.html?action=signup&rewards=true';
+            
+            // For demo, we'll just continue with guest checkout
+            isGuestCheckout = true;
+            showCheckoutView();
+        }
+
         // Google Maps functionality
         function initGoogleMaps() {
             // Open in Google Maps button - UPDATED with your exact location
@@ -3762,398 +3233,62 @@
             });
         }
 
-        // ============================================
-        // AUTHENTICATION FUNCTIONS
-        // ============================================
-        
-        // Update user interface based on authentication state
-        function updateAuthUI() {
-            if (currentUser) {
-                // User is logged in
-                userIndicator.classList.add('visible');
-                authNavLinks.style.display = 'none';
-                
-                // Update user info
-                const displayName = currentUser.name || currentUser.email.split('@')[0] || 'User';
-                const firstLetter = displayName.charAt(0).toUpperCase();
-                
-                userAvatar.textContent = firstLetter;
-                userName.textContent = displayName;
-                userPoints.textContent = `${userLoyaltyPoints} points`;
-                
-                // Mobile view
-                mobileUserIndicator.style.display = 'flex';
-                mobileUserAvatar.textContent = firstLetter;
-                mobileUserName.textContent = displayName;
-                mobileUserPoints.textContent = `${userLoyaltyPoints} points`;
-                
-                // Show logout button in mobile menu
-                mobileOpenAuthModal.style.display = 'none';
-                mobileOpenSignupModal.style.display = 'none';
-                mobileLogoutBtn.style.display = 'flex';
-            } else {
-                // User is not logged in
-                userIndicator.classList.remove('visible');
-                authNavLinks.style.display = 'flex';
-                
-                // Mobile view
-                mobileUserIndicator.style.display = 'none';
-                mobileOpenAuthModal.style.display = 'flex';
-                mobileOpenSignupModal.style.display = 'flex';
-                mobileLogoutBtn.style.display = 'none';
-            }
-        }
-        
-        // Update user points display
-        function updateUserPointsDisplay() {
-            if (currentUser) {
-                userPoints.textContent = `${userLoyaltyPoints} points`;
-                mobileUserPoints.textContent = `${userLoyaltyPoints} points`;
-            }
-        }
-        
-        // Open authentication modal
-        function openAuthModal(tab = 'login') {
-            authModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            // Set active tab
-            authTabs.forEach(t => t.classList.remove('active'));
-            authForms.forEach(f => f.classList.remove('active'));
-            
-            document.querySelector(`.auth-tab[data-tab="${tab}"]`).classList.add('active');
-            document.getElementById(`${tab}Form`).classList.add('active');
-            
-            // Clear messages and form
-            authMessage.className = 'auth-message';
-            authMessage.textContent = '';
-            
-            if (tab === 'login') {
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPassword').value = '';
-            } else {
-                document.getElementById('signupName').value = '';
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPhone').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirmPassword').value = '';
-            }
-        }
-        
-        // Close authentication modal
-        function closeAuthModal() {
-            authModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Show authentication message
-        function showAuthMessage(message, type = 'error') {
-            authMessage.textContent = message;
-            authMessage.className = `auth-message ${type}`;
-            
-            if (type === 'success') {
-                setTimeout(() => {
-                    authMessage.className = 'auth-message';
-                    authMessage.textContent = '';
-                }, 3000);
-            }
-        }
-        
-        // Handle user login
-        function handleLogin(email, password) {
-            // Demo authentication - replace with real backend
-            showAuthMessage('Logging in...', 'success');
-            
-            // Simulate API call
-            setTimeout(() => {
-                // For demo purposes, accept any email/password
-                currentUser = {
-                    id: 'user_' + Date.now(),
-                    email: email,
-                    name: email.split('@')[0],
-                    phone: '+27 79 123 4567'
-                };
-                
-                localStorage.setItem('malumenico_user', JSON.stringify(currentUser));
-                
-                // Award welcome points
-                userLoyaltyPoints = 100;
-                localStorage.setItem('malumenico_points', userLoyaltyPoints.toString());
-                
-                updateAuthUI();
-                showAuthMessage('Login successful! Welcome back!', 'success');
-                
-                setTimeout(() => {
-                    closeAuthModal();
-                    
-                    // If user was trying to checkout, proceed
-                    if (cart.length > 0) {
-                        isGuestCheckout = false;
-                        showCheckoutView();
-                    }
-                }, 1500);
-            }, 1000);
-        }
-        
-        // Handle user signup
-        function handleSignup(name, email, phone, password) {
-            // Validate password confirmation
-            const confirmPassword = document.getElementById('signupConfirmPassword').value;
-            if (password !== confirmPassword) {
-                showAuthMessage('Passwords do not match!', 'error');
-                return;
-            }
-            
-            showAuthMessage('Creating your account...', 'success');
-            
-            // Simulate API call
-            setTimeout(() => {
-                currentUser = {
-                    id: 'user_' + Date.now(),
-                    email: email,
-                    name: name,
-                    phone: phone
-                };
-                
-                localStorage.setItem('malumenico_user', JSON.stringify(currentUser));
-                
-                // Award welcome bonus points
-                userLoyaltyPoints = 200; // Extra points for signup
-                localStorage.setItem('malumenico_points', userLoyaltyPoints.toString());
-                
-                updateAuthUI();
-                showAuthMessage(`Account created successfully! Welcome ${name}! You've earned 200 loyalty points! 🎉`, 'success');
-                
-                setTimeout(() => {
-                    closeAuthModal();
-                    
-                    // If user was trying to checkout, proceed
-                    if (cart.length > 0) {
-                        isGuestCheckout = false;
-                        showCheckoutView();
-                    }
-                    
-                    // Show welcome alert
-                    alert(`🎉 Welcome to Malume Nico, ${name}!\n\nYou've earned 200 loyalty points! Use them to get discounts on future orders.`);
-                }, 1500);
-            }, 1000);
-        }
-        
-        // Handle user logout
-        function handleLogout() {
-            currentUser = null;
-            userLoyaltyPoints = 0;
-            localStorage.removeItem('malumenico_user');
-            localStorage.removeItem('malumenico_points');
-            
-            updateAuthUI();
-            
-            // Close mobile menu if open
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            
-            alert('You have been logged out successfully.');
-        }
-        
-        // Show post-purchase modal
-        function showPostPurchaseModal(orderNumber) {
-            orderNumberDisplay.textContent = orderNumber;
-            postPurchaseModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Close post-purchase modal
-        function closePostPurchaseModal() {
-            postPurchaseModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        
-        // ============================================
-        // EVENT LISTENERS FOR AUTHENTICATION
-        // ============================================
-        
-        // Open auth modal from header
-        openAuthModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('login');
-        });
-        
-        openSignupModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('signup');
-        });
-        
-        // Mobile auth buttons
-        mobileOpenAuthModal.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('login');
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-        });
-        
-        mobileOpenSignupModal.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('signup');
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-        });
-        
-        // Close auth modal
-        closeAuthModal.addEventListener('click', closeAuthModal);
-        
-        // Close modal when clicking outside
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                closeAuthModal();
+        // Close modals when clicking outside
+        guestCheckoutModal.addEventListener('click', (e) => {
+            if (e.target === guestCheckoutModal) {
+                guestCheckoutModal.classList.remove('active');
+                cartContainer.classList.remove('open');
+                showCartView();
             }
         });
-        
-        // Tab switching
-        authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.getAttribute('data-tab');
-                
-                authTabs.forEach(t => t.classList.remove('active'));
-                authForms.forEach(f => f.classList.remove('active'));
-                
-                tab.classList.add('active');
-                document.getElementById(`${tabName}Form`).classList.add('active');
-                
-                authMessage.className = 'auth-message';
-                authMessage.textContent = '';
-            });
-        });
-        
-        // Switch to login from signup
-        switchToLoginBtn.addEventListener('click', () => {
-            authTabs.forEach(t => t.classList.remove('active'));
-            authForms.forEach(f => f.classList.remove('active'));
-            
-            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
-            loginForm.classList.add('active');
-        });
-        
-        // Form submissions
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showAuthMessage('Please fill in all fields', 'error');
-                return;
-            }
-            
-            handleLogin(email, password);
-        });
-        
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const phone = document.getElementById('signupPhone').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            if (!name || !email || !phone || !password) {
-                showAuthMessage('Please fill in all fields', 'error');
-                return;
-            }
-            
-            handleSignup(name, email, phone, password);
-        });
-        
-        // Continue as guest button
-        continueAsGuestBtn.addEventListener('click', () => {
-            closeAuthModal();
-            
-            // If cart has items, proceed to checkout as guest
-            if (cart.length > 0) {
-                isGuestCheckout = true;
-                showCheckoutView();
-            }
-        });
-        
-        // Logout button
-        logoutBtn.addEventListener('click', handleLogout);
-        mobileLogoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleLogout();
-        });
-        
-        // ============================================
-        // CHECKOUT FLOW EVENT LISTENERS
-        // ============================================
-        
-        // Checkout as guest
-        checkoutAsGuestBtn.addEventListener('click', () => {
-            isGuestCheckout = true;
-            checkoutOptions.style.display = 'none';
-            showCheckoutView();
-        });
-        
-        // Checkout with account (open auth modal)
-        checkoutWithAccountBtn.addEventListener('click', () => {
-            checkoutOptions.style.display = 'none';
-            openAuthModal('signup');
-        });
-        
-        // Create account link in guest checkout
-        createAccountLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            openAuthModal('signup');
-        });
-        
-        // Post-purchase account creation
-        createAccountAfterOrder.addEventListener('click', () => {
-            closePostPurchaseModal();
-            openAuthModal('signup');
-        });
-        
-        // Skip account creation
-        skipAccountCreation.addEventListener('click', () => {
-            closePostPurchaseModal();
-            alert('Thank you for your order! You can create an account anytime from your profile page to track orders and earn rewards.');
-        });
-        
-        // Close post-purchase modal when clicking outside
+
         postPurchaseModal.addEventListener('click', (e) => {
             if (e.target === postPurchaseModal) {
-                closePostPurchaseModal();
+                postPurchaseModal.classList.remove('active');
+                cartContainer.classList.remove('open');
+                showCartView();
+                
+                // Reset cart
+                cart = [];
+                updateCart();
             }
         });
-        
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-        
+
+        // Add ESC key to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (guestCheckoutModal.classList.contains('active')) {
+                    guestCheckoutModal.classList.remove('active');
+                    cartContainer.classList.remove('open');
+                    showCartView();
+                }
+                if (postPurchaseModal.classList.contains('active')) {
+                    postPurchaseModal.classList.remove('active');
+                    cartContainer.classList.remove('open');
+                    showCartView();
+                    
+                    // Reset cart
+                    cart = [];
+                    updateCart();
+                }
+            }
+        });
+
+        // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize authentication UI
-            updateAuthUI();
-            
-            // Initialize the rest of your website
             renderMenuItems();
             updateCart();
             setActiveNavItem();
             initGoogleMaps();
+            
+            // Initialize fade-in animations
             initFadeInAnimations();
+
+            // Handle keyboard events to keep header in place
             handleKeyboardEvents();
-            
-            // Check if user has pending cart items
-            const savedCart = localStorage.getItem('malumenico_cart');
-            if (savedCart) {
-                cart = JSON.parse(savedCart);
-                updateCart();
-            }
-            
-            // Save cart to localStorage on changes
-            const originalUpdateCart = updateCart;
-            window.updateCart = function() {
-                originalUpdateCart();
-                localStorage.setItem('malumenico_cart', JSON.stringify(cart));
-            };
         });
-        
-        // Handle keyboard events to keep header in place
+
+        // Handle keyboard events to ensure header stays fixed
         function handleKeyboardEvents() {
             let originalHeight = window.innerHeight;
             
