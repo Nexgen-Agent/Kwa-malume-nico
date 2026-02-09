@@ -45,6 +45,30 @@ class MenuItem(Base):
     image_url = Column(String)
     is_active = Column(Boolean, default=True)
 
+class Staff(Base):
+    __tablename__ = "staff"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    role = Column(String, nullable=False) # chef, cashier, delivery, etc.
+    salary = Column(Float, nullable=False)
+    contact_info = Column(String)
+    employment_status = Column(String, default="active") # active, inactive
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    attendance = relationship("Attendance", back_populates="staff")
+    orders = relationship("Order", back_populates="assigned_staff")
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    staff_id = Column(Integer, ForeignKey("staff.id"))
+    date = Column(DateTime(timezone=True), server_default=func.now())
+    status = Column(String) # present, off
+
+    staff = relationship("Staff", back_populates="attendance")
+
 class Order(Base):
     __tablename__ = "orders"
 
@@ -60,9 +84,14 @@ class Order(Base):
     instructions = Column(String, nullable=True)
     table_number = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    accepted_at = Column(DateTime(timezone=True), nullable=True)
+    prepared_at = Column(DateTime(timezone=True), nullable=True)
+    delivered_at = Column(DateTime(timezone=True), nullable=True)
+    assigned_staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)
 
     user = relationship("User", back_populates="orders")
     items = relationship("OrderItem", back_populates="order")
+    assigned_staff = relationship("Staff", back_populates="orders")
 
 class OrderItem(Base):
     __tablename__ = "order_items"
@@ -122,3 +151,12 @@ class ReviewImage(Base):
     image_url = Column(String, nullable=False)
 
     review = relationship("Review", back_populates="images")
+
+class Expense(Base):
+    __tablename__ = "expenses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    category = Column(String, nullable=False)
+    amount = Column(Float, nullable=False)
+    description = Column(String)
+    date = Column(DateTime(timezone=True), server_default=func.now())

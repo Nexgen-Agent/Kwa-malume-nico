@@ -1513,6 +1513,12 @@
             if (res.success) handleAuthSuccess();
         });
 
+        const appleLoginBtn = document.getElementById('appleLoginBtn');
+        appleLoginBtn.addEventListener('click', async () => {
+            const res = await Auth.loginWithApple();
+            if (res.success) handleAuthSuccess();
+        });
+
         submitLogin.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;

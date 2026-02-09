@@ -82,6 +82,10 @@ class OrderResponse(OrderBase):
     total: float
     delivery_fee: float
     created_at: datetime
+    accepted_at: Optional[datetime] = None
+    prepared_at: Optional[datetime] = None
+    delivered_at: Optional[datetime] = None
+    assigned_staff_id: Optional[int] = None
     items: List[OrderItemResponse]
 
     class Config:

@@ -129,6 +129,14 @@ const Auth = {
         const data = await response.json();
         alert(data.message);
         return { success: false, error: 'OAuth not fully implemented' };
+    },
+
+    /**
+     * Simulated Apple Login
+     */
+    loginWithApple: async function() {
+        alert('Apple Login coming soon!');
+        return { success: false, error: 'OAuth not fully implemented' };
     }
 };
 

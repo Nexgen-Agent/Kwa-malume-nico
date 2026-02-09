@@ -72,6 +72,24 @@ def update_order_status(db: Session, order_id: int, status: str):
     db_order = db.query(Order).filter(Order.id == order_id).first()
     if db_order:
         db_order.status = status
+
+        # Update timestamps based on status
+        now = datetime.now()
+        if status == "preparing":
+            db_order.accepted_at = now
+        elif status == "ready":
+            db_order.prepared_at = now
+        elif status == "completed":
+            db_order.delivered_at = now
+
+        db.commit()
+        db.refresh(db_order)
+    return db_order
+
+def assign_order_staff(db: Session, order_id: int, staff_id: int):
+    db_order = db.query(Order).filter(Order.id == order_id).first()
+    if db_order:
+        db_order.assigned_staff_id = staff_id
         db.commit()
         db.refresh(db_order)
     return db_order
