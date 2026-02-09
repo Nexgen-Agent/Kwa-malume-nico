@@ -1497,20 +1497,20 @@
             });
         });
 
-        googleLoginBtn.addEventListener('click', () => {
-            const res = Auth.loginWithGoogle();
+        googleLoginBtn.addEventListener('click', async () => {
+            const res = await Auth.loginWithGoogle();
             if (res.success) handleAuthSuccess();
         });
 
-        facebookLoginBtn.addEventListener('click', () => {
-            const res = Auth.loginWithFacebook();
+        facebookLoginBtn.addEventListener('click', async () => {
+            const res = await Auth.loginWithFacebook();
             if (res.success) handleAuthSuccess();
         });
 
-        submitLogin.addEventListener('click', () => {
+        submitLogin.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
-            const res = Auth.login(email, pass);
+            const res = await Auth.login(email, pass);
 
             if (res.success) {
                 handleAuthSuccess();
@@ -1519,11 +1519,11 @@
             }
         });
 
-        submitSignup.addEventListener('click', () => {
+        submitSignup.addEventListener('click', async () => {
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const pass = document.getElementById('signupPassword').value;
-            const res = Auth.register(email, pass, name);
+            const res = await Auth.register(email, pass, name);
 
             if (res.success) {
                 handleAuthSuccess();

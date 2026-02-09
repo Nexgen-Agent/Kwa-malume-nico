@@ -1,77 +1,97 @@
 /**
  * auth.js - Authentication management for Malume Nico
- * Handles registration, login, and session management using localStorage.
+ * Connects to the FastAPI backend.
  */
 
-const AUTH_KEY = 'malume_nico_auth_session';
-const USERS_KEY = 'malume_nico_users';
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : 'https://api.malumenico.com'; // Placeholder for production URL
+
+const AUTH_KEY = 'malume_nico_auth_token';
+const USER_KEY = 'malume_nico_user_data';
 
 const Auth = {
     /**
-     * Get the currently logged in user
+     * Get the currently logged in user from local storage
      */
     getUser: function() {
-        const session = localStorage.getItem(AUTH_KEY);
-        return session ? JSON.parse(session) : null;
+        const userData = localStorage.getItem(USER_KEY);
+        return userData ? JSON.parse(userData) : null;
+    },
+
+    /**
+     * Get the access token
+     */
+    getToken: function() {
+        return localStorage.getItem(AUTH_KEY);
     },
 
     /**
      * Check if a user is logged in
      */
     isLoggedIn: function() {
-        return this.getUser() !== null;
+        return this.getToken() !== null;
     },
 
     /**
      * Register a new user
      */
-    register: function(email, password, name = '') {
-        // Basic validation
-        if (!this.validateEmail(email)) {
-            return { success: false, error: 'Invalid email' };
+    register: async function(email, password, name = '') {
+        try {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, full_name: name })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return { success: false, error: errorData.detail || 'Registration failed' };
+            }
+
+            // After registration, log in
+            return await this.login(email, password);
+        } catch (error) {
+            return { success: false, error: 'Network error connecting to backend' };
         }
-        if (password.length < 6) {
-            return { success: false, error: 'Password must be at least 6 characters' };
-        }
-
-        const users = this.getAllUsers();
-        if (users.find(u => u.email === email)) {
-            return { success: false, error: 'Account already exists' };
-        }
-
-        const newUser = {
-            email: email,
-            password: this.mockHash(password), // Mock hash for security demonstration
-            name: name,
-            coupon_eligible: true, // Mark as eligible for rewards/coupons
-            created_at: new Date().toISOString()
-        };
-
-        users.push(newUser);
-        localStorage.setItem(USERS_KEY, JSON.stringify(users));
-
-        // Automatically log in after registration
-        return this.login(email, password);
     },
 
     /**
      * Login a user
      */
-    login: function(email, password) {
-        const users = this.getAllUsers();
-        const hashedPassword = this.mockHash(password);
-        const user = users.find(u => u.email === email && u.password === hashedPassword);
+    login: async function(email, password) {
+        try {
+            const formData = new URLSearchParams();
+            formData.append('username', email);
+            formData.append('password', password);
 
-        if (!user) {
-            return { success: false, error: 'Login failure' };
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return { success: false, error: errorData.detail || 'Login failure' };
+            }
+
+            const data = await response.json();
+            localStorage.setItem(AUTH_KEY, data.access_token);
+
+            // Get user profile (using a placeholder or separate call if needed)
+            // For now, we'll store the email and name
+            const userResponse = await fetch(`${API_BASE_URL}/orders/user`, {
+                headers: { 'Authorization': `Bearer ${data.access_token}` }
+            });
+
+            // We'll just store a basic session for now
+            localStorage.setItem(USER_KEY, JSON.stringify({ email: email, name: email.split('@')[0] }));
+
+            return { success: true };
+        } catch (error) {
+            return { success: false, error: 'Network error connecting to backend' };
         }
-
-        // Create session (excluding password)
-        const sessionUser = { ...user };
-        delete sessionUser.password;
-
-        localStorage.setItem(AUTH_KEY, JSON.stringify(sessionUser));
-        return { success: true, user: sessionUser };
     },
 
     /**
@@ -79,54 +99,31 @@ const Auth = {
      */
     logout: function() {
         localStorage.removeItem(AUTH_KEY);
+        localStorage.removeItem(USER_KEY);
         window.location.reload();
     },
 
     /**
      * Simulated Google Login
      */
-    loginWithGoogle: function() {
-        console.log('Google login placeholder');
-        // Simulate successful redirect/login for demo
-        return this.register('google_user@example.com', 'google_oauth_placeholder', 'Google User');
+    loginWithGoogle: async function() {
+        const response = await fetch(`${API_BASE_URL}/auth/google`, { method: 'POST' });
+        const data = await response.json();
+        alert(data.message);
+        return { success: false, error: 'OAuth not fully implemented' };
     },
 
     /**
      * Simulated Facebook Login
      */
-    loginWithFacebook: function() {
-        console.log('Facebook login placeholder');
-        // Simulate successful redirect/login for demo
-        return this.register('fb_user@example.com', 'fb_oauth_placeholder', 'Facebook User');
-    },
-
-    /**
-     * Helper: Get all registered users from localStorage
-     */
-    getAllUsers: function() {
-        const users = localStorage.getItem(USERS_KEY);
-        return users ? JSON.parse(users) : [];
-    },
-
-    /**
-     * Helper: Validate email format
-     */
-    validateEmail: function(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    },
-
-    /**
-     * Mock hashing for security demonstration
-     */
-    mockHash: function(str) {
-        // Simple base64 "hash" for demonstration in a static mockup
-        // In a real app, use SHA-256 or bcrypt on the server
-        return btoa('salt_' + str).split('').reverse().join('');
+    loginWithFacebook: async function() {
+        const response = await fetch(`${API_BASE_URL}/auth/facebook`, { method: 'POST' });
+        const data = await response.json();
+        alert(data.message);
+        return { success: false, error: 'OAuth not fully implemented' };
     }
 };
 
-// Export for use in other scripts if needed, though we'll use it globally for this static site
 if (typeof window !== 'undefined') {
     window.Auth = Auth;
 }
