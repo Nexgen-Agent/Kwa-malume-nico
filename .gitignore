@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+malume_nico.db
+server_output.log
+.env
+venv/
+.vscode/

@@ -2787,44 +2787,71 @@
         });
 
         // Floating process payment button
-        floatingProcessPaymentBtn.addEventListener('click', () => {
+        floatingProcessPaymentBtn.addEventListener('click', async () => {
             if (!validatePaymentForm()) return;
             
             // Show processing
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.add('active');
 
-            // Simulate payment processing
-            setTimeout(() => {
-                paymentProcessing.classList.remove('active');
-                paymentSuccess.classList.add('active');
+            try {
+                const currentOrderData = JSON.parse(localStorage.getItem('currentOrder') || '{}');
+                const orderPayload = {
+                    customer_name: currentOrderData.customer.name,
+                    customer_phone: currentOrderData.customer.phone,
+                    order_type: currentOrderData.type,
+                    address: currentOrderData.customer.address,
+                    instructions: currentOrderData.customer.instructions,
+                    table_number: currentOrderData.customer.table,
+                    items: currentOrderData.items.map(item => ({
+                        menu_item_id: parseInt(item.id),
+                        quantity: item.quantity
+                    }))
+                };
 
-                // Generate random order number
-                const randomOrderNum = 'MN-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
-                orderNumber.textContent = randomOrderNum;
-                confirmedOrderNumber.textContent = randomOrderNum;
-
-                // Store order
-                const currentOrder = JSON.parse(localStorage.getItem('currentOrder') || '{}');
-                currentOrder.orderNumber = randomOrderNum;
-                currentOrder.paymentMethod = selectedPaymentMethod;
-                currentOrder.status = 'confirmed';
-                currentOrder.timestamp = new Date().toISOString();
-
-                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
-                orders.push(currentOrder);
-                localStorage.setItem('orders', JSON.stringify(orders));
-
-                // Clear current order
-                localStorage.removeItem('currentOrder');
-                
-                // If guest checkout, show post-purchase offer after delay
-                if (currentOrder.isGuest) {
-                    setTimeout(() => {
-                        showPostPurchaseOffer(randomOrderNum);
-                    }, 2000);
+                const headers = { 'Content-Type': 'application/json' };
+                if (Auth.isLoggedIn()) {
+                    headers['Authorization'] = `Bearer ${Auth.getToken()}`;
                 }
-            }, 3000);
+
+                const endpoint = Auth.isLoggedIn() ? '/orders/create' : '/orders/guest-create';
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(orderPayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Order submission failed');
+                }
+
+                const dbOrder = await response.json();
+
+                // Simulate payment processing delay for UX
+                setTimeout(() => {
+                    paymentProcessing.classList.remove('active');
+                    paymentSuccess.classList.add('active');
+
+                    orderNumber.textContent = `MN-${dbOrder.id}`;
+                    confirmedOrderNumber.textContent = `MN-${dbOrder.id}`;
+
+                    // Clear current order and cart
+                    localStorage.removeItem('currentOrder');
+                    cart = [];
+                    updateCart();
+
+                    // If guest checkout, show post-purchase offer after delay
+                    if (!Auth.isLoggedIn()) {
+                        setTimeout(() => {
+                            showPostPurchaseOffer(dbOrder.id);
+                        }, 2000);
+                    }
+                }, 2000);
+            } catch (error) {
+                paymentProcessing.classList.remove('active');
+                paymentMethodView.classList.add('active');
+                alert('There was an error processing your order. Please try again.');
+            }
         });
 
         // Show post-purchase account creation offer
