@@ -861,6 +861,95 @@
             }
         }
 
+        /* Auth Modals */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-modal-content {
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            position: relative;
+        }
+
+        .auth-modal h3 {
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .auth-form-group {
+            margin-bottom: 15px;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .auth-form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .auth-form-group input:focus {
+            border-color: var(--gold);
+        }
+
+        .close-auth-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Error Notification */
+        #authError, #authErrorSignup {
+            display: none;
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff6666;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         /* Hide bottom nav on desktop */
         @media (min-width: 769px) {
             .bottom-nav {
@@ -1016,19 +1105,19 @@
             <div class="auth-section glass">
                 <h3 class="auth-title">Connect Your Account</h3>
                 <div class="auth-buttons">
-                    <button class="auth-btn google">
+                    <button class="auth-btn google" id="googleLoginBtn">
                         <i class="fab fa-google"></i> Continue with Google
                     </button>
-                    <button class="auth-btn apple">
+                    <button class="auth-btn apple" id="appleLoginBtn">
                         <i class="fab fa-apple"></i> Continue with Apple
                     </button>
-                    <button class="auth-btn facebook">
+                    <button class="auth-btn facebook" id="facebookLoginBtn">
                         <i class="fab fa-facebook-f"></i> Continue with Facebook
                     </button>
-                    <button class="auth-btn email">
+                    <button class="auth-btn email" id="emailSignupBtn">
                         <i class="fas fa-envelope"></i> Sign up with Email
                     </button>
-                    <button class="auth-btn email" style="background: rgba(255,255,255,0.1); color: white;">
+                    <button class="auth-btn email" id="emailLoginBtn" style="background: rgba(255,255,255,0.1); color: white;">
                         <i class="fas fa-sign-in-alt"></i> Login with Email
                     </button>
                 </div>
@@ -1146,6 +1235,45 @@
     </footer>
 
     <!-- TikTok-style Bottom Navigation -->
+    <!-- Auth Modals -->
+    <div id="loginModal" class="auth-modal">
+        <div class="auth-modal-content glass">
+            <button class="close-auth-modal">&times;</button>
+            <h3>Login with Email</h3>
+            <div id="authError"></div>
+            <div class="auth-form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email">
+            </div>
+            <div class="auth-form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password">
+            </div>
+            <button class="auth-btn email" id="submitLogin">Login</button>
+        </div>
+    </div>
+
+    <div id="signupModal" class="auth-modal">
+        <div class="auth-modal-content glass">
+            <button class="close-auth-modal">&times;</button>
+            <h3>Sign up with Email</h3>
+            <div id="authErrorSignup"></div>
+            <div class="auth-form-group">
+                <label for="signupName">Full Name</label>
+                <input type="text" id="signupName" placeholder="Enter your name">
+            </div>
+            <div class="auth-form-group">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" placeholder="Enter your email">
+            </div>
+            <div class="auth-form-group">
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" placeholder="Minimum 6 characters">
+            </div>
+            <button class="auth-btn email" id="submitSignup">Create Account</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
             <div class="bottom-nav-icon">
@@ -1183,6 +1311,7 @@
         </a>
     </nav>
 
+    <script src="assets/js/auth.js"></script>
     <script>
         // Profile Data for Malume Nicodemus
         let profileData = {
@@ -1331,9 +1460,112 @@
             // Initialize fade-in animations
             initFadeInAnimations();
             
+            // Check login status
+            checkLoginStatus();
+
             // Set the default profile data
             setProfileData();
         });
+
+        // Auth Logic
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const emailLoginBtn = document.getElementById('emailLoginBtn');
+        const emailSignupBtn = document.getElementById('emailSignupBtn');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const facebookLoginBtn = document.getElementById('facebookLoginBtn');
+        const closeAuthModals = document.querySelectorAll('.close-auth-modal');
+        const submitLogin = document.getElementById('submitLogin');
+        const submitSignup = document.getElementById('submitSignup');
+        const authError = document.getElementById('authError');
+        const authErrorSignup = document.getElementById('authErrorSignup');
+
+        emailLoginBtn.addEventListener('click', () => {
+            loginModal.classList.add('active');
+        });
+
+        emailSignupBtn.addEventListener('click', () => {
+            signupModal.classList.add('active');
+        });
+
+        closeAuthModals.forEach(btn => {
+            btn.addEventListener('click', () => {
+                loginModal.classList.remove('active');
+                signupModal.classList.remove('active');
+                authError.style.display = 'none';
+                authErrorSignup.style.display = 'none';
+            });
+        });
+
+        googleLoginBtn.addEventListener('click', () => {
+            const res = Auth.loginWithGoogle();
+            if (res.success) handleAuthSuccess();
+        });
+
+        facebookLoginBtn.addEventListener('click', () => {
+            const res = Auth.loginWithFacebook();
+            if (res.success) handleAuthSuccess();
+        });
+
+        submitLogin.addEventListener('click', () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            const res = Auth.login(email, pass);
+
+            if (res.success) {
+                handleAuthSuccess();
+            } else {
+                showAuthError(authError, res.error);
+            }
+        });
+
+        submitSignup.addEventListener('click', () => {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const pass = document.getElementById('signupPassword').value;
+            const res = Auth.register(email, pass, name);
+
+            if (res.success) {
+                handleAuthSuccess();
+            } else {
+                showAuthError(authErrorSignup, res.error);
+            }
+        });
+
+        function showAuthError(element, error) {
+            element.textContent = error === 'Login failure' ? 'Invalid email or password' :
+                                 error === 'Account already exists' ? 'Email already registered' :
+                                 error === 'Invalid email' ? 'Please enter a valid email' : error;
+            element.style.display = 'block';
+        }
+
+        function handleAuthSuccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('checkout') === 'true') {
+                window.location.href = 'index.html?checkout=true';
+            } else {
+                window.location.reload();
+            }
+        }
+
+        // Check if logged in and update UI
+        function checkLoginStatus() {
+            if (Auth.isLoggedIn()) {
+                const user = Auth.getUser();
+                profileData.name = user.name || user.email.split('@')[0];
+                profileData.email = user.email;
+                setProfileData();
+
+                // Hide auth section or show logout
+                document.querySelector('.auth-title').textContent = 'Account Connected';
+                document.querySelector('.auth-buttons').innerHTML = `
+                    <p style="text-align: center; margin-bottom: 15px;">Logged in as <strong>${user.email}</strong></p>
+                    <button class="auth-btn email" onclick="Auth.logout()" style="background: rgba(255,255,255,0.1); color: white;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                `;
+            }
+        }
 
         // Set profile data
         function setProfileData() {
