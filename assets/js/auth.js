@@ -79,14 +79,22 @@ const Auth = {
             const data = await response.json();
             localStorage.setItem(AUTH_KEY, data.access_token);
 
-            // Get user profile (using a placeholder or separate call if needed)
-            // For now, we'll store the email and name
-            const userResponse = await fetch(`${API_BASE_URL}/orders/user`, {
+            // Get user profile
+            const profileResponse = await fetch(`${API_BASE_URL}/auth/me`, {
                 headers: { 'Authorization': `Bearer ${data.access_token}` }
             });
 
-            // We'll just store a basic session for now
-            localStorage.setItem(USER_KEY, JSON.stringify({ email: email, name: email.split('@')[0] }));
+            if (profileResponse.ok) {
+                const profileData = await profileResponse.json();
+                localStorage.setItem(USER_KEY, JSON.stringify(profileData));
+            } else {
+                // Fallback if profile fetch fails
+                localStorage.setItem(USER_KEY, JSON.stringify({
+                    email: email,
+                    full_name: email.split('@')[0],
+                    coupon_eligible: true
+                }));
+            }
 
             return { success: true };
         } catch (error) {

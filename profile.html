@@ -1465,6 +1465,12 @@
 
             // Set the default profile data
             setProfileData();
+
+            // Auto-open signup modal if coming from checkout
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('checkout') === 'true' && !Auth.isLoggedIn()) {
+                signupModal.classList.add('active');
+            }
         });
 
         // Auth Logic

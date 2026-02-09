@@ -92,3 +92,55 @@ class DailySales(BaseModel):
     date: str
     total_sales: float
     order_count: int
+
+# Review Schemas
+class ReviewImageResponse(BaseModel):
+    id: int
+    image_url: str
+
+    class Config:
+        from_attributes = True
+
+class ReviewCommentBase(BaseModel):
+    text: str
+    guest_name: Optional[str] = None
+
+class ReviewCommentCreate(ReviewCommentBase):
+    pass
+
+class ReviewCommentResponse(ReviewCommentBase):
+    id: int
+    user_id: Optional[int] = None
+    created_at: datetime
+    full_name: Optional[str] = None # Helper field for UI
+
+    class Config:
+        from_attributes = True
+
+class ReviewBase(BaseModel):
+    stars: int = Field(..., ge=1, le=5)
+    text: str = Field(..., min_length=1)
+    guest_name: Optional[str] = None
+
+class ReviewCreate(ReviewBase):
+    pass
+
+class ReviewResponse(ReviewBase):
+    id: int
+    user_id: Optional[int] = None
+    created_at: datetime
+    likes_count: int = 0
+    comments_count: int = 0
+    is_liked: bool = False # For the current user
+    images: List[ReviewImageResponse] = []
+    comments: List[ReviewCommentResponse] = []
+    full_name: Optional[str] = None # Helper field for UI
+
+    class Config:
+        from_attributes = True
+
+class ReviewFeed(BaseModel):
+    reviews: List[ReviewResponse]
+    total_count: int
+    page: int
+    pages: int

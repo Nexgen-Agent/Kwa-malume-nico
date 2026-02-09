@@ -5,6 +5,8 @@ from app.database.database import get_db
 from app.schemas.schemas import UserCreate, UserResponse, Token
 from app.services import user_service
 from app.auth import security
+from app.auth.deps import get_current_active_user
+from app.models.models import User
 from datetime import timedelta
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -38,3 +40,7 @@ def google_login():
 @router.post("/facebook")
 def facebook_login():
     return {"message": "Facebook OAuth placeholder - integration required"}
+
+@router.get("/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_active_user)):
+    return current_user

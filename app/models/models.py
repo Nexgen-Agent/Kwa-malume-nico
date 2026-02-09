@@ -75,3 +75,50 @@ class OrderItem(Base):
 
     order = relationship("Order", back_populates="items")
     menu_item = relationship("MenuItem")
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    guest_name = Column(String, nullable=True)
+    stars = Column(Integer, nullable=False)
+    text = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User")
+    likes = relationship("ReviewLike", back_populates="review", cascade="all, delete-orphan")
+    comments = relationship("ReviewComment", back_populates="review", cascade="all, delete-orphan")
+    images = relationship("ReviewImage", back_populates="review", cascade="all, delete-orphan")
+
+class ReviewLike(Base):
+    __tablename__ = "review_likes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    review_id = Column(Integer, ForeignKey("reviews.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    review = relationship("Review", back_populates="likes")
+    user = relationship("User")
+
+class ReviewComment(Base):
+    __tablename__ = "review_comments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    review_id = Column(Integer, ForeignKey("reviews.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    guest_name = Column(String, nullable=True)
+    text = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    review = relationship("Review", back_populates="comments")
+    user = relationship("User")
+
+class ReviewImage(Base):
+    __tablename__ = "review_images"
+
+    id = Column(Integer, primary_key=True, index=True)
+    review_id = Column(Integer, ForeignKey("reviews.id"))
+    image_url = Column(String, nullable=False)
+
+    review = relationship("Review", back_populates="images")
