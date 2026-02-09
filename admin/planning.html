@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Planning & Milestones | Admin | Malume Nico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="top-bar">
+        <button class="top-bar-btn"><i class="fas fa-search"></i></button>
+        <div class="page-title">Planning & Milestones</div>
+        <button class="top-bar-btn" id="addBtn"><i class="fas fa-plus"></i></button>
+    </div>
+
+    <div class="section-tab-container" style="margin-top: 15px;">
+        <div class="section-tab active" data-tab="daily">Daily Tasks</div>
+        <div class="section-tab" data-tab="weekly">Weekly</div>
+        <div class="section-tab" data-tab="monthly">Monthly</div>
+        <div class="section-tab" data-tab="yearly">Yearly</div>
+    </div>
+
+    <main id="planningContent" class="planning-section">
+        <!-- Content will be loaded here -->
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="staff.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Staff</span>
+        </a>
+        <a href="planning.html" class="nav-item active">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Planning</span>
+        </a>
+        <a href="finance.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Finance</span>
+        </a>
+    </nav>
+
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <h3 style="margin-bottom: 20px; color: var(--gold);">Add Daily Task</h3>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="taskTitle" placeholder="e.g., Restock Russian sausages">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="taskDesc" class="form-group" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; color:white; padding:10px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Assign to Staff</label>
+                <select id="taskStaff">
+                    <option value="">Unassigned</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Due Time</label>
+                <input type="datetime-local" id="taskDue">
+            </div>
+            <button class="btn btn-primary" style="margin-bottom: 10px;" id="saveTaskBtn">Save Task</button>
+            <button class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Milestone Modal -->
+    <div id="milestoneModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <h3 id="milestoneModalTitle" style="margin-bottom: 20px; color: var(--gold);">Add Milestone</h3>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="msTitle" placeholder="e.g., Reach R50k sales">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="msDesc" class="form-group" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; color:white; padding:10px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Assign to Staff</label>
+                <select id="msStaff">
+                    <option value="">Unassigned</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Deadline</label>
+                <input type="date" id="msDeadline">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="msStatus">
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="margin-bottom: 10px;" id="saveMilestoneBtn">Save Milestone</button>
+            <button class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        let currentTab = 'daily';
+        let staffList = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.isLoggedIn()) { window.location.href = '../profile.html'; return; }
+            fetchStaff();
+            loadContent();
+
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentTab = tab.getAttribute('data-tab');
+                    loadContent();
+                });
+            });
+        });
+
+        async function fetchStaff() {
+            try {
+                const response = await fetch('/admin/staff', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                staffList = await response.json();
+                const taskSelect = document.getElementById('taskStaff');
+                const msSelect = document.getElementById('msStaff');
+                staffList.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = s.name;
+                    taskSelect.appendChild(opt.cloneNode(true));
+                    msSelect.appendChild(opt);
+                });
+            } catch (error) { console.error('Error fetching staff:', error); }
+        }
+
+        function loadContent() {
+            if (currentTab === 'daily') fetchTasks();
+            else fetchMilestones(currentTab);
+        }
+
+        async function fetchTasks() {
+            const content = document.getElementById('planningContent');
+            content.innerHTML = '<p>Loading tasks...</p>';
+            try {
+                const response = await fetch('/admin/tasks', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const tasks = await response.json();
+                content.innerHTML = tasks.length ? tasks.map(t => `
+                    <div class="task-card glass">
+                        <div class="task-check ${t.is_completed ? 'completed' : ''}" onclick="toggleTask(${t.id}, ${!t.is_completed})">
+                            ${t.is_completed ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                        <div class="task-info">
+                            <div class="task-title" style="${t.is_completed ? 'text-decoration: line-through; opacity:0.6' : ''}">${t.title}</div>
+                            <div class="task-meta">
+                                ${t.due_time ? '<i class="far fa-clock"></i> ' + new Date(t.due_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                                ${t.assigned_staff ? ' | <i class="far fa-user"></i> ' + t.assigned_staff.name : ''}
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <i class="fas fa-edit" style="font-size:0.9rem; opacity:0.5" onclick="editTask(${JSON.stringify(t).replace(/"/g, '&quot;')})"></i>
+                            <i class="fas fa-trash" style="font-size:0.9rem; color:#dc3545" onclick="deleteTask(${t.id})"></i>
+                        </div>
+                    </div>
+                `).join('') : '<div class="empty-cart"><p>No tasks for today</p></div>';
+            } catch (error) { content.innerHTML = '<p>Error loading tasks</p>'; }
+        }
+
+        async function fetchMilestones(type) {
+            const content = document.getElementById('planningContent');
+            content.innerHTML = `<p>Loading ${type} milestones...</p>`;
+            try {
+                const response = await fetch(`/admin/milestones?milestone_type=${type}`, {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const milestones = await response.json();
+                content.innerHTML = milestones.length ? milestones.map(m => `
+                    <div class="milestone-card glass">
+                        <div class="milestone-header">
+                            <div style="font-weight:700; font-size:1.1rem; color:var(--gold)">${m.title}</div>
+                            <div class="milestone-status">${m.progress_status}</div>
+                        </div>
+                        <p style="font-size:0.9rem; opacity:0.8; margin-bottom:10px;">${m.description || ''}</p>
+                        <div class="milestone-progress">
+                            <div class="progress-bar" style="width: ${m.is_completed ? '100%' : (m.progress_status === 'In Progress' ? '50%' : '0%')}"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                            <div class="task-meta">
+                                Deadline: ${new Date(m.deadline).toLocaleDateString()}
+                                ${m.assigned_staff ? ' | <i class="far fa-user"></i> ' + m.assigned_staff.name : ''}
+                            </div>
+                            <div style="display:flex; gap:15px; align-items:center;">
+                                <i class="fas fa-edit" style="opacity:0.5" onclick="editMilestone(${JSON.stringify(m).replace(/"/g, '&quot;')})"></i>
+                                <input type="checkbox" ${m.is_completed ? 'checked' : ''} onclick="toggleMilestone(${m.id}, this.checked)">
+                                <i class="fas fa-trash" style="color:#dc3545" onclick="deleteMilestone(${m.id})"></i>
+                            </div>
+                        </div>
+                    </div>
+                `).join('') : `<div class="empty-cart"><p>No ${type} milestones set</p></div>`;
+            } catch (error) { content.innerHTML = '<p>Error loading milestones</p>'; }
+        }
+
+        // Action Buttons
+        let editingTaskId = null;
+        let editingMilestoneId = null;
+
+        const addBtn = document.getElementById('addBtn');
+        addBtn.onclick = () => {
+            if (currentTab === 'daily') openTaskModal();
+            else openMilestoneModal();
+        };
+
+        function openTaskModal(t = null) {
+            editingTaskId = t ? t.id : null;
+            document.getElementById('taskTitle').value = t ? t.title : '';
+            document.getElementById('taskDesc').value = t ? t.description : '';
+            document.getElementById('taskStaff').value = t ? (t.assigned_staff_id || '') : '';
+            document.getElementById('taskDue').value = t && t.due_time ? t.due_time.slice(0, 16) : '';
+            document.getElementById('saveTaskBtn').textContent = t ? 'Update Task' : 'Save Task';
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        function openMilestoneModal(m = null) {
+            editingMilestoneId = m ? m.id : null;
+            document.getElementById('msTitle').value = m ? m.title : '';
+            document.getElementById('msDesc').value = m ? m.description : '';
+            document.getElementById('msStaff').value = m ? (m.assigned_staff_id || '') : '';
+            document.getElementById('msDeadline').value = m && m.deadline ? m.deadline.slice(0, 10) : '';
+            document.getElementById('msStatus').value = m ? m.progress_status : 'Not Started';
+            document.getElementById('milestoneModalTitle').textContent = m ? `Edit ${m.milestone_type} Milestone` : `Add ${currentTab} Milestone`;
+            document.getElementById('saveMilestoneBtn').textContent = m ? 'Update Milestone' : 'Save Milestone';
+            document.getElementById('milestoneModal').style.display = 'flex';
+        }
+
+        function editTask(t) { openTaskModal(t); }
+        function editMilestone(m) { openMilestoneModal(m); }
+
+        function closeModals() {
+            document.getElementById('taskModal').style.display = 'none';
+            document.getElementById('milestoneModal').style.display = 'none';
+        }
+
+        document.getElementById('saveTaskBtn').onclick = async () => {
+            const data = {
+                title: document.getElementById('taskTitle').value,
+                description: document.getElementById('taskDesc').value,
+                assigned_staff_id: document.getElementById('taskStaff').value ? parseInt(document.getElementById('taskStaff').value) : null,
+                due_time: document.getElementById('taskDue').value || null
+            };
+            const method = editingTaskId ? 'PATCH' : 'POST';
+            const url = editingTaskId ? `/admin/tasks/${editingTaskId}` : '/admin/tasks';
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { closeModals(); fetchTasks(); }
+        };
+
+        document.getElementById('saveMilestoneBtn').onclick = async () => {
+            const data = {
+                title: document.getElementById('msTitle').value,
+                description: document.getElementById('msDesc').value,
+                assigned_staff_id: document.getElementById('msStaff').value ? parseInt(document.getElementById('msStaff').value) : null,
+                deadline: document.getElementById('msDeadline').value,
+                progress_status: document.getElementById('msStatus').value,
+                milestone_type: editingMilestoneId ? undefined : currentTab
+            };
+            const method = editingMilestoneId ? 'PATCH' : 'POST';
+            const url = editingMilestoneId ? `/admin/milestones/${editingMilestoneId}` : '/admin/milestones';
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { closeModals(); fetchMilestones(currentTab); }
+        };
+
+        async function toggleTask(id, completed) {
+            await fetch(`/admin/tasks/${id}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ is_completed: completed })
+            });
+            fetchTasks();
+        }
+
+        async function toggleMilestone(id, completed) {
+            await fetch(`/admin/milestones/${id}`, {
+                method: 'PATCH',
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ is_completed: completed, progress_status: completed ? 'Completed' : 'In Progress' })
+            });
+            fetchMilestones(currentTab);
+        }
+
+        async function deleteTask(id) {
+            if (confirm('Delete this task?')) {
+                await fetch(`/admin/tasks/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${Auth.getToken()}` } });
+                fetchTasks();
+            }
+        }
+
+        async function deleteMilestone(id) {
+            if (confirm('Delete this milestone?')) {
+                await fetch(`/admin/milestones/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${Auth.getToken()}` } });
+                fetchMilestones(currentTab);
+            }
+        }
+    </script>
+</body>
+</html>

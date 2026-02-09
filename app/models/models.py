@@ -160,3 +160,41 @@ class Expense(Base):
     amount = Column(Float, nullable=False)
     description = Column(String)
     date = Column(DateTime(timezone=True), server_default=func.now())
+
+class Budget(Base):
+    __tablename__ = "budgets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    month = Column(Integer, nullable=False)
+    year = Column(Integer, nullable=False)
+    category = Column(String, nullable=False)
+    allocated_amount = Column(Float, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+class Task(Base):
+    __tablename__ = "tasks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(String)
+    due_time = Column(DateTime(timezone=True))
+    is_completed = Column(Boolean, default=False)
+    assigned_staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    assigned_staff = relationship("Staff")
+
+class Milestone(Base):
+    __tablename__ = "milestones"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    description = Column(String)
+    deadline = Column(DateTime(timezone=True))
+    progress_status = Column(String, default="Not Started") # Not Started, In Progress, Completed
+    assigned_staff_id = Column(Integer, ForeignKey("staff.id"), nullable=True)
+    is_completed = Column(Boolean, default=False)
+    milestone_type = Column(String, nullable=False) # weekly, monthly, yearly
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    assigned_staff = relationship("Staff")

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Finance & Database | Malume Nico</title>
+    <title>Finance & Budget | Admin | Malume Nico</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .finance-summary { padding: 20px; display: grid; grid-template-columns: 1fr; gap: 15px; }
         .summary-card { padding: 25px; text-align: center; }
@@ -14,6 +15,12 @@
         .profit { color: #28a745; }
         .expense { color: #dc3545; }
 
+        .budget-grid { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 0 20px 20px; }
+        .budget-card { padding: 15px; }
+        .budget-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+        .budget-bar-bg { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .budget-bar-fill { height: 100%; background: var(--gold); }
+
         .expense-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
         .expense-item { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
     </style>
@@ -21,12 +28,16 @@
 <body>
     <div class="top-bar">
         <button class="top-bar-btn"><i class="fas fa-search"></i></button>
-        <div class="page-title">Finance & Database</div>
-        <button class="top-bar-btn" id="addExpenseBtn"><i class="fas fa-plus"></i></button>
+        <div class="page-title">Finance & Budget</div>
+        <button class="top-bar-btn" id="menuBtn"><i class="fas fa-ellipsis-v"></i></button>
     </div>
 
     <main>
-        <div class="finance-summary">
+        <div class="finance-summary" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="summary-card glass">
+                <div class="summary-label">Daily Revenue</div>
+                <div class="summary-value" id="dailyRevenue">R0.00</div>
+            </div>
             <div class="summary-card glass">
                 <div class="summary-label">Monthly Income</div>
                 <div class="summary-value" id="totalIncome">R0.00</div>
@@ -41,8 +52,33 @@
             </div>
         </div>
 
+        <div class="graph-section">
+            <div class="section-header">
+                <h2>Revenue vs Expenses</h2>
+            </div>
+            <div class="graph-container glass">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+
         <div class="section-header">
-            <h2>Recent Expenses</h2>
+            <h2>Budget Allocation</h2>
+            <button class="top-bar-btn" onclick="openBudgetModal()"><i class="fas fa-plus-circle"></i></button>
+        </div>
+        <div class="budget-grid" id="budgetGrid">
+            <!-- Budgets will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2>Income Logs</h2>
+        </div>
+        <div class="expense-list" id="incomeList">
+            <!-- Income will be loaded here -->
+        </div>
+
+        <div class="section-header">
+            <h2>Expense Logs</h2>
+            <button class="top-bar-btn" onclick="openExpenseModal()"><i class="fas fa-plus-circle"></i></button>
         </div>
         <div class="expense-list" id="expenseList">
             <!-- Expenses will be loaded here -->
@@ -58,13 +94,17 @@
             <i class="fas fa-users"></i>
             <span>Staff</span>
         </a>
+        <a href="planning.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Planning</span>
+        </a>
         <a href="finance.html" class="nav-item active">
             <i class="fas fa-wallet"></i>
             <span>Finance</span>
         </a>
     </nav>
 
-    <!-- Add Expense Modal -->
+    <!-- Expense Modal -->
     <div id="expenseModal" class="modal-overlay">
         <div class="modal-content glass">
             <h3 style="margin-bottom: 20px; color: var(--gold);">Record Expense</h3>
@@ -74,8 +114,8 @@
                     <option value="Supplies">Supplies</option>
                     <option value="Utilities">Utilities</option>
                     <option value="Rent">Rent</option>
+                    <option value="Salaries">Salaries</option>
                     <option value="Marketing">Marketing</option>
-                    <option value="Maintenance">Maintenance</option>
                     <option value="Other">Other</option>
                 </select>
             </div>
@@ -88,7 +128,31 @@
                 <input type="text" id="expDesc" placeholder="Optional details">
             </div>
             <button class="btn btn-primary" style="margin-bottom: 10px;" id="saveExpenseBtn">Save Expense</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Budget Modal -->
+    <div id="budgetModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <h3 style="margin-bottom: 20px; color: var(--gold);">Set Monthly Budget</h3>
+            <div class="form-group">
+                <label>Category</label>
+                <select id="budCategory">
+                    <option value="Supplies">Supplies</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Rent">Rent</option>
+                    <option value="Salaries">Salaries</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Allocated Amount</label>
+                <input type="number" id="budAmount" placeholder="R0.00">
+            </div>
+            <button class="btn btn-primary" style="margin-bottom: 10px;" id="saveBudgetBtn">Set Budget</button>
+            <button class="btn btn-secondary" onclick="closeModals()">Cancel</button>
         </div>
     </div>
 
@@ -96,82 +160,195 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (!Auth.isLoggedIn()) { window.location.href = '../profile.html'; return; }
-            fetchFinanceSummary();
-            fetchExpenses();
+            fetchFinanceReport();
         });
 
-        async function fetchFinanceSummary() {
+        async function fetchFinanceReport() {
             try {
-                const response = await fetch('/admin/finance/summary', {
+                // Fetch daily revenue separately if not in report
+                const statsRes = await fetch('/admin/dashboard/stats', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const statsData = await statsRes.json();
+                document.getElementById('dailyRevenue').textContent = `R${statsData.daily_revenue.toFixed(2)}`;
+
+                const response = await fetch('/admin/finance/report', {
                     headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
                 });
                 const data = await response.json();
 
-                document.getElementById('totalIncome').textContent = `R${data.total_income.toFixed(2)}`;
-                document.getElementById('totalExpenses').textContent = `R${data.total_expenses.toFixed(2)}`;
-                document.getElementById('estimatedProfit').textContent = `R${data.estimated_profit.toFixed(2)}`;
-            } catch (error) {
-                console.error('Error fetching finance summary:', error);
-            }
+                document.getElementById('totalIncome').textContent = `R${data.monthly_revenue.toFixed(2)}`;
+                document.getElementById('totalExpenses').textContent = `R${data.monthly_expenses.toFixed(2)}`;
+
+                const profitEl = document.getElementById('estimatedProfit');
+                profitEl.textContent = `R${data.estimated_profit.toFixed(2)}`;
+                if (data.estimated_profit < 0) {
+                    profitEl.classList.remove('profit');
+                    profitEl.classList.add('expense');
+                } else {
+                    profitEl.classList.remove('expense');
+                    profitEl.classList.add('profit');
+                }
+
+                renderBudgets(data.budgets);
+                renderExpenses(data.expense_logs);
+                renderChart(data.monthly_revenue, data.monthly_expenses);
+                fetchIncomeLogs();
+            } catch (error) { console.error('Error fetching finance report:', error); }
         }
 
-        async function fetchExpenses() {
+        async function fetchIncomeLogs() {
             try {
-                const response = await fetch('/admin/finance/expenses', {
+                const response = await fetch('/admin/orders', {
                     headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
                 });
-                const expenses = await response.json();
-                const list = document.getElementById('expenseList');
-
-                list.innerHTML = expenses.map(e => `
+                const orders = await response.json();
+                const list = document.getElementById('incomeList');
+                list.innerHTML = orders.map(o => `
                     <div class="expense-item glass">
                         <div>
-                            <div style="font-weight: 600;">${e.category}</div>
-                            <div style="font-size: 0.8rem; opacity: 0.7;">${e.description || 'No description'}</div>
-                            <div style="font-size: 0.7rem; opacity: 0.5;">${new Date(e.date).toLocaleDateString()}</div>
+                            <div style="font-weight: 600;">Order #${o.id}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">${o.order_type} | ${o.status}</div>
+                            <div style="font-size: 0.7rem; opacity: 0.5;">${new Date(o.created_at).toLocaleString()}</div>
                         </div>
-                        <div style="font-weight: 700; color: #dc3545;">-R${e.amount.toFixed(2)}</div>
+                        <div style="font-weight: 700; color: #28a745;">+R${o.total.toFixed(2)}</div>
                     </div>
                 `).join('');
-            } catch (error) {
-                console.error('Error fetching expenses:', error);
+            } catch (error) { console.error('Error fetching income:', error); }
+        }
+
+        function renderBudgets(budgets) {
+            const grid = document.getElementById('budgetGrid');
+            grid.innerHTML = budgets.length ? budgets.map(b => {
+                const percent = Math.min((b.spent / b.allocated) * 100, 100);
+                return `
+                    <div class="budget-card glass">
+                        <div class="budget-header">
+                            <span style="font-weight:600">${b.category}</span>
+                            <span>R${b.spent.toFixed(0)} / R${b.allocated.toFixed(0)}</span>
+                        </div>
+                        <div class="budget-bar-bg">
+                            <div class="budget-bar-fill" style="width: ${percent}%; background: ${percent > 90 ? '#dc3545' : 'var(--gold)'}"></div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                            <div style="font-size:0.7rem; opacity:0.6;">
+                                ${b.remaining >= 0 ? 'R' + b.remaining.toFixed(0) + ' remaining' : 'R' + Math.abs(b.remaining).toFixed(0) + ' over budget'}
+                            </div>
+                            <i class="fas fa-trash" style="font-size:0.8rem; opacity:0.5;" onclick="deleteBudget(${b.id})"></i>
+                        </div>
+                    </div>
+                `;
+            }).join('') : '<p style="opacity:0.5; padding:0 20px">No budgets set for this month</p>';
+        }
+
+        function renderExpenses(expenses) {
+            const list = document.getElementById('expenseList');
+            list.innerHTML = expenses.map(e => `
+                <div class="expense-item glass">
+                    <div>
+                        <div style="font-weight: 600;">${e.category}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7;">${e.description || 'No description'}</div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                        <div style="font-weight: 700; color: #dc3545;">-R${e.amount.toFixed(2)}</div>
+                        <div style="margin-top:5px; display:flex; gap:10px; font-size:0.8rem; opacity:0.5;">
+                            <i class="fas fa-edit" onclick="editExpense(${JSON.stringify(e).replace(/"/g, '&quot;')})"></i>
+                            <i class="fas fa-trash" onclick="deleteExpense(${e.id})"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderChart(revenue, expenses) {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Revenue', 'Expenses'],
+                    datasets: [{
+                        data: [revenue, expenses],
+                        backgroundColor: ['#c89b2d', '#dc3545'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: 'white' } } }
+                }
+            });
+        }
+
+        let editingExpenseId = null;
+
+        function openExpenseModal(e = null) {
+            editingExpenseId = e ? e.id : null;
+            document.getElementById('expCategory').value = e ? e.category : 'Supplies';
+            document.getElementById('expAmount').value = e ? e.amount : '';
+            document.getElementById('expDesc').value = e ? e.description : '';
+            document.getElementById('saveExpenseBtn').textContent = e ? 'Update Expense' : 'Save Expense';
+            document.getElementById('expenseModal').style.display = 'flex';
+        }
+        function openBudgetModal() { document.getElementById('budgetModal').style.display = 'flex'; }
+        function closeModals() {
+            document.getElementById('expenseModal').style.display = 'none';
+            document.getElementById('budgetModal').style.display = 'none';
+        }
+
+        function editExpense(e) { openExpenseModal(e); }
+
+        async function deleteExpense(id) {
+            if (confirm('Delete this expense?')) {
+                await fetch(`/admin/finance/expenses/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                fetchFinanceReport();
             }
         }
 
-        // Expense Modal Logic
-        const expenseModal = document.getElementById('expenseModal');
-        const addExpenseBtn = document.getElementById('addExpenseBtn');
-        const saveExpenseBtn = document.getElementById('saveExpenseBtn');
+        async function deleteBudget(id) {
+            if (confirm('Delete this budget?')) {
+                await fetch(`/admin/finance/budgets/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                fetchFinanceReport();
+            }
+        }
 
-        addExpenseBtn.onclick = () => { expenseModal.style.display = 'flex'; };
-        function closeModal() { expenseModal.style.display = 'none'; }
-
-        saveExpenseBtn.onclick = async () => {
+        document.getElementById('saveExpenseBtn').onclick = async () => {
             const data = {
                 category: document.getElementById('expCategory').value,
                 amount: parseFloat(document.getElementById('expAmount').value),
                 description: document.getElementById('expDesc').value
             };
+            const method = editingExpenseId ? 'PATCH' : 'POST';
+            const url = editingExpenseId ? `/admin/finance/expenses/${editingExpenseId}` : '/admin/finance/expenses';
 
-            try {
-                const response = await fetch('/admin/finance/expenses', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${Auth.getToken()}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                if (response.ok) {
-                    closeModal();
-                    fetchFinanceSummary();
-                    fetchExpenses();
-                } else {
-                    alert('Error saving expense');
-                }
-            } catch (error) {
-                console.error('Error saving expense:', error);
-            }
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { closeModals(); fetchFinanceReport(); }
+        };
+
+        document.getElementById('saveBudgetBtn').onclick = async () => {
+            const now = new Date();
+            const data = {
+                category: document.getElementById('budCategory').value,
+                allocated_amount: parseFloat(document.getElementById('budAmount').value),
+                month: now.getMonth() + 1,
+                year: now.getFullYear()
+            };
+            const response = await fetch('/admin/finance/budgets', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${Auth.getToken()}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) { closeModals(); fetchFinanceReport(); }
         };
     </script>
 </body>

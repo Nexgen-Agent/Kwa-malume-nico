@@ -2708,7 +2708,11 @@
                 alert('Your cart is empty. Add some items before checking out.');
                 return;
             }
-            showGuestCheckoutModal();
+            if (Auth.isLoggedIn()) {
+                showCheckoutView();
+            } else {
+                showGuestCheckoutModal();
+            }
         });
 
         function showGuestCheckoutModal() {
@@ -3325,15 +3329,15 @@
                     guestNotice.innerHTML = `
                         <p style="margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-crown" style="color: var(--gold);"></i>
-                            <span>Welcome back, <strong>${escapeHTML(user.name || user.email)}</strong>! Your 10% member discount has been applied.</span>
+                            <span>Welcome back, <strong>${escapeHTML(user.full_name || user.email)}</strong>! Your 10% member discount has been applied.</span>
                         </p>
                     `;
                 }
 
                 // Pre-fill name if available
-                if (user.name) {
+                if (user.full_name) {
                     const nameInput = document.getElementById('customerName');
-                    if (nameInput) nameInput.value = user.name;
+                    if (nameInput) nameInput.value = user.full_name;
                 }
 
                 // Update desktop nav
