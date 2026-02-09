@@ -1013,24 +1013,50 @@
             </div>
 
             <!-- Auth Section -->
-            <div class="auth-section glass">
+            <div class="auth-section glass" id="authSection">
                 <h3 class="auth-title">Connect Your Account</h3>
                 <div class="auth-buttons">
-                    <button class="auth-btn google">
+                    <button class="auth-btn google" id="googleAuthBtn">
                         <i class="fab fa-google"></i> Continue with Google
                     </button>
-                    <button class="auth-btn apple">
+                    <button class="auth-btn apple" id="appleAuthBtn">
                         <i class="fab fa-apple"></i> Continue with Apple
                     </button>
-                    <button class="auth-btn facebook">
+                    <button class="auth-btn facebook" id="facebookAuthBtn">
                         <i class="fab fa-facebook-f"></i> Continue with Facebook
                     </button>
-                    <button class="auth-btn email">
+                    <button class="auth-btn email" id="showSignupBtn">
                         <i class="fas fa-envelope"></i> Sign up with Email
                     </button>
-                    <button class="auth-btn email" style="background: rgba(255,255,255,0.1); color: white;">
+                    <button class="auth-btn email" id="showLoginBtn" style="background: rgba(255,255,255,0.1); color: white;">
                         <i class="fas fa-sign-in-alt"></i> Login with Email
                     </button>
+                </div>
+
+                <!-- Email Signup Form -->
+                <div id="emailSignupForm" style="display: none; margin-top: 20px; flex-direction: column; gap: 15px;">
+                    <div class="info-item">
+                        <label class="info-label">Email Address</label>
+                        <input type="email" id="signupEmail" class="info-input" placeholder="you@example.com">
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Password</label>
+                        <input type="password" id="signupPassword" class="info-input" placeholder="Min 6 characters">
+                    </div>
+                    <button class="auth-btn email" id="executeSignupBtn">Create Account</button>
+                </div>
+
+                <!-- Email Login Form -->
+                <div id="emailLoginForm" style="display: none; margin-top: 20px; flex-direction: column; gap: 15px;">
+                    <div class="info-item">
+                        <label class="info-label">Email Address</label>
+                        <input type="email" id="loginEmail" class="info-input" placeholder="you@example.com">
+                    </div>
+                    <div class="info-item">
+                        <label class="info-label">Password</label>
+                        <input type="password" id="loginPassword" class="info-input" placeholder="Enter your password">
+                    </div>
+                    <button class="auth-btn email" id="executeLoginBtn">Login</button>
                 </div>
             </div>
         </div>
@@ -1183,6 +1209,7 @@
         </a>
     </nav>
 
+    <script src="assets/js/auth.js"></script>
     <script>
         // Profile Data for Malume Nicodemus
         let profileData = {
@@ -1333,6 +1360,106 @@
             
             // Set the default profile data
             setProfileData();
+
+            // Toggle Email Forms
+            const showSignupBtn = document.getElementById('showSignupBtn');
+            const showLoginBtn = document.getElementById('showLoginBtn');
+            const emailSignupForm = document.getElementById('emailSignupForm');
+            const emailLoginForm = document.getElementById('emailLoginForm');
+
+            showSignupBtn.addEventListener('click', () => {
+                emailSignupForm.style.display = emailSignupForm.style.display === 'none' ? 'flex' : 'none';
+                emailLoginForm.style.display = 'none';
+            });
+
+            showLoginBtn.addEventListener('click', () => {
+                emailLoginForm.style.display = emailLoginForm.style.display === 'none' ? 'flex' : 'none';
+                emailSignupForm.style.display = 'none';
+            });
+
+            // Handle URL Parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const isRedirectCheckout = urlParams.get('redirect') === 'checkout';
+
+            if (isRedirectCheckout) {
+                // Scroll to auth section
+                const authSection = document.getElementById('authSection');
+                if (authSection) {
+                    authSection.scrollIntoView({ behavior: 'smooth' });
+                    authSection.style.border = '2px solid var(--gold)';
+                    setTimeout(() => {
+                        authSection.style.border = '1px solid rgba(255, 255, 255, 0.25)';
+                    }, 3000);
+                }
+            }
+
+            // Authentication Execution
+            const executeSignupBtn = document.getElementById('executeSignupBtn');
+            const executeLoginBtn = document.getElementById('executeLoginBtn');
+            const googleAuthBtn = document.getElementById('googleAuthBtn');
+            const facebookAuthBtn = document.getElementById('facebookAuthBtn');
+            const appleAuthBtn = document.getElementById('appleAuthBtn');
+
+            const handleAuthSuccess = (user, isNew = false) => {
+                if (isNew) {
+                    localStorage.setItem('welcomeCouponEligible', 'true');
+                }
+                if (isRedirectCheckout) {
+                    window.location.href = 'index.html?checkout=true';
+                } else {
+                    alert('Success! Welcome, ' + user.name);
+                    location.reload();
+                }
+            };
+
+            executeSignupBtn.addEventListener('click', async () => {
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                try {
+                    const user = await Auth.signUpWithEmail(email, password);
+                    handleAuthSuccess(user, true);
+                } catch (e) {
+                    alert(e.message || 'Signup failed');
+                }
+            });
+
+            executeLoginBtn.addEventListener('click', async () => {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                try {
+                    const user = await Auth.loginWithEmail(email, password);
+                    handleAuthSuccess(user, false);
+                } catch (e) {
+                    alert(e.message || 'Login failed');
+                }
+            });
+
+            googleAuthBtn.addEventListener('click', async () => {
+                try {
+                    const user = await Auth.loginWithOAuth('Google');
+                    handleAuthSuccess(user, true);
+                } catch (e) {
+                    alert('Google login failed');
+                }
+            });
+
+            facebookAuthBtn.addEventListener('click', async () => {
+                try {
+                    const user = await Auth.loginWithOAuth('Facebook');
+                    handleAuthSuccess(user, true);
+                } catch (e) {
+                    alert('Facebook login failed');
+                }
+            });
+
+            appleAuthBtn.addEventListener('click', async () => {
+                try {
+                    const user = await Auth.loginWithOAuth('Apple');
+                    handleAuthSuccess(user, true);
+                } catch (e) {
+                    alert('Apple login failed');
+                }
+            });
         });
 
         // Set profile data

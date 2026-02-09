@@ -2419,6 +2419,7 @@
         </a>
     </nav>
 
+    <script src="assets/js/auth.js"></script>
     <script>
         // Menu data with image URLs
         const menuItems = [
@@ -2635,11 +2636,40 @@
         let isGuestCheckout = true;
         let userEmailForPostPurchase = '';
 
+        // Check if user is logged in to set initial guest state
+        if (typeof Auth !== 'undefined' && Auth.getCurrentUser()) {
+            isGuestCheckout = false;
+        }
+
+        // Cart persistence functions
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function loadCart() {
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                try {
+                    cart = JSON.parse(savedCart);
+                } catch (e) {
+                    console.error("Failed to parse saved cart", e);
+                    cart = [];
+                }
+                updateCart();
+            }
+        }
+
         // Function to update header total amount
         function updateHeaderTotalAmount() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-            const total = subtotal + deliveryFee;
+            let total = subtotal + deliveryFee;
+
+            // Apply Welcome Discount
+            if (localStorage.getItem('welcomeCouponEligible') === 'true' && cart.length > 0) {
+                const discount = total * 0.1;
+                total -= discount;
+            }
             
             headerTotalAmount.textContent = `R${total.toFixed(2)}`;
             
@@ -2707,7 +2737,13 @@
                 alert('Your cart is empty. Add some items before checking out.');
                 return;
             }
-            showGuestCheckoutModal();
+            // If user is logged in, skip guest choice and go to checkout
+            if (typeof Auth !== 'undefined' && Auth.getCurrentUser()) {
+                isGuestCheckout = false;
+                showCheckoutView();
+            } else {
+                showGuestCheckoutModal();
+            }
         });
 
         function showGuestCheckoutModal() {
@@ -2735,7 +2771,8 @@
         createAccountForRewardsBtn.addEventListener('click', () => {
             isGuestCheckout = false;
             guestCheckoutModal.classList.remove('active');
-            showAccountCreationModal();
+            saveCart();
+            window.location.href = 'profile.html?redirect=checkout';
         });
 
         // Show checkout view
@@ -2853,6 +2890,7 @@
             
             // Reset cart
             cart = [];
+            saveCart();
             updateCart();
             hideAllFloatingButtons();
         });
@@ -2861,6 +2899,7 @@
         continueShopping.addEventListener('click', () => {
             // Clear cart and close
             cart = [];
+            saveCart();
             updateCart();
             cartContainer.classList.remove('open');
             guestCheckoutModal.classList.remove('active');
@@ -2888,7 +2927,13 @@
         function updateTotalAmount() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-            const total = subtotal + deliveryFee;
+            let total = subtotal + deliveryFee;
+
+            // Apply Welcome Discount
+            if (localStorage.getItem('welcomeCouponEligible') === 'true' && cart.length > 0) {
+                const discount = total * 0.1;
+                total -= discount;
+            }
             
             totalAmount.textContent = `R${total.toFixed(2)}`;
             
@@ -2979,6 +3024,7 @@
                 });
             }
 
+            saveCart();
             updateCart();
             cartContainer.classList.add('open');
             showCartView();
@@ -3062,6 +3108,7 @@
             const item = cart.find(item => item.id === id);
             if (item) {
                 item.quantity += 1;
+                saveCart();
                 updateCart();
             }
         }
@@ -3075,6 +3122,7 @@
                 } else {
                     cart.splice(itemIndex, 1);
                 }
+                saveCart();
                 updateCart();
             }
         }
@@ -3274,10 +3322,38 @@
             }
         });
 
+        // Handle Post-Auth Return
+        function handlePostAuthReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isReturnToCheckout = urlParams.get('checkout') === 'true';
+
+            if (isReturnToCheckout && cart.length > 0) {
+                // Directly set the UI state instead of simulating clicks
+                const cartContainer = document.getElementById('cartContainer');
+                if (cartContainer) {
+                    cartContainer.classList.add('open');
+                    isGuestCheckout = false;
+                    showCheckoutView();
+
+                    if (localStorage.getItem('welcomeCouponEligible') === 'true') {
+                        alert('Welcome! Your 10% signup discount has been applied.');
+                        updateTotalAmount();
+                    }
+
+                    // Pre-fill user data
+                    const user = Auth.getCurrentUser();
+                    if (user) {
+                        const nameInput = document.getElementById('customerName');
+                        if (nameInput && user.name) nameInput.value = user.name;
+                    }
+                }
+            }
+        }
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
-            updateCart();
+            loadCart();
             setActiveNavItem();
             initGoogleMaps();
             
@@ -3286,6 +3362,16 @@
 
             // Handle keyboard events to keep header in place
             handleKeyboardEvents();
+
+            // Handle return from signup
+            handlePostAuthReturn();
+
+            // Pre-fill user if logged in
+            const user = Auth.getCurrentUser();
+            if (user && user.name) {
+                const nameInput = document.getElementById('customerName');
+                if (nameInput) nameInput.value = user.name;
+            }
         });
 
         // Handle keyboard events to ensure header stays fixed
