@@ -1429,105 +1429,19 @@
         </a>
     </nav>
 
+    <script src="assets/js/auth.js"></script>
     <script>
-        // Sample review data with profile pictures and images
-        const sampleReviews = [
-            {
-                id: 1,
-                reviewerName: "Thabo M.",
-                rating: 5,
-                content: "Best kota in Tzaneen! The Titanic Family Kota is absolutely amazing. Perfectly balanced flavors and generous portions. Will definitely be back!",
-                timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
-                likes: 12,
-                liked: false,
-                shares: 3,
-                replied: false,
-                replies: [
-                    {
-                        id: 1,
-                        replyerName: "Malume Nico",
-                        content: "Thank you Thabo! We're so glad you enjoyed the Titanic Kota. Can't wait to serve you again!",
-                        timestamp: new Date(Date.now() - 10 * 60 * 1000) // 10 minutes ago
-                    }
-                ],
-                photos: [],
-                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-            },
-            {
-                id: 2,
-                reviewerName: "Sarah K.",
-                rating: 4,
-                content: "The Range Rover Kota was delicious! Only giving 4 stars because I had to wait a bit longer than expected. But the food was worth it!",
-                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-                likes: 8,
-                liked: false,
-                shares: 1,
-                replied: false,
-                replies: [],
-                photos: ["https://images.unsplash.com/photo-1546964124-0cce460f38ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
-                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-            },
-            {
-                id: 3,
-                reviewerName: "Mike T.",
-                rating: 5,
-                content: "I've tried kotas all over Limpopo, and Malume Nico's are by far the best. The Bugatti Kota with steak is my absolute favorite!",
-                timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-                likes: 15,
-                liked: true,
-                shares: 5,
-                replied: false,
-                replies: [],
-                photos: ["https://images.unsplash.com/photo-1551782450-17144efb9c50?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
-                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-            },
-            {
-                id: 4,
-                reviewerName: "Lerato P.",
-                rating: 5,
-                content: "The atmosphere here is amazing! Great food, friendly staff, and reasonable prices. The Dunked Wings are a must-try!",
-                timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-                likes: 22,
-                liked: false,
-                shares: 7,
-                replied: false,
-                replies: [
-                    {
-                        id: 1,
-                        replyerName: "Malume Nico",
-                        content: "Thanks Lerato! We're happy you enjoyed both the food and the vibe. See you soon!",
-                        timestamp: new Date(Date.now() - 20 * 60 * 60 * 1000) // 20 hours ago
-                    },
-                    {
-                        id: 2,
-                        replyerName: "Lerato P.",
-                        content: "Already planning my next visit!",
-                        timestamp: new Date(Date.now() - 19 * 60 * 60 * 1000) // 19 hours ago
-                    }
-                ],
-                photos: ["https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"],
-                avatar: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-            },
-            {
-                id: 5,
-                reviewerName: "David L.",
-                rating: 5,
-                content: "The service here is exceptional! Malume Nico himself came to check on us. The food was fresh and the portions are huge!",
-                timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-                likes: 18,
-                liked: false,
-                shares: 4,
-                replied: false,
-                replies: [],
-                photos: [
-                    "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-                ],
-                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80"
-            }
-        ];
+        function escapeHTML(str) {
+            if (!str) return "";
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
 
-        // UPDATED: Enhanced Mobile Menu Toggle - SAME AS HOMEPAGE
+        // API Configuration - Uses Auth.API_BASE_URL if available
+        const API_URL = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : '');
+
+        // Enhanced Mobile Menu Toggle - SAME AS HOMEPAGE
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
@@ -1570,44 +1484,61 @@
         // Review functionality
         let reviews = [];
         let currentRating = 0;
-        let uploadedPhotos = [];
+        let selectedFiles = [];
+        let currentPage = 1;
+        let totalPages = 1;
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             loadReviews();
-            renderReviews();
             initReviewForm();
             setActiveNavItem();
             initFadeInAnimations();
             initImageModal();
+            checkAuthStatus();
             
             // Set up live refresh
-            setInterval(refreshReviews, 30000); // Refresh every 30 seconds
+            setInterval(refreshReviews, 60000); // Refresh every minute
         });
 
-        // Load reviews from localStorage or use sample reviews
-        function loadReviews() {
-            const storedReviews = localStorage.getItem('malumeNicoReviews');
-            if (storedReviews) {
-                try {
-                    reviews = JSON.parse(storedReviews);
-                } catch (e) {
-                    console.error('Error parsing stored reviews:', e);
-                    reviews = [...sampleReviews];
+        // Load reviews from backend
+        async function loadReviews(page = 1) {
+            showLoadingAnimation();
+            try {
+                const headers = {};
+                if (Auth.isLoggedIn()) {
+                    headers['Authorization'] = `Bearer ${Auth.getToken()}`;
                 }
-            } else {
-                reviews = [...sampleReviews];
+
+                const response = await fetch(`${API_URL}/reviews/feed?page=${page}&limit=10`, { headers });
+                const data = await response.json();
+
+                if (page === 1) {
+                    reviews = data.reviews;
+                } else {
+                    reviews = [...reviews, ...data.reviews];
+                }
+
+                currentPage = data.page;
+                totalPages = data.pages;
+
+                renderReviews();
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                // Fallback or error message
+            } finally {
+                hideLoadingAnimation();
             }
         }
 
         // Set active page based on current URL
         function setActiveNavItem() {
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const currentPageName = window.location.pathname.split('/').pop() || 'index.html';
             
             const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
             bottomNavItems.forEach(item => {
                 const href = item.getAttribute('href');
-                if (href === currentPage) {
+                if (href === currentPageName) {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
@@ -1649,13 +1580,11 @@
             const closeModal = document.getElementById('closeModal');
             const modalImage = document.getElementById('modalImage');
             
-            // Close modal when clicking close button
             closeModal.addEventListener('click', () => {
                 imageModal.classList.remove('active');
                 document.body.style.overflow = 'auto';
             });
             
-            // Close modal when clicking outside the image
             imageModal.addEventListener('click', (e) => {
                 if (e.target === imageModal) {
                     imageModal.classList.remove('active');
@@ -1663,15 +1592,6 @@
                 }
             });
             
-            // Close modal with escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && imageModal.classList.contains('active')) {
-                    imageModal.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-            
-            // Function to open modal with image
             window.openImageModal = (imageSrc) => {
                 modalImage.src = imageSrc;
                 imageModal.classList.add('active');
@@ -1701,51 +1621,32 @@
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 if (file.type.startsWith('image/')) {
+                    selectedFiles.push(file);
+                    
                     const reader = new FileReader();
-                    
                     reader.onload = (e) => {
-                        const photoData = {
-                            id: Date.now() + i,
-                            url: e.target.result
-                        };
+                        const div = document.createElement('div');
+                        div.className = 'uploaded-photo-wrapper';
+                        div.style.position = 'relative';
+                        div.style.display = 'inline-block';
+
+                        div.innerHTML = `
+                            <img class="uploaded-photo" src="${e.target.result}" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-right: 10px;">
+                            <span class="remove-photo" style="position: absolute; top: -5px; right: 5px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: white;">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        `;
+
+                        div.querySelector('.remove-photo').addEventListener('click', () => {
+                            selectedFiles = selectedFiles.filter(f => f !== file);
+                            div.remove();
+                        });
                         
-                        uploadedPhotos.push(photoData);
-                        renderUploadedPhotos();
+                        uploadedPhotosContainer.appendChild(div);
                     };
-                    
                     reader.readAsDataURL(file);
                 }
             }
-        }
-
-        // Render uploaded photos
-        function renderUploadedPhotos() {
-            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
-            uploadedPhotosContainer.innerHTML = '';
-            
-            uploadedPhotos.forEach(photo => {
-                const photoElement = document.createElement('img');
-                photoElement.className = 'uploaded-photo';
-                photoElement.src = photo.url;
-                photoElement.alt = 'Uploaded photo';
-                
-                const removeBtn = document.createElement('span');
-                removeBtn.className = 'remove-photo';
-                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                removeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    removePhoto(photo.id);
-                });
-                
-                photoElement.appendChild(removeBtn);
-                uploadedPhotosContainer.appendChild(photoElement);
-            });
-        }
-
-        // Remove uploaded photo
-        function removePhoto(photoId) {
-            uploadedPhotos = uploadedPhotos.filter(photo => photo.id !== photoId);
-            renderUploadedPhotos();
         }
 
         // Show loading animation
@@ -1761,7 +1662,7 @@
         }
 
         // Post a new review
-        function postReview() {
+        async function postReview() {
             const reviewText = document.getElementById('reviewText').value.trim();
             
             if (!reviewText) {
@@ -1774,53 +1675,62 @@
                 return;
             }
             
-            // Show loading animation
-            showLoadingAnimation();
+            const submitBtn = document.getElementById('submitReview');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
             
-            // Get user details from localStorage (assuming they've been set in profile)
-            const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
-                name: 'Guest User',
-                avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-            };
+            const formData = new FormData();
+            formData.append('stars', currentRating);
+            formData.append('text', reviewText);
             
-            const newReview = {
-                id: Date.now(),
-                reviewerName: userProfile.name,
-                rating: currentRating,
-                content: reviewText,
-                timestamp: new Date(),
-                likes: 0,
-                liked: false,
-                shares: 0,
-                replied: false,
-                replies: [],
-                photos: [...uploadedPhotos],
-                avatar: userProfile.avatar
-            };
+            if (!Auth.isLoggedIn()) {
+                const guestName = prompt("Please enter your name for the review:") || "Guest";
+                formData.append('guest_name', guestName);
+            }
             
-            // Simulate API call delay
-            setTimeout(() => {
-                reviews.unshift(newReview);
-                saveReviews();
-                renderReviews();
+            selectedFiles.forEach(file => {
+                formData.append('files', file);
+            });
+
+            try {
+                const headers = {};
+                if (Auth.isLoggedIn()) {
+                    headers['Authorization'] = `Bearer ${Auth.getToken()}`;
+                }
                 
-                // Reset form
-                document.getElementById('reviewText').value = '';
-                setRating(0);
-                uploadedPhotos = [];
-                renderUploadedPhotos();
+                const response = await fetch(`${API_URL}/reviews/submit`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: formData
+                });
                 
-                // Hide loading animation
-                hideLoadingAnimation();
-                
-                // Show success message
-                showSuccessMessage('Thank you for your review!');
-            }, 800);
+                if (response.ok) {
+                    const newReview = await response.json();
+                    reviews.unshift(newReview);
+                    renderReviews();
+
+                    // Reset form
+                    document.getElementById('reviewText').value = '';
+                    setRating(0);
+                    selectedFiles = [];
+                    document.getElementById('uploadedPhotos').innerHTML = '';
+
+                    showSuccessMessage('Thank you for your review!');
+                } else {
+                    const err = await response.json();
+                    alert(err.detail || 'Failed to post review');
+                }
+            } catch (error) {
+                console.error('Error posting review:', error);
+                alert('Network error. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Post Review';
+            }
         }
 
         // Show success message
         function showSuccessMessage(message) {
-            // Create a toast notification
             const toast = document.createElement('div');
             toast.style.cssText = `
                 position: fixed;
@@ -1837,22 +1747,17 @@
                 opacity: 0;
             `;
             toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            
             document.body.appendChild(toast);
             
-            // Animate in
             setTimeout(() => {
                 toast.style.transform = 'translateX(0)';
                 toast.style.opacity = '1';
             }, 100);
             
-            // Animate out after 3 seconds
             setTimeout(() => {
                 toast.style.transform = 'translateX(100%)';
                 toast.style.opacity = '0';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
+                setTimeout(() => document.body.removeChild(toast), 300);
             }, 3000);
         }
 
@@ -1860,399 +1765,217 @@
         function renderReviews() {
             const reviewsFeed = document.getElementById('reviewsFeed');
             
-            // Hide loading animation
-            hideLoadingAnimation();
-            
             // Remove existing reviews (except loader)
-            const existingReviews = reviewsFeed.querySelectorAll('.review-item');
-            existingReviews.forEach(review => review.remove());
+            const items = reviewsFeed.querySelectorAll('.review-item');
+            items.forEach(item => item.remove());
             
             if (reviews.length === 0) {
-                reviewsFeed.innerHTML += `
-                    <div class="review-item glass fade-in" style="text-align: center; padding: 40px;">
-                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
-                        <h3 style="color: var(--gold); margin-bottom: 10px;">No Reviews Yet</h3>
-                        <p>Be the first to share your experience at Malume Nico!</p>
-                    </div>
+                const empty = document.createElement('div');
+                empty.className = 'review-item glass fade-in';
+                empty.style.textAlign = 'center';
+                empty.style.padding = '40px';
+                empty.innerHTML = `
+                    <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                    <h3 style="color: var(--gold); margin-bottom: 10px;">No Reviews Yet</h3>
+                    <p>Be the first to share your experience at Malume Nico!</p>
                 `;
+                reviewsFeed.appendChild(empty);
                 return;
             }
             
             reviews.forEach((review, index) => {
-                const reviewElement = document.createElement('div');
-                reviewElement.className = `review-item glass fade-in ${index % 2 === 0 ? 'fade-in-left' : 'fade-in-right'} ${index > 1 ? 'fade-in-delay-' + (index % 4) : ''}`;
-                reviewElement.innerHTML = createReviewHTML(review);
-                reviewsFeed.appendChild(reviewElement);
-                
-                // Add event listeners for this review
-                addReviewEventListeners(review.id);
+                const div = document.createElement('div');
+                div.className = `review-item glass fade-in`;
+                div.innerHTML = createReviewHTML(review);
+                reviewsFeed.appendChild(div);
+                addReviewEventListeners(review, div);
             });
         }
 
         // Create HTML for a single review
         function createReviewHTML(review) {
-            const timeAgo = getTimeAgo(review.timestamp);
-            const starsHTML = createStarsHTML(review.rating);
-            const photosHTML = createPhotosHTML(review.photos);
-            const repliesHTML = createRepliesHTML(review.replies);
+            const timeAgo = getTimeAgo(review.created_at);
+            const starsHTML = Array.from({length: 5}, (_, i) => `<i class="${i < review.stars ? 'fas' : 'far'} fa-star"></i>`).join('');
+
+            const photosHTML = review.images.length > 0
+                ? `<div class="review-photos">${review.images.map(img => `<img src="${API_URL}${img.image_url}" class="review-photo" onclick="openImageModal('${API_URL}${img.image_url}')">`).join('')}</div>`
+                : '';
+
+            const repliesHTML = review.comments.length > 0
+                ? `<div class="replies-section">${review.comments.map(c => `
+                    <div class="reply-item">
+                        <div class="reply-header">
+                            <div class="replyer-avatar">${escapeHTML(c.full_name ? c.full_name.charAt(0).toUpperCase() : 'G')}</div>
+                            <div class="replyer-name">${escapeHTML(c.full_name || 'Guest')}</div>
+                            <div class="reply-time">${getTimeAgo(c.created_at)}</div>
+                        </div>
+                        <div class="reply-content">${escapeHTML(c.text)}</div>
+                    </div>`).join('')}</div>`
+                : '';
             
             return `
                 <div class="review-header">
-                    <div class="reviewer-avatar">
-                        ${review.avatar ? `<img src="${review.avatar}" alt="${review.reviewerName}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : review.reviewerName.charAt(0).toUpperCase()}
-                    </div>
+                    <div class="reviewer-avatar">${escapeHTML(review.full_name ? review.full_name.charAt(0).toUpperCase() : 'G')}</div>
                     <div class="reviewer-info">
-                        <div class="reviewer-name">${review.reviewerName}</div>
+                        <div class="reviewer-name">${escapeHTML(review.full_name || 'Guest')}</div>
                         <div class="review-time">${timeAgo}</div>
                     </div>
                 </div>
-                
-                <div class="review-rating">
-                    ${starsHTML}
-                </div>
-                
-                <div class="review-content">
-                    ${review.content}
-                </div>
-                
+                <div class="review-rating">${starsHTML}</div>
+                <div class="review-content">${escapeHTML(review.text)}</div>
                 ${photosHTML}
-                
                 <div class="review-actions">
-                    <button class="action-btn like-btn ${review.liked ? 'liked' : ''}" data-review-id="${review.id}">
-                        <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes}</span>
+                    <button class="action-btn like-btn ${review.is_liked ? 'liked active' : ''}" data-id="${review.id}">
+                        <i class="fas fa-thumbs-up"></i> <span class="like-count">${review.likes_count}</span>
                     </button>
-                    <button class="action-btn comment-btn" data-review-id="${review.id}">
-                        <i class="fas fa-comment"></i> <span class="comment-count">${review.replies.length}</span>
-                    </button>
-                    <button class="action-btn share-btn" data-review-id="${review.id}">
-                        <i class="fas fa-share"></i> <span class="share-count">${review.shares}</span>
+                    <button class="action-btn comment-btn" data-id="${review.id}">
+                        <i class="fas fa-comment"></i> <span class="comment-count">${review.comments_count}</span>
                     </button>
                 </div>
-                
                 ${repliesHTML}
-                
                 <div class="reply-form" id="replyForm-${review.id}" style="display: none;">
                     <input type="text" placeholder="Write a comment..." id="replyInput-${review.id}">
-                    <button class="btn-reply" data-review-id="${review.id}">Comment</button>
+                    <button class="btn-reply" data-id="${review.id}">Comment</button>
                 </div>
             `;
         }
 
-        // Create stars HTML based on rating
-        function createStarsHTML(rating) {
-            let starsHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= rating) {
-                    starsHTML += '<i class="fas fa-star"></i>';
-                } else {
-                    starsHTML += '<i class="far fa-star"></i>';
-                }
-            }
-            return starsHTML;
-        }
-
-        // Create photos HTML if there are any
-        function createPhotosHTML(photos) {
-            if (photos.length === 0) return '';
-            
-            let photosHTML = '<div class="review-photos">';
-            photos.forEach(photo => {
-                photosHTML += `<img src="${photo.url}" alt="Review photo" class="review-photo" onclick="openImageModal('${photo.url}')">`;
-            });
-            photosHTML += '</div>';
-            
-            return photosHTML;
-        }
-
-        // Create replies HTML
-        function createRepliesHTML(replies) {
-            if (replies.length === 0) return '';
-            
-            let repliesHTML = '<div class="replies-section">';
-            replies.forEach(reply => {
-                const timeAgo = getTimeAgo(reply.timestamp);
-                repliesHTML += `
-                    <div class="reply-item">
-                        <div class="reply-header">
-                            <div class="replyer-avatar">
-                                ${reply.replyerName.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="replyer-name">${reply.replyerName}</div>
-                            <div class="reply-time">${timeAgo}</div>
-                        </div>
-                        <div class="reply-content">${reply.content}</div>
-                    </div>
-                `;
-            });
-            repliesHTML += '</div>';
-            
-            return repliesHTML;
-        }
-
         // Add event listeners for a specific review
-        function addReviewEventListeners(reviewId) {
-            // Like button
-            const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
-            if (likeBtn) {
-                likeBtn.addEventListener('click', () => {
-                    toggleLike(reviewId);
-                });
-            }
-            
-            // Comment button
-            const commentBtn = document.querySelector(`.comment-btn[data-review-id="${reviewId}"]`);
-            if (commentBtn) {
-                commentBtn.addEventListener('click', () => {
-                    toggleReplyForm(reviewId);
-                });
-            }
-            
-            // Share button
-            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
-            if (shareBtn) {
-                shareBtn.addEventListener('click', () => {
-                    toggleShare(reviewId);
-                });
-            }
-            
-            // Submit reply button
-            const submitReplyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
-            if (submitReplyBtn) {
-                submitReplyBtn.addEventListener('click', () => {
-                    submitReply(reviewId);
-                });
-            }
+        function addReviewEventListeners(review, element) {
+            element.querySelector('.like-btn').addEventListener('click', () => toggleLike(review, element));
+            element.querySelector('.comment-btn').addEventListener('click', () => {
+                const form = document.getElementById(`replyForm-${review.id}`);
+                form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+            });
+            element.querySelector('.btn-reply').addEventListener('click', () => submitReply(review, element));
         }
 
         // Toggle like on a review
-        function toggleLike(reviewId) {
-            const review = reviews.find(r => r.id === reviewId);
-            if (!review) return;
-            
-            // Show updating state on the button
-            const likeBtn = document.querySelector(`.like-btn[data-review-id="${reviewId}"]`);
-            const reviewItem = likeBtn.closest('.review-item');
-            
-            likeBtn.classList.add('updating');
-            reviewItem.classList.add('updating');
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                if (review.liked) {
-                    review.likes--;
-                    review.liked = false;
-                } else {
-                    review.likes++;
-                    review.liked = true;
-                }
-                
-                saveReviews();
-                
-                // Update only the like button and count
-                const likeCount = likeBtn.querySelector('.like-count');
-                likeCount.textContent = review.likes;
-                
-                if (review.liked) {
-                    likeBtn.classList.add('liked');
-                } else {
-                    likeBtn.classList.remove('liked');
-                }
-                
-                // Remove updating state
-                likeBtn.classList.remove('updating');
-                reviewItem.classList.remove('updating');
-            }, 500);
-        }
-
-        // Toggle share on a review
-        function toggleShare(reviewId) {
-            const review = reviews.find(r => r.id === reviewId);
-            if (!review) return;
-            
-            // Show updating state on the button
-            const shareBtn = document.querySelector(`.share-btn[data-review-id="${reviewId}"]`);
-            const reviewItem = shareBtn.closest('.review-item');
-            
-            shareBtn.classList.add('updating');
-            reviewItem.classList.add('updating');
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                review.shares++;
-                
-                saveReviews();
-                
-                // Update only the share button and count
-                const shareCount = shareBtn.querySelector('.share-count');
-                shareCount.textContent = review.shares;
-                
-                // Remove updating state
-                shareBtn.classList.remove('updating');
-                reviewItem.classList.remove('updating');
-                
-                // Show success message
-                showSuccessMessage('Review shared!');
-            }, 500);
-        }
-
-        // Toggle reply form visibility
-        function toggleReplyForm(reviewId) {
-            const replyForm = document.getElementById(`replyForm-${reviewId}`);
-            if (replyForm.style.display === 'none') {
-                replyForm.style.display = 'flex';
-            } else {
-                replyForm.style.display = 'none';
-            }
-        }
-
-        // Submit a reply to a review
-        function submitReply(reviewId) {
-            const replyInput = document.getElementById(`replyInput-${reviewId}`);
-            const replyText = replyInput.value.trim();
-            
-            if (!replyText) {
-                alert('Please enter a comment');
+        async function toggleLike(review, element) {
+            if (!Auth.isLoggedIn()) {
+                alert('Please login to like reviews');
                 return;
             }
             
-            const review = reviews.find(r => r.id === reviewId);
-            if (!review) return;
+            const btn = element.querySelector('.like-btn');
+            btn.classList.add('updating');
             
-            // Show updating state
-            const replyBtn = document.querySelector(`.btn-reply[data-review-id="${reviewId}"]`);
-            const reviewItem = replyBtn.closest('.review-item');
-            
-            replyBtn.disabled = true;
-            replyBtn.textContent = 'Posting...';
-            reviewItem.classList.add('updating');
-            
-            // Get user details from localStorage
-            const userProfile = JSON.parse(localStorage.getItem('malumeNicoUserProfile')) || {
-                name: 'Guest User'
-            };
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                const newReply = {
-                    id: Date.now(),
-                    replyerName: userProfile.name,
-                    content: replyText,
-                    timestamp: new Date()
-                };
+            try {
+                const response = await fetch(`${API_URL}/reviews/${review.id}/like`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
                 
-                review.replies.push(newReply);
-                review.replied = true;
-                saveReviews();
-                
-                // Update the replies section
-                const repliesSection = reviewItem.querySelector('.replies-section');
-                if (repliesSection) {
-                    const timeAgo = getTimeAgo(newReply.timestamp);
-                    const replyHTML = `
-                        <div class="reply-item">
-                            <div class="reply-header">
-                                <div class="replyer-avatar">
-                                    ${newReply.replyerName.charAt(0).toUpperCase()}
-                                </div>
-                                <div class="replyer-name">${newReply.replyerName}</div>
-                                <div class="reply-time">${timeAgo}</div>
-                            </div>
-                            <div class="reply-content">${newReply.content}</div>
-                        </div>
-                    `;
-                    repliesSection.innerHTML += replyHTML;
-                } else {
-                    // If no replies section exists, create one
-                    const timeAgo = getTimeAgo(newReply.timestamp);
-                    const repliesHTML = `
-                        <div class="replies-section">
-                            <div class="reply-item">
-                                <div class="reply-header">
-                                    <div class="replyer-avatar">
-                                        ${newReply.replyerName.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div class="replyer-name">${newReply.replyerName}</div>
-                                    <div class="reply-time">${timeAgo}</div>
-                                </div>
-                                <div class="reply-content">${newReply.content}</div>
-                            </div>
-                        </div>
-                    `;
-                    const reviewActions = reviewItem.querySelector('.review-actions');
-                    reviewActions.insertAdjacentHTML('afterend', repliesHTML);
+                if (response.ok) {
+                    const data = await response.json();
+                    review.is_liked = data.is_liked;
+                    review.likes_count += data.is_liked ? 1 : -1;
+
+                    btn.querySelector('.like-count').textContent = review.likes_count;
+                    if (review.is_liked) {
+                        btn.classList.add('liked', 'active');
+                    } else {
+                        btn.classList.remove('liked', 'active');
+                    }
                 }
-                
-                // Update comment count
-                const commentBtn = reviewItem.querySelector('.comment-btn');
-                const commentCount = commentBtn.querySelector('.comment-count');
-                commentCount.textContent = review.replies.length;
-                
-                // Reset form
-                replyInput.value = '';
-                toggleReplyForm(reviewId);
-                
-                // Remove updating state
-                replyBtn.disabled = false;
-                replyBtn.textContent = 'Comment';
-                reviewItem.classList.remove('updating');
-            }, 800);
+            } catch (error) {
+                console.error('Error toggling like:', error);
+            } finally {
+                btn.classList.remove('updating');
+            }
         }
 
-        // Format time ago
+        // Submit a reply
+        async function submitReply(review, element) {
+            const input = document.getElementById(`replyInput-${review.id}`);
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const btn = element.querySelector('.btn-reply');
+            btn.disabled = true;
+            
+            const payload = { text };
+            if (!Auth.isLoggedIn()) {
+                payload.guest_name = prompt("Enter your name for the comment:") || "Guest";
+            }
+            
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (Auth.isLoggedIn()) {
+                    headers['Authorization'] = `Bearer ${Auth.getToken()}`;
+                }
+                
+                const response = await fetch(`${API_URL}/reviews/${review.id}/comment`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    const newComment = await response.json();
+                    review.comments.push(newComment);
+                    review.comments_count++;
+
+                    // Re-render this review or just append comment
+                    renderReviews(); // Simple for now
+                }
+            } catch (error) {
+                console.error('Error posting comment:', error);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
         function getTimeAgo(timestamp) {
             const now = new Date();
-            const diffMs = now - new Date(timestamp);
+            const past = new Date(timestamp);
+            const diffMs = now - past;
             const diffSecs = Math.floor(diffMs / 1000);
             const diffMins = Math.floor(diffSecs / 60);
             const diffHours = Math.floor(diffMins / 60);
             const diffDays = Math.floor(diffHours / 24);
             
-            if (diffSecs < 60) {
-                return 'Just now';
-            } else if (diffMins < 60) {
-                return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-            } else if (diffHours < 24) {
-                return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-            } else if (diffDays < 7) {
-                return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-            } else {
-                return new Date(timestamp).toLocaleDateString();
+            if (diffSecs < 60) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return past.toLocaleDateString();
+        }
+
+        function refreshReviews() {
+            if (currentPage === 1) {
+                loadReviews(1);
             }
         }
 
-        // Save reviews to localStorage
-        function saveReviews() {
-            localStorage.setItem('malumeNicoReviews', JSON.stringify(reviews));
-        }
-
-        // Refresh reviews (simulate live updates)
-        function refreshReviews() {
-            // In a real app, this would fetch new reviews from the server
-            console.log('Refreshing reviews...');
-            
-            // For demo purposes, we'll just re-render
-            // But in production, you might want to do a more efficient update
-            // renderReviews();
-        }
-
-        // UPDATED: Fade-in animation on scroll - SAME AS HOMEPAGE
         function initFadeInAnimations() {
             const fadeElements = document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right');
-            
-            const fadeInObserver = new IntersectionObserver((entries) => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
+            }, { threshold: 0.1 });
+            fadeElements.forEach(el => observer.observe(el));
+        }
 
-            fadeElements.forEach(element => {
-                fadeInObserver.observe(element);
-            });
+        function checkAuthStatus() {
+            if (Auth.isLoggedIn()) {
+                const user = Auth.getUser();
+                const navLinks = document.querySelector('.nav-links');
+                if (navLinks) {
+                    navLinks.innerHTML = `
+                        <a href="profile.html" class="login-btn"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#" class="signup-btn" onclick="Auth.logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    `;
+                }
+                const mobileNavLinks = document.querySelector('.mobile-nav-links');
+                if (mobileNavLinks) {
+                    mobileNavLinks.innerHTML = `
+                        <a href="profile.html" class="mobile-nav-link"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#" class="mobile-nav-link" onclick="Auth.logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    `;
+                }
+            }
         }
     </script>
 </body>

@@ -2091,7 +2091,7 @@
                 <div class="guest-notice" style="margin-bottom: 20px; padding: 15px; background: rgba(200, 155, 45, 0.1); border-radius: 12px; border-left: 3px solid var(--gold);">
                     <p style="margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-user-clock"></i>
-                        <span>You're checking out as a guest. <a href="profile.html" style="color: var(--gold); text-decoration: underline;">Create an account</a> to earn rewards.</span>
+                        <span>You're checking out as a guest. <a href="profile.html?checkout=true" style="color: var(--gold); text-decoration: underline;">Sign up to get coupons</a> to earn rewards.</span>
                     </p>
                 </div>
 
@@ -3306,6 +3306,12 @@
             }
         });
 
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
         // Check authentication status and update UI
         function checkAuthStatus() {
             if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
@@ -3319,7 +3325,7 @@
                     guestNotice.innerHTML = `
                         <p style="margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
                             <i class="fas fa-crown" style="color: var(--gold);"></i>
-                            <span>Welcome back, <strong>${user.name || user.email}</strong>! Your 10% member discount has been applied.</span>
+                            <span>Welcome back, <strong>${escapeHTML(user.name || user.email)}</strong>! Your 10% member discount has been applied.</span>
                         </p>
                     `;
                 }
