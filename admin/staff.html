@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Staff Management | Malume Nico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .staff-list { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .staff-card { padding: 20px; position: relative; }
+        .staff-role { font-size: 0.8rem; color: var(--gold); margin-bottom: 10px; }
+        .staff-stats { display: flex; gap: 20px; margin-top: 15px; font-size: 0.85rem; }
+        .staff-actions { margin-top: 15px; display: flex; gap: 10px; }
+        .btn-small { padding: 8px 15px; font-size: 0.8rem; width: auto; }
+        .attendance-btns { display: flex; gap: 5px; margin-top: 10px; }
+        .att-btn { padding: 5px 10px; font-size: 0.7rem; border-radius: 5px; border: none; cursor: pointer; opacity: 0.6; }
+        .att-btn.active { opacity: 1; font-weight: 700; }
+        .btn-present { background: #28a745; color: white; }
+        .btn-off { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <button class="top-bar-btn"><i class="fas fa-search"></i></button>
+        <div class="page-title">Staff Management</div>
+        <button class="top-bar-btn" id="addStaffBtn"><i class="fas fa-plus"></i></button>
+    </div>
+
+    <main>
+        <div class="staff-list" id="staffList">
+            <!-- Staff will be loaded here -->
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="staff.html" class="nav-item active">
+            <i class="fas fa-users"></i>
+            <span>Staff</span>
+        </a>
+        <a href="finance.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Finance</span>
+        </a>
+    </nav>
+
+    <!-- Add/Edit Staff Modal -->
+    <div id="staffModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <h3 id="modalTitle" style="margin-bottom: 20px; color: var(--gold);">Add Staff Member</h3>
+            <input type="hidden" id="staffId">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="staffName" placeholder="Full Name">
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select id="staffRole">
+                    <option value="chef">Chef</option>
+                    <option value="cashier">Cashier</option>
+                    <option value="delivery">Delivery</option>
+                    <option value="manager">Manager</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Salary (Monthly)</label>
+                <input type="number" id="staffSalary" placeholder="R0.00">
+            </div>
+            <div class="form-group">
+                <label>Contact Info</label>
+                <input type="text" id="staffContact" placeholder="Phone / Email">
+            </div>
+            <button class="btn btn-primary" style="margin-bottom: 10px;" id="saveStaffBtn">Save Staff</button>
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Auth.isLoggedIn()) { window.location.href = '../profile.html'; return; }
+            fetchStaff();
+        });
+
+        async function fetchStaff() {
+            try {
+                const response = await fetch('/admin/staff', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const staff = await response.json();
+                const list = document.getElementById('staffList');
+
+                list.innerHTML = staff.map(s => `
+                    <div class="staff-card glass">
+                        <div class="staff-role">${s.role.toUpperCase()}</div>
+                        <div style="font-size: 1.1rem; font-weight: 700;">${s.name}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 5px;">${s.contact_info}</div>
+
+                        <div class="staff-stats">
+                            <div>Salary: <strong>R${s.salary.toFixed(2)}</strong></div>
+                            <div>Worked: <strong>${s.days_worked}</strong> days</div>
+                            <div>Off: <strong>${s.days_off}</strong> days</div>
+                        </div>
+
+                        <div class="attendance-btns">
+                            <span style="font-size: 0.75rem; align-self: center; margin-right: 5px;">Today:</span>
+                            <button class="att-btn btn-present" onclick="recordAttendance(${s.id}, 'present')">Present</button>
+                            <button class="att-btn btn-off" onclick="recordAttendance(${s.id}, 'off')">Off</button>
+                        </div>
+
+                        <div class="staff-actions">
+                            <button class="btn btn-secondary btn-small" onclick="editStaff(${JSON.stringify(s).replace(/"/g, '&quot;')})">Edit</button>
+                            <button class="btn btn-secondary btn-small" onclick="deleteStaff(${s.id})" style="color: #dc3545;">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching staff:', error);
+            }
+        }
+
+        // Attendance logic
+        async function recordAttendance(staffId, status) {
+            try {
+                const response = await fetch('/admin/attendance', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ staff_id: staffId, status: status })
+                });
+                if (response.ok) {
+                    alert('Attendance recorded');
+                    fetchStaff();
+                }
+            } catch (error) {
+                console.error('Error recording attendance:', error);
+            }
+        }
+
+        // Staff Modal Logic
+        const staffModal = document.getElementById('staffModal');
+        const addStaffBtn = document.getElementById('addStaffBtn');
+        const saveStaffBtn = document.getElementById('saveStaffBtn');
+
+        addStaffBtn.onclick = () => {
+            document.getElementById('modalTitle').textContent = 'Add Staff Member';
+            document.getElementById('staffId').value = '';
+            document.getElementById('staffName').value = '';
+            document.getElementById('staffSalary').value = '';
+            document.getElementById('staffContact').value = '';
+            staffModal.style.display = 'flex';
+        };
+
+        function closeModal() { staffModal.style.display = 'none'; }
+
+        function editStaff(s) {
+            document.getElementById('modalTitle').textContent = 'Edit Staff Member';
+            document.getElementById('staffId').value = s.id;
+            document.getElementById('staffName').value = s.name;
+            document.getElementById('staffRole').value = s.role;
+            document.getElementById('staffSalary').value = s.salary;
+            document.getElementById('staffContact').value = s.contact_info;
+            staffModal.style.display = 'flex';
+        }
+
+        saveStaffBtn.onclick = async () => {
+            const id = document.getElementById('staffId').value;
+            const data = {
+                name: document.getElementById('staffName').value,
+                role: document.getElementById('staffRole').value,
+                salary: parseFloat(document.getElementById('staffSalary').value),
+                contact_info: document.getElementById('staffContact').value
+            };
+
+            const url = id ? `/admin/staff/${id}` : '/admin/staff';
+            const method = id ? 'PATCH' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${Auth.getToken()}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    closeModal();
+                    fetchStaff();
+                } else {
+                    alert('Error saving staff');
+                }
+            } catch (error) {
+                console.error('Error saving staff:', error);
+            }
+        };
+
+        async function deleteStaff(id) {
+            if (!confirm('Are you sure you want to delete this staff member?')) return;
+            try {
+                const response = await fetch(`/admin/staff/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                if (response.ok) fetchStaff();
+            } catch (error) {
+                console.error('Error deleting staff:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Admin Dashboard | Malume Nico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <button class="top-bar-btn"><i class="fas fa-search"></i></button>
+        <div class="page-title">Admin Dashboard</div>
+        <button class="top-bar-btn" id="menuBtn"><i class="fas fa-ellipsis-v"></i></button>
+    </div>
+
+    <main id="dashboard">
+        <div class="stats-grid">
+            <div class="stat-card glass">
+                <span class="stat-label">Monthly Revenue</span>
+                <span class="stat-value" id="monthlyRevenue">R0.00</span>
+            </div>
+            <div class="stat-card glass">
+                <span class="stat-label">Daily Revenue</span>
+                <span class="stat-value" id="dailyRevenue">R0.00</span>
+            </div>
+            <div class="stat-card glass">
+                <span class="stat-label">Today's Orders</span>
+                <span class="stat-value" id="ordersCount">0</span>
+            </div>
+            <div class="stat-card glass">
+                <span class="stat-label">Pending Orders</span>
+                <span class="stat-value" id="pendingOrders">0</span>
+            </div>
+            <div class="stat-card glass">
+                <span class="stat-label">Completed</span>
+                <span class="stat-value" id="completedOrders">0</span>
+            </div>
+            <div class="stat-card glass">
+                <span class="stat-label">Deliveries</span>
+                <span class="stat-value" id="deliveryOrders">0</span>
+            </div>
+        </div>
+
+        <div class="graph-section">
+            <div class="section-header">
+                <h2>Revenue (Last 30 Days)</h2>
+            </div>
+            <div class="graph-container glass">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2>Recent Orders</h2>
+        </div>
+        <div class="order-list" id="recentOrders">
+            <!-- Orders will be loaded here -->
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="staff.html" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Staff</span>
+        </a>
+        <a href="finance.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Finance</span>
+        </a>
+    </nav>
+
+    <!-- Quick Actions Modal -->
+    <div id="actionsModal" class="modal-overlay">
+        <div class="modal-content glass">
+            <h3 style="margin-bottom: 20px; color: var(--gold);">Quick Actions</h3>
+            <button class="btn btn-secondary" style="margin-bottom: 10px;" onclick="location.reload()">Refresh Data</button>
+            <button class="btn btn-secondary" style="margin-bottom: 20px;" onclick="logout()">Logout</button>
+            <button class="btn btn-primary" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        // Check Admin Role
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!Auth.isLoggedIn()) {
+                window.location.href = '../profile.html';
+                return;
+            }
+
+            const user = Auth.getUser();
+            if (user.role !== 'admin' && user.role !== 'staff') {
+                alert('Access Denied: Admin privileges required');
+                window.location.href = '../index.html';
+                return;
+            }
+
+            fetchDashboardStats();
+            fetchGraphData();
+            fetchRecentOrders();
+        });
+
+        async function fetchDashboardStats() {
+            try {
+                const response = await fetch('/admin/dashboard/stats', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const data = await response.json();
+
+                document.getElementById('monthlyRevenue').textContent = `R${data.monthly_revenue.toFixed(2)}`;
+                document.getElementById('dailyRevenue').textContent = `R${data.daily_revenue.toFixed(2)}`;
+                document.getElementById('ordersCount').textContent = data.orders_count;
+                document.getElementById('pendingOrders').textContent = data.pending_orders;
+                document.getElementById('completedOrders').textContent = data.completed_orders;
+                document.getElementById('deliveryOrders').textContent = data.delivery_orders;
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        }
+
+        async function fetchGraphData() {
+            try {
+                const response = await fetch('/admin/dashboard/graph', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const data = await response.json();
+
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map(d => d.date.split('-').slice(1).join('/')),
+                        datasets: [{
+                            label: 'Revenue (R)',
+                            data: data.map(d => d.revenue),
+                            borderColor: '#c89b2d',
+                            backgroundColor: 'rgba(200, 155, 45, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching graph data:', error);
+            }
+        }
+
+        async function fetchRecentOrders() {
+            try {
+                const response = await fetch('/admin/orders', {
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                const orders = await response.json();
+                const list = document.getElementById('recentOrders');
+
+                list.innerHTML = orders.slice(0, 10).map(order => `
+                    <div class="order-card glass" onclick="viewOrder(${order.id})">
+                        <div class="order-header">
+                            <span>#${order.id} - ${order.customer_name}</span>
+                            <span class="order-status-badge status-${order.status}">${order.status}</span>
+                        </div>
+                        <div class="order-details">
+                            <p>Amount: R${order.total.toFixed(2)} | ${order.order_type}</p>
+                            <p>Time: ${new Date(order.created_at).toLocaleTimeString()}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        }
+
+        // Modal Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const modal = document.getElementById('actionsModal');
+
+        menuBtn.onclick = () => modal.style.display = 'flex';
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = (e) => { if (e.target == modal) closeModal(); }
+
+        function logout() {
+            Auth.logout();
+            window.location.href = '../index.html';
+        }
+
+        function viewOrder(id) {
+            // Placeholder for order details view or status update
+            const newStatus = prompt('Update Status (pending, preparing, ready, completed, cancelled):');
+            if (newStatus) {
+                updateOrderStatus(id, newStatus);
+            }
+        }
+
+        async function updateOrderStatus(id, status) {
+            try {
+                const response = await fetch(`/admin/orders/update/${id}?status=${status}`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${Auth.getToken()}` }
+                });
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+            }
+        }
+    </script>
+</body>
+</html>
