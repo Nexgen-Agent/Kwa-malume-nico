@@ -1564,7 +1564,7 @@
         function checkLoginStatus() {
             if (Auth.isLoggedIn()) {
                 const user = Auth.getUser();
-                profileData.name = user.name || user.email.split('@')[0];
+                profileData.name = user.full_name || user.email.split('@')[0];
                 profileData.email = user.email;
                 setProfileData();
 

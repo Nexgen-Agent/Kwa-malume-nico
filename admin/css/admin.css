@@ -232,3 +232,22 @@ body {
 
 .btn-primary { background: var(--gold); color: var(--ink); }
 .btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+
+/* Planning & Milestone specific styles */
+.section-tab-container { display: flex; overflow-x: auto; gap: 10px; padding: 0 20px 15px; scrollbar-width: none; }
+.section-tab-container::-webkit-scrollbar { display: none; }
+.section-tab { padding: 8px 20px; border-radius: 50px; background: rgba(255,255,255,0.1); white-space: nowrap; cursor: pointer; transition: all 0.3s; font-size: 0.85rem; }
+.section-tab.active { background: var(--gold); color: var(--ink); font-weight: 600; }
+
+.task-card { padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+.task-info { flex: 1; }
+.task-title { font-weight: 600; margin-bottom: 3px; }
+.task-meta { font-size: 0.75rem; opacity: 0.6; }
+.task-check { width: 24px; height: 24px; border: 2px solid var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.task-check.completed { background: var(--gold); color: var(--ink); }
+
+.milestone-card { padding: 20px; margin-bottom: 15px; }
+.milestone-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.milestone-status { font-size: 0.7rem; padding: 3px 8px; border-radius: 10px; background: rgba(200,155,45,0.2); color: var(--gold); }
+.milestone-progress { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; margin: 10px 0; }
+.progress-bar { height: 100%; background: var(--gold); transition: width 0.3s; }
