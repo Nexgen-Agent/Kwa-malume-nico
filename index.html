@@ -2419,6 +2419,7 @@
         </a>
     </nav>
 
+    <script src="assets/js/auth.js"></script>
     <script>
         // Menu data with image URLs
         const menuItems = [
@@ -2629,7 +2630,7 @@
             });
         }
 
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('malume_nico_cart') || '[]');
         let orderType = 'dinein';
         let selectedPaymentMethod = 'card'; // Only card is available
         let isGuestCheckout = true;
@@ -2842,7 +2843,7 @@
         // Create account post-purchase
         createAccountPostPurchase.addEventListener('click', () => {
             // Redirect to profile page for account creation
-            window.location.href = 'profile.html?action=signup&order=' + confirmedOrderNumber.textContent;
+            window.location.href = 'profile.html?checkout=true&order=' + confirmedOrderNumber.textContent;
         });
 
         // Skip account creation
@@ -2888,7 +2889,15 @@
         function updateTotalAmount() {
             const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
             const deliveryFee = orderType === 'delivery' && subtotal < 280 ? 30 : 0;
-            const total = subtotal + deliveryFee;
+
+            let total = subtotal + deliveryFee;
+
+            // Apply 10% discount if user is logged in and eligible
+            const isUserLoggedIn = typeof Auth !== 'undefined' && Auth.isLoggedIn();
+            if (isUserLoggedIn && Auth.getUser().coupon_eligible) {
+                total = total * 0.9;
+                // Add a visual indicator if possible, but for now just update the amount
+            }
             
             totalAmount.textContent = `R${total.toFixed(2)}`;
             
@@ -2986,6 +2995,9 @@
 
         // Update cart display
         function updateCart() {
+            // Persist cart
+            localStorage.setItem('malume_nico_cart', JSON.stringify(cart));
+
             // Update cart count
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
             cartCount.textContent = totalItems;
@@ -3196,15 +3208,8 @@
 
         // Show account creation modal (for rewards path)
         function showAccountCreationModal() {
-            // In a real implementation, this would show a signup form
-            // For now, we'll redirect to profile page with signup intent
-            alert('Redirecting to account creation for rewards...');
-            // Uncomment in production:
-            // window.location.href = 'profile.html?action=signup&rewards=true';
-            
-            // For demo, we'll just continue with guest checkout
-            isGuestCheckout = true;
-            showCheckoutView();
+            // Redirect to profile page with checkout return intent
+            window.location.href = 'profile.html?checkout=true';
         }
 
         // Google Maps functionality
@@ -3274,13 +3279,76 @@
             }
         });
 
+        // Check authentication status and update UI
+        function checkAuthStatus() {
+            if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+                const user = Auth.getUser();
+                isGuestCheckout = false;
+
+                // Update guest notice in checkout
+                const guestNotice = document.querySelector('.guest-notice');
+                if (guestNotice) {
+                    guestNotice.style.background = 'rgba(200, 155, 45, 0.2)';
+                    guestNotice.innerHTML = `
+                        <p style="margin: 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-crown" style="color: var(--gold);"></i>
+                            <span>Welcome back, <strong>${user.name || user.email}</strong>! Your 10% member discount has been applied.</span>
+                        </p>
+                    `;
+                }
+
+                // Pre-fill name if available
+                if (user.name) {
+                    const nameInput = document.getElementById('customerName');
+                    if (nameInput) nameInput.value = user.name;
+                }
+
+                // Update desktop nav
+                const navLinks = document.querySelector('.nav-links');
+                if (navLinks) {
+                    navLinks.innerHTML = `
+                        <a href="profile.html" class="login-btn">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" class="signup-btn" onclick="Auth.logout(); return false;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    `;
+                }
+
+                // Update mobile nav
+                const mobileNavLinks = document.querySelector('.mobile-nav-links');
+                if (mobileNavLinks) {
+                    mobileNavLinks.innerHTML = `
+                        <a href="profile.html" class="mobile-nav-link">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" class="mobile-nav-link" onclick="Auth.logout(); return false;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    `;
+                }
+
+                // Refresh total with discount
+                updateTotalAmount();
+            }
+        }
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             renderMenuItems();
             updateCart();
             setActiveNavItem();
             initGoogleMaps();
+            checkAuthStatus();
             
+            // Check for checkout redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('checkout') === 'true' && cart.length > 0) {
+                cartContainer.classList.add('open');
+                showCheckoutView();
+            }
+
             // Initialize fade-in animations
             initFadeInAnimations();
 
