@@ -21,6 +21,7 @@
     <link rel="manifest" href="/manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/auth.js"></script>
     <style>
         /* === RESET & BASE STYLES === */
         * {
@@ -1476,7 +1477,8 @@
         ];
 
         // State variables
-        let userBalance = 2400;
+        const currentUser = AuthService.getCurrentUser();
+        let userBalance = currentUser ? currentUser.coupons : 0;
         let surpriseBoxAvailable = true;
         let selectedReward = null;
 
@@ -1614,6 +1616,9 @@
             // Update user balance after a delay
             setTimeout(() => {
                 userBalance += rewardAmount;
+                if (AuthService.isLoggedIn()) {
+                    AuthService.updateCoupons(rewardAmount);
+                }
                 updateBalanceDisplay();
                 
                 // Add to history
@@ -1754,6 +1759,9 @@
             
             // Deduct cost from balance
             userBalance -= selectedReward.cost;
+            if (AuthService.isLoggedIn()) {
+                AuthService.updateCoupons(-selectedReward.cost);
+            }
             updateBalanceDisplay();
             
             // Add to history

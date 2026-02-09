@@ -15,6 +15,7 @@
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/auth.js"></script>
     
     <style>
         /* === RESET & BASE STYLES === */
@@ -657,6 +658,28 @@
             gap: 15px;
         }
 
+        .auth-form {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .auth-form.active {
+            display: flex;
+        }
+
+        .error-message {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+
         .auth-btn {
             display: flex;
             align-items: center;
@@ -1013,25 +1036,60 @@
             </div>
 
             <!-- Auth Section -->
-            <div class="auth-section glass">
-                <h3 class="auth-title">Connect Your Account</h3>
-                <div class="auth-buttons">
-                    <button class="auth-btn google">
+            <div class="auth-section glass" id="authSection">
+                <h3 class="auth-title" id="authTitle">Connect Your Account</h3>
+
+                <div id="authErrorMessage" class="error-message"></div>
+
+                <div class="auth-buttons" id="authButtons">
+                    <button class="auth-btn google" id="googleLoginBtn">
                         <i class="fab fa-google"></i> Continue with Google
                     </button>
-                    <button class="auth-btn apple">
+                    <button class="auth-btn apple" id="appleLoginBtn">
                         <i class="fab fa-apple"></i> Continue with Apple
                     </button>
-                    <button class="auth-btn facebook">
+                    <button class="auth-btn facebook" id="facebookLoginBtn">
                         <i class="fab fa-facebook-f"></i> Continue with Facebook
                     </button>
-                    <button class="auth-btn email">
+                    <button class="auth-btn email" id="signupEmailBtn">
                         <i class="fas fa-envelope"></i> Sign up with Email
                     </button>
-                    <button class="auth-btn email" style="background: rgba(255,255,255,0.1); color: white;">
+                    <button class="auth-btn email" id="loginEmailBtn" style="background: rgba(255,255,255,0.1); color: white;">
                         <i class="fas fa-sign-in-alt"></i> Login with Email
                     </button>
                 </div>
+
+                <!-- Email Login Form -->
+                <form class="auth-form" id="emailLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="info-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="info-input" required>
+                    </div>
+                    <button type="submit" class="auth-btn email">Login</button>
+                    <button type="button" class="auth-btn" style="background:none; color:white;" id="backFromLogin">Back</button>
+                </form>
+
+                <!-- Email Signup Form -->
+                <form class="auth-form" id="emailSignupForm">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" class="info-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" class="info-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="info-input" required>
+                    </div>
+                    <button type="submit" class="auth-btn email">Sign Up</button>
+                    <button type="button" class="auth-btn" style="background:none; color:white;" id="backFromSignup">Back</button>
+                </form>
             </div>
         </div>
 
@@ -1184,8 +1242,25 @@
     </nav>
 
     <script>
-        // Profile Data for Malume Nicodemus
-        let profileData = {
+        // Auth UI Elements
+        const authSection = document.getElementById('authSection');
+        const authButtons = document.getElementById('authButtons');
+        const authTitle = document.getElementById('authTitle');
+        const authErrorMessage = document.getElementById('authErrorMessage');
+        const emailLoginForm = document.getElementById('emailLoginForm');
+        const emailSignupForm = document.getElementById('emailSignupForm');
+
+        const signupEmailBtn = document.getElementById('signupEmailBtn');
+        const loginEmailBtn = document.getElementById('loginEmailBtn');
+        const backFromLogin = document.getElementById('backFromLogin');
+        const backFromSignup = document.getElementById('backFromSignup');
+
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const facebookLoginBtn = document.getElementById('facebookLoginBtn');
+        const appleLoginBtn = document.getElementById('appleLoginBtn');
+
+        // Profile Data
+        let profileData = AuthService.getCurrentUser() || {
             name: "Malume Nicodemus",
             username: "@malumenico",
             email: "malume.nicodemus@example.com",
@@ -1326,13 +1401,137 @@
             alert('Banner upload functionality would be implemented with Supabase');
         });
 
+        // Helper to show errors
+        function showError(message) {
+            authErrorMessage.textContent = message;
+            authErrorMessage.style.display = 'block';
+            setTimeout(() => {
+                authErrorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle Redirect after login
+        function handleAuthSuccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect');
+            if (redirect === 'checkout') {
+                window.location.href = 'index.html?redirect=checkout';
+            } else {
+                location.reload();
+            }
+        }
+
+        // Toggle Forms
+        signupEmailBtn.addEventListener('click', () => {
+            authButtons.style.display = 'none';
+            emailSignupForm.classList.add('active');
+            authTitle.textContent = 'Create Account';
+        });
+
+        loginEmailBtn.addEventListener('click', () => {
+            authButtons.style.display = 'none';
+            emailLoginForm.classList.add('active');
+            authTitle.textContent = 'Login';
+        });
+
+        backFromLogin.addEventListener('click', () => {
+            emailLoginForm.classList.remove('active');
+            authButtons.style.display = 'flex';
+            authTitle.textContent = 'Connect Your Account';
+        });
+
+        backFromSignup.addEventListener('click', () => {
+            emailSignupForm.classList.remove('active');
+            authButtons.style.display = 'flex';
+            authTitle.textContent = 'Connect Your Account';
+        });
+
+        // Email Actions
+        emailSignupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            try {
+                await AuthService.register(email, password, name);
+                handleAuthSuccess();
+            } catch (err) {
+                showError(err.message);
+            }
+        });
+
+        emailLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await AuthService.login(email, password);
+                handleAuthSuccess();
+            } catch (err) {
+                showError(err.message);
+            }
+        });
+
+        // OAuth Actions
+        googleLoginBtn.addEventListener('click', async () => {
+            try {
+                await AuthService.loginWithGoogle();
+                handleAuthSuccess();
+            } catch (err) {
+                showError(err.message);
+            }
+        });
+
+        facebookLoginBtn.addEventListener('click', async () => {
+            try {
+                await AuthService.loginWithFacebook();
+                handleAuthSuccess();
+            } catch (err) {
+                showError(err.message);
+            }
+        });
+
+        appleLoginBtn.addEventListener('click', async () => {
+            try {
+                await AuthService.loginWithApple();
+                handleAuthSuccess();
+            } catch (err) {
+                showError(err.message);
+            }
+        });
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize fade-in animations
             initFadeInAnimations();
             
-            // Set the default profile data
+            // Set the profile data
             setProfileData();
+
+            // If action=signup is in URL, automatically show signup form
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'signup') {
+                signupEmailBtn.click();
+            }
+
+            // Hide auth section if already logged in (optional, but good for UX)
+            if (AuthService.isLoggedIn() && !urlParams.get('redirect')) {
+                // Keep it but maybe change title
+                authTitle.textContent = 'Connected Account';
+                authButtons.style.display = 'none';
+
+                const logoutBtn = document.createElement('button');
+                logoutBtn.className = 'auth-btn';
+                logoutBtn.style.background = 'rgba(255, 68, 68, 0.2)';
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+                logoutBtn.onclick = () => {
+                    AuthService.logout();
+                    location.reload();
+                };
+                authSection.appendChild(logoutBtn);
+            }
         });
 
         // Set profile data

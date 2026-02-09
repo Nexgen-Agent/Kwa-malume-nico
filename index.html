@@ -21,6 +21,7 @@
     <link rel="manifest" href="/manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="assets/js/auth.js"></script>
     <style>
         /* === RESET & BASE STYLES === */
         * {
@@ -2629,10 +2630,10 @@
             });
         }
 
-        let cart = [];
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
         let orderType = 'dinein';
         let selectedPaymentMethod = 'card'; // Only card is available
-        let isGuestCheckout = true;
+        let isGuestCheckout = !AuthService.isLoggedIn();
         let userEmailForPostPurchase = '';
 
         // Function to update header total amount
@@ -2746,6 +2747,20 @@
             paymentMethodView.classList.remove('active');
             paymentProcessing.classList.remove('active');
             paymentSuccess.classList.remove('active');
+
+            // Handle logged in state in checkout
+            const guestNotice = document.querySelector('.guest-notice');
+            if (typeof AuthService !== 'undefined' && AuthService.isLoggedIn()) {
+                isGuestCheckout = false;
+                if (guestNotice) guestNotice.style.display = 'none';
+                const user = AuthService.getCurrentUser();
+                if (user && !document.getElementById('customerName').value) {
+                    document.getElementById('customerName').value = user.name || '';
+                }
+            } else {
+                isGuestCheckout = true;
+                if (guestNotice) guestNotice.style.display = 'block';
+            }
             
             // Show floating place order button
             hideAllFloatingButtons();
@@ -2986,6 +3001,9 @@
 
         // Update cart display
         function updateCart() {
+            // Persist cart to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
             // Update cart count
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
             cartCount.textContent = totalItems;
@@ -3196,15 +3214,11 @@
 
         // Show account creation modal (for rewards path)
         function showAccountCreationModal() {
-            // In a real implementation, this would show a signup form
-            // For now, we'll redirect to profile page with signup intent
-            alert('Redirecting to account creation for rewards...');
-            // Uncomment in production:
-            // window.location.href = 'profile.html?action=signup&rewards=true';
+            // Save current cart state before redirecting
+            localStorage.setItem('cart', JSON.stringify(cart));
             
-            // For demo, we'll just continue with guest checkout
-            isGuestCheckout = true;
-            showCheckoutView();
+            // Redirect to profile page with signup intent and return URL
+            window.location.href = 'profile.html?action=signup&rewards=true&redirect=checkout';
         }
 
         // Google Maps functionality
@@ -3286,6 +3300,14 @@
 
             // Handle keyboard events to keep header in place
             handleKeyboardEvents();
+
+            // Check if returning from checkout account creation
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('redirect') === 'checkout') {
+                // Open cart and go to checkout
+                cartContainer.classList.add('open');
+                showCheckoutView();
+            }
         });
 
         // Handle keyboard events to ensure header stays fixed
